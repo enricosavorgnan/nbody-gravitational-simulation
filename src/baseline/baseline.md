@@ -102,15 +102,15 @@ The implemented time integrator is Drift-Kick-Drift:
 
 The energy check uses the same softened potential as the force law:
 
-```text
-U = - sum_{i<j} G m^2 / sqrt(|r_i-r_j|^2 + eps^2)
-```
+$$
+U = -\sum_{i \lt j} G m^2 / \sqrt{(|r_i-r_j|^2 + \varepsilon^2)}
+$$
 
 The reported verification metric is
 
-```text
-abs(E(t) - E(0)) / max(abs(E(0)), dtype_min_normal)
-```
+$$
+\left | E(t) - E(0) \right | / \max(\left | E(0) \right |, \text{dtype_min_normal})
+$$
 
 A warning is printed if the maximum observed drift exceeds `--energy-tol` (default `1e-3`). This does not terminate the run, because large drift is often an intentional teaching signal: reduce `dt`, increase `eps`, or inspect the initial conditions.
 
@@ -130,3 +130,130 @@ The baseline is serial on purpose. Natural extensions are:
 - preserve the SoA layout when adding MPI ring-shift communication;
 - can you measure the achieved FLOP/s before and after each change.
 - Instrument your code so that you can tie every section and assess their scalability separately, instead of just the total run-time
+
+
+
+## Files Structure:
+
+#### `nbody_direct_serial.c`
+
+Main Body
+
+- `main`: 
+  - Accepts several command-line arguments.
+  - Initializes an empty particle SoA using `particles_init_empty`.
+  - Reads the *input binary file* using `particles_read_binary` that operates some checks and allocates a SoA.
+  - Computes the total energy using `total_energy` that internally calls `kinetic_energy` and `potential_energy_naive`.
+  - Computes the integration over a `for` loop using `leapfrog_dkd_step`.
+  - Writes an *output binary file* using `particles_write_binary`-
+  - Frees the occupied memory using `particles_free`.
+  - Meanwhile, lots of checks are run, as well as several messages are printed.
+
+---
+
+Integration Scheme
+
+- `compute_acceleration_naive`:
+  - This is the most delicate method. Computes accelerations (unsurprisingly)
+  - for each particle `i`, for each particle `j`:
+    - Compute distance $r_ij$.
+    - Computes $\sqrt{r_ij}$ and invert it.
+    - Elevates to the cube and multiplies by the mass.
+    - Sums the result to a temporary variable 
+  - Stores the resulting sum into the i-th component of the particles' SoA.
+
+- `drift`:
+  - Drift step for the DKD procedure. 
+  - Drifts the particles' position by a given time interval `dt`:
+    $$
+  x_i = x_i + v_i * dt
+    $$
+  
+- `kick`:
+  - Kick step for the DKD procedure.
+  - Kicks the particles' velocity by a given time interval `dt`:
+    $$
+  v_i = v_i + a_i * dt
+    $$
+
+- `leapfrog_dkd_step`:
+  - Applies a Leapfrog step suing DKD procedure: Drift - Acceleration - Kick - Drift
+  - Calls in sequence: `drift`, `compute_Acceleration_naive`, `kick`, `drift`
+
+---
+
+Type Checks
+
+- `dtype_to_storage_float`:
+  - Converts physical quantities to disk-types.
+
+- `kinetic_energy`:
+  - Defines the physical quantity of the kinetic energy via a `for` loop and exploiting long-double accumulators.
+
+- `potential_energy_naive`:
+  - Defines the physical quantity of potential energy via a nested `for` loop
+  - Defined as:
+  $$
+    - g \cdot m_2 \cdot \sum_j \frac{1}{\sqrt{r_{\cdot, j}}}
+  $$
+
+- `total_energy`:
+  - Simply computes `kinetic_energy` + `potential_energy_naive` 
+
+---
+
+Checks
+
+- `die`:
+  - Method launched in case of errors. Throws an `stderr` and terminates.
+
+- `parse_size`:
+  - Parses command line values' size. 
+  - In case of errors, calls `die`.
+
+- `parse_dtyp`:
+  - Converts command line floats into `dtype` type, i.e., `float` or `double` depending on `NBODY_USE_FLOAT` or `NBODY_USE_DOUBLE`.
+
+- `option_value`:
+  - Returns the argument given the key.
+
+- `checked_align_alloc`:
+  - Allocates cache-line aligned blocks.
+  - Is used by `particles_allocate` during particles' SoA allocation in memory. 
+
+- `checked_fread`, `checked_fwrite`:
+  - Respectively read and write exactly `nmemb` items from and to a binary stream.
+
+---
+
+Memory allocation
+
+- `particles_init_empty`:
+  - Simply defines a SoA in the form of `particles_s` struct having null pointers but for `p->mass = 1.0`.
+
+- `particles_allocate`:
+  - Initializes an empty SoA using `particles_init_empty`.
+  - Ensures that each member of the SoA is correctly aligned in cache memory using `checked_aligned_alloc`.
+
+- `particles_free`:
+  - Frees the memory occupied by particles' SoA.
+
+- `particles_read_binary`:
+  - Reads a binary file whose path is in `path` variable.
+  - Operates some checks during the read using `checked _fread`.
+  - Allocates the particles' SoA using `particles_allocate`.
+  - Iterates a `for` loop for storing the initial values for the particles' position and velocity. Acceleration is kept un-initialized since they will be computed in a second moment. Internally to the for loop, an expensive check is run: possibly change it.
+
+- `particles_write_binaries`:
+  - Opens a binary stream in the output file path `*path`.
+  - Operates a check during writing operations using `checked_fwrite`.
+  - Converts types using `dtype_to_storage_float`. 
+  - Writes records into the stream file and closes.
+
+---
+
+
+
+
+#### `generate_ic.c`
+- ``
