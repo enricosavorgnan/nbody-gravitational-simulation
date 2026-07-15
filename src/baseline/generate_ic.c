@@ -1,5 +1,5 @@
 /*
- * gen_plummer_sphere.c
+ * generate_ic.c
  *
  * Stand-alone C11 generator for equal-mass Plummer-sphere initial conditions.
  * The output is the native-endian binary format read by nbody_direct_serial.c:
@@ -9,16 +9,20 @@
  *   N records     x y z vx vy vz as six IEEE single-precision floats
  *
  * The generator samples the usual Plummer radius distribution and an isotropic
- * equilibrium velocity distribution.  The velocity scale follows the same
- * dimensionless convention as the solver: total mass M = N * particle_mass and
- * G is user-settable, both defaulting to one in code units.
+ * equilibrium velocity distribution.
+ * The velocity scale follows the same dimensionless convention as the solver:
+ * total mass M = N * particle_mass and G is user-settable, defaulting to one in
+ * code units.
  *
  * The generated coordinates and velocities use dtype internally.  Select it at
  * compile time with -DNBODY_USE_DOUBLE or -DNBODY_USE_FLOAT; the file is always
  * stored as float32 records.
+
  */
 
-#include "../docs/Nbody_serial_baseline/nbody_common.h"
+
+
+#include "./headers/nbody_common.h"
 
 #include <errno.h>
 #include <stdarg.h>
@@ -41,13 +45,13 @@ typedef struct rng_s
 } rng_t;
 
 
-/* ··············································································
+/*
  * ··············································································
  *
  *  U T I L I T I E S
  *
  * ··············································································
- */
+*/
 
 static void die (const char *format, ...)
 {
@@ -84,7 +88,7 @@ static void print_usage (const char *program    // argv[0]
  * Parse a positive particle count or seed-like integer from the command line.
  * The function is intentionally strict so that typos in benchmark scripts do
  * not silently produce a different initial condition.
- */
+*/
 static size_t parse_size (const char *text,     // decimal text to parse
                           const char *name      // option name used in errors
 )

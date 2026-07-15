@@ -29,7 +29,7 @@
  *
  */
 
-#include "../headers/nbody_common.h"
+#include "./headers/nbody_common.h"
 
 #include <errno.h>
 #include <stdarg.h>
@@ -85,10 +85,11 @@ static void die (const char *format, ...)
 }
 
 /*
- * Parse a size_t command-line value.  All user-facing quantities that count
- * particles or steps pass through this function so that overflow and malformed
- * input fail early, before any allocation or simulation state is modified.
- */
+ * Parse a size_t command-line value.
+ * All user-facing quantities that count particles or steps pass through
+ * this function so that overflow and malformed input fail early, before
+ * any allocation or simulation state is modified.
+*/
 static size_t parse_size (const char *text,     // decimal text to parse
                           const char *name      // option name used in errors
 			  )
@@ -107,8 +108,8 @@ static size_t parse_size (const char *text,     // decimal text to parse
 }
 
 /*
- * Parse a finite floating-point command-line value and cast it to dtype.  The
- * parser reads through double because strtof and strtod differ only in final
+ * Parse a finite floating-point command-line value and cast it to dtype.
+ * The parser reads through double because strtof and strtod differ only in final
  * rounding for the ranges used here; the explicit range check keeps float-mode
  * builds from silently accepting values that cannot be represented by dtype.
  */
@@ -314,16 +315,16 @@ static void particles_free (particles_t *p    // container to release
 
 /*
  * Cast one physical quantity to the on-disk type.
- * Nofinite values and overflows should still fail loudly.
+ * No finite values and overflows should still fail loudly.
  * How do we deal with that?
  * Check the initial condition generator for a more performant
  * implementation.
  *
  * NOTE: may this be a bottleneck in the I/O ? what your profiling says?
- *       if so, you may consider to make this optional only when a "debugging mode"
- *       is set, and to expand to a simple cast otherwose,
- *       Optionally this sanity checks should be made as a loop over particles that
- *       accumulates failures counter, instead on per-particle funciton call
+ *       if so, you may consider making this optional only when a "debugging mode"
+ *       is set, and to expand to a simple cast otherwise;
+ *       Optionally, these sanity checks should be made as a loop over particles that
+ *       accumulate failure counter, instead on per-particle function call
  */
 static float dtype_to_storage_float (dtype       value,       // value to store
                                      const char *component,   // component name for diagnostics
@@ -552,7 +553,7 @@ static void drift (particles_t *p,       // particle positions are modified in p
 }
 
 /*
- * Kick all velocities using the current accelerations.  his is the K in DKD
+ * Kick all velocities using the current accelerations. This is the K in DKD
  */
 static void kick (particles_t *p,       // particle velocities are modified in place
                   dtype        dt       // full kick interval
@@ -583,12 +584,12 @@ static void kick (particles_t *p,       // particle velocities are modified in p
  *   3. kick velocities by dt;
  *   4. drift positions by dt/2 with the updated velocities.
  *
- * This keeps positions and velocities synchronised at integer time levels 
+ * This keeps positions and velocities synchronized at integer time levels
  */
 static void leapfrog_dkd_step (particles_t *p,        // complete particle state, modified in place
                                dtype        g,        // gravitational constant
                                dtype        eps,      // softening length
-                               dtype        dt        // full time step
+                               dtype        dt        // full time-step
 			       )
 {
   drift (p, (dtype) 0.5 * dt);
@@ -626,9 +627,9 @@ static dtype kinetic_energy (const particles_t *p    // particle velocities are 
 
 /*
  * Simple O(N^2) potential-energy diagnostic for the same softened potential used
- * by the force kernel.  Not performance critical if called only every
- * K steps, and keeping it independent of compute_accelerations_naive makes it a
- * useful correctness check during optimisation.
+ * by the force kernel.
+ * Not performance critical if called only every K steps, and keeping it independent
+ * of compute_accelerations_naive makes it a useful correctness check during optimization.
  */
 static dtype potential_energy_naive (particles_t *p,        // particle positions are read-only
                                      dtype        g,        // gravitational constant
@@ -664,10 +665,8 @@ static dtype potential_energy_naive (particles_t *p,        // particle position
 }
 
 /*
- * Total mechanical energy, returned together with kinetic and potential parts
- * for reporting.
- * The relative drift of this quantity is the main verification
- * metric 
+ * Total mechanical energy, returned together with kinetic and potential parts for reporting.
+ * The relative drift of this quantity is the main verification metric.
  */
 static dtype total_energy (particles_t *p,           // complete particle state, read-only
                            dtype        g,           // gravitational constant
@@ -683,16 +682,12 @@ static dtype total_energy (particles_t *p,           // complete particle state,
 }
 
 
-
-
-
-
 /* ======================================================================================== */
-
+/*
    : ------------------------------------------------------ :
    :  HELP & MAIN                                           :
    : ------------------------------------------------------ :
- */ 
+*/
 
 /*
  * Print a compact command-line reference.
@@ -742,7 +737,7 @@ int main (int argc, char **argv)
 
 
   // ·························································
-  // allocate particles container to an empty state
+  // allocate particles' container to an empty state
   particles_init_empty (&particles);
 
   

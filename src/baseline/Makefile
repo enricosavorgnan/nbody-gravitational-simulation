@@ -6,7 +6,7 @@ LDLIBS    ?= -lm
 PRECISION ?= double
 
 PROGRAMS := nbody_direct_serial generate_ic
-HEADERS  := nbody_common.h
+HEADERS  := ./headers/nbody_common.h
 
 ifeq ($(PRECISION),float)
 PRECISION_CPPFLAGS := -DNBODY_USE_FLOAT
