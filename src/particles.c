@@ -16,7 +16,7 @@
  * simply gives every pointer a known value so that particles_free can safely be
  * called after a partial failure path.
  */
-static void particles_init_empty (particles_t *p    // particle container to initialise
+void particles_init_empty (particles_t *p    // particle container to initialise
 				  )
 {
   p->n    = 0u;
@@ -39,7 +39,7 @@ static void particles_init_empty (particles_t *p    // particle container to ini
  * direct kernel only needs streams of x/y/z coordinates and accumulators.  This
  * layout is also the natural one for later SIMD and MPI ring-buffer work.
  */
-static void particles_allocate (particles_t  *p,       // output container
+void particles_allocate (particles_t  *p,       // output container
                                 size_t        n,       // number of particles
                                 dtype         mass     // mass of each particle
 				)
@@ -72,7 +72,7 @@ static void particles_allocate (particles_t  *p,       // output container
  * Release all particle arrays and return the container to the empty state.  No
  * simulation data survive this call.
  */
-static void particles_free (particles_t *p    // container to release
+void particles_free (particles_t *p    // container to release
 			    )
 {
   free (p->x);
@@ -101,7 +101,7 @@ static void particles_free (particles_t *p    // container to release
  *       Optionally, these sanity checks should be made as a loop over particles that
  *       accumulate failure counter, instead on per-particle function call
  */
-static float dtype_to_storage_float (dtype       value,       // value to store
+float dtype_to_storage_float (dtype       value,       // value to store
                                      const char *component,   // component name for diagnostics
                                      size_t      i            // particle index for diagnostics
 				     )
@@ -122,7 +122,7 @@ static float dtype_to_storage_float (dtype       value,       // value to store
  * Acceleration arrays are left uninitialised because every force evaluation
  * overwrites them.
  */
-static void particles_read_binary (const char  *path,       // input file path
+void particles_read_binary (const char  *path,       // input file path
                                    dtype        mass,       // mass assigned to each particle
                                    particles_t *p           // output particle container
 				   )
@@ -184,7 +184,7 @@ static void particles_read_binary (const char  *path,       // input file path
  * this is simple rather than maximally fast;
  * check in the code for initial condition generator
  */
-static void particles_write_binary (const char        *path,       // output file path
+void particles_write_binary (const char        *path,       // output file path
                                     const particles_t *p           // particle state to write
 				    )
 {

@@ -32,7 +32,7 @@
  */
 
 
-static void compute_accelerations_naive (size_t  n,          // number of particles
+void compute_accelerations_naive (size_t  n,          // number of particles
                                          dtype   g,          // gravitational constant
                                          dtype   mass,       // mass of every source particle
                                          dtype   eps,        // Plummer softening length
@@ -87,7 +87,7 @@ static void compute_accelerations_naive (size_t  n,          // number of partic
  *
  * Again: are data qualifiers missed for optimization?
  */
-static void drift (particles_t *p,       // particle positions are modified in place
+void drift (particles_t *p,       // particle positions are modified in place
                    dtype        dt       // drift interval, often 0.5 * full step
 		   )
 {
@@ -111,7 +111,7 @@ static void drift (particles_t *p,       // particle positions are modified in p
 /*
  * Kick all velocities using the current accelerations. This is the K in DKD
  */
-static void kick (particles_t *p,       // particle velocities are modified in place
+void kick (particles_t *p,       // particle velocities are modified in place
                   dtype        dt       // full kick interval
 		  )
 {
@@ -142,7 +142,7 @@ static void kick (particles_t *p,       // particle velocities are modified in p
  *
  * This keeps positions and velocities synchronized at integer time levels
  */
-static void leapfrog_dkd_step (particles_t *p,        // complete particle state, modified in place
+void leapfrog_dkd_step (particles_t *p,        // complete particle state, modified in place
                                dtype        g,        // gravitational constant
                                dtype        eps,      // softening length
                                dtype        dt        // full time-step
@@ -161,7 +161,7 @@ static void leapfrog_dkd_step (particles_t *p,        // complete particle state
  * A long-double accumulator is used so that summation roundoff in the check is less likely to hide
  * errors caused by the integration or the force kernel.
  */
-static dtype kinetic_energy (const particles_t *p    // particle velocities are read-only
+dtype kinetic_energy (const particles_t *p    // particle velocities are read-only
 			     )
 {
   size_t        n    = p->n;
@@ -187,7 +187,7 @@ static dtype kinetic_energy (const particles_t *p    // particle velocities are 
  * Not performance critical if called only every K steps, and keeping it independent
  * of compute_accelerations_naive makes it a useful correctness check during optimization.
  */
-static dtype potential_energy_naive (particles_t *p,        // particle positions are read-only
+dtype potential_energy_naive (particles_t *p,        // particle positions are read-only
                                      dtype        g,        // gravitational constant
                                      dtype        eps       // softening length
 				     )
@@ -224,7 +224,7 @@ static dtype potential_energy_naive (particles_t *p,        // particle position
  * Total mechanical energy, returned together with kinetic and potential parts for reporting.
  * The relative drift of this quantity is the main verification metric.
  */
-static dtype total_energy (particles_t *p,           // complete particle state, read-only
+dtype total_energy (particles_t *p,           // complete particle state, read-only
                            dtype        g,           // gravitational constant
                            dtype        eps,         // softening length
                            dtype       *kinetic,     // output kinetic energy

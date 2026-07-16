@@ -6,24 +6,23 @@
 
 #ifndef NBODY_TIME_H
 #define NBODY_TIME_H
-#endif //NBODY_TIME_H
 
-#include <float.h>
-#include <math.h>
+#define _POSIX_C_SOURCE 199309L
 #include <stdlib.h>
 #include <time.h>
-#include <stdarg.h>
-#include <stdio.h>
+#include <math.h>
+
+#include "utils.h"
 
 
 typedef struct profiler_s
 {
     // One-Time Measurements
-    double *reading_time;
-    double *writing_time;
-    double *allocation_time;
-    double *compute_acceleration_time;
-    double *total_energy_time;
+    double reading_time;
+    double writing_time;
+    double allocation_time;
+    double compute_acceleration_time;
+    double total_energy_time;
 
     // Per-Step Measurements
     size_t n_steps;
@@ -35,10 +34,10 @@ typedef struct profiler_s
 } profiler_t ;
 
 
-static void profiler_allocate (profiler_t *profiler, const size_t n_steps) {};
-static void profiler_free (const profiler_t *profiler) {};
-static void print_single_statistics (const char *label, const double *times, const size_t n_steps) {};
-static void save_statistics (const char *path, const char *label, const double *times, const size_t n_steps) {};
-static int compare_doubles (const void *a, const void *b);
+void profiler_allocate (profiler_t *profiler, const size_t n_steps);
+void profiler_free (const profiler_t *profiler);
+static void print_single_statistics (const char *label, const double *times, const size_t n_steps);
+void print_statistics (const profiler_t *profiler);
+void save_statistics (const char *path, const char *label, const double *times, const size_t n_steps);
 
-
+#endif //NBODY_TIME_H

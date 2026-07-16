@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./headers/nbody_common.h"
+#include "./headers/common.h"
 #include "./headers/profiling.h"
 #include "./headers/utils.h"
 #include "./headers/particles.h"

@@ -22,7 +22,7 @@
 
 
 
-#include "./headers/nbody_common.h"
+#include "./headers/common.h"
 
 #include <errno.h>
 #include <stdarg.h>

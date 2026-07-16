@@ -2,8 +2,8 @@
  * Contains implementations for the serial time profiling and more
 */
 
-#include "./headers/nbody_profiling.h"
-#include "./headers/nbody_common.h"
+#include "./headers/profiling.h"
+#include "./headers/common.h"
 #include "./headers/utils.h"
 
 
@@ -18,23 +18,23 @@ static inline double get_time(void)
 {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (double) ts.tv_sec + (double) ts.tv_sec * 1.0e-9;
+    return (double) ts.tv_sec + (double) ts.tv_nsec * 1.0e-9;
 }
 
 
 /* ==================================================================================== */
 /* PROFILING */
 
-static void profiler_allocate (profiler_t *profiler, const size_t n_steps)
+void profiler_allocate (profiler_t *profiler, const size_t n_steps)
 {
     const size_t bytes = n_steps * sizeof(double);
 
     // One-Time Measurements
-    profiler->reading_time              = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
-    profiler->writing_time              = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
-    profiler->allocation_time           = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
-    profiler->compute_acceleration_time = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
-    profiler->total_energy_time         = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
+    profiler->reading_time              = 0.0;
+    profiler->writing_time              = 0.0;
+    profiler->allocation_time           = 0.0;
+    profiler->compute_acceleration_time = 0.0;
+    profiler->total_energy_time         = 0.0;
 
     // Per-Step Measurements
     profiler->n_steps                   = n_steps;
@@ -45,14 +45,8 @@ static void profiler_allocate (profiler_t *profiler, const size_t n_steps)
 }
 
 
-static void profiler_free (const profiler_t *profiler)
+void profiler_free (const profiler_t *profiler)
 {
-    free(profiler->reading_time);
-    free(profiler->writing_time);
-    free(profiler->allocation_time);
-    free(profiler->compute_acceleration_time);
-    free(profiler->total_energy_time);
-
     free(profiler->force_time);
     free(profiler->drift_time);
     free(profiler->kick_time);
@@ -100,16 +94,16 @@ static void print_single_statistics (const char *label, const double *times, con
 }
 
 
-static void print_statistics (const profiler_t *profiler)
+void print_statistics (const profiler_t *profiler)
 {
     printf ("\n--- Performance Profiling Report ---\n");
 
     // Report One-Time Measurements
-    printf ("%-15s : %.6e s\n", "File Read", *profiler->reading_time);
-    printf ("%-15s : %.6e s\n", "File Write", *profiler->writing_time);
-    printf ("%-15s : %.6e s\n", "Allocation", *profiler->allocation_time);
-    printf ("%-15s : %.6e s\n", "Compute Acceleration", *profiler->compute_acceleration_time);
-    printf ("%-15s : %.6e s\n", "Total Run", *profiler->total_energy_time);
+    printf ("%-15s : %.6e s\n", "File Read", profiler->reading_time);
+    printf ("%-15s : %.6e s\n", "File Write", profiler->writing_time);
+    printf ("%-15s : %.6e s\n", "Allocation", profiler->allocation_time);
+    printf ("%-15s : %.6e s\n", "Compute Acceleration", profiler->compute_acceleration_time);
+    printf ("%-15s : %.6e s\n", "Total Run", profiler->total_energy_time);
 
     printf ("\n--- Step Statistics (%zu steps) ---\n", profiler->n_steps);
 
@@ -121,7 +115,7 @@ static void print_statistics (const profiler_t *profiler)
 }
 
 
-static void save_statistics (const char *path, const char *label, const double *times, const size_t n_steps)
+void save_statistics (const char *path, const char *label, const double *times, const size_t n_steps)
 {
     FILE *fp = fopen(path, "a");
     if (!fp) die ("Cannot open file '%s' for writing statistics", path);

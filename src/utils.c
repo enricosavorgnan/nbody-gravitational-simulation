@@ -12,7 +12,7 @@
  */
 
 
-static void die (const char *format, ...)
+void die (const char *format, ...)
 {
   va_list  args;
 
@@ -29,7 +29,7 @@ static void die (const char *format, ...)
  * this function so that overflow and malformed input fail early, before
  * any allocation or simulation state is modified.
 */
-static size_t parse_size (const char *text,     // decimal text to parse
+size_t parse_size (const char *text,     // decimal text to parse
                           const char *name      // option name used in errors
 			  )
 {
@@ -52,7 +52,7 @@ static size_t parse_size (const char *text,     // decimal text to parse
  * rounding for the ranges used here; the explicit range check keeps float-mode
  * builds from silently accepting values that dtype cannot represent.
  */
-static dtype parse_dtype (const char *text,     // decimal text to parse
+dtype parse_dtype (const char *text,     // decimal text to parse
                           const char *name      // option name used in errors
 			  )
 {
@@ -74,7 +74,7 @@ static dtype parse_dtype (const char *text,     // decimal text to parse
  * The caller passes the loop index by address so that the separated-value
  * form consumes the following argv entry exactly once.
  */
-static const char *option_value (int        *i,       // current argv index, updated on success
+const char *option_value (int        *i,       // current argv index, updated on success
                                  int         argc,    // argc from main
                                  char      **argv,    // argv from main
                                  const char *key      // long option name, including "--"
@@ -102,7 +102,7 @@ static const char *option_value (int        *i,       // current argv index, upd
  * correctness, but it makes the serial skeleton a better starting point for
  * vectorisation and OpenMP first-touch experiments.
  */
-static void *checked_aligned_alloc (size_t  nbytes,      // requested useful bytes
+void *checked_aligned_alloc (size_t  nbytes,      // requested useful bytes
                                     size_t  alignment    // power-of-two alignment
 				    )
 {
@@ -129,7 +129,7 @@ static void *checked_aligned_alloc (size_t  nbytes,      // requested useful byt
  * partial binary records being mistaken for valid particles, which is otherwise
  * easy to do when replacing a line-oriented ASCII reader with fread.
  */
-static void checked_fread (void       *ptr,       // destination buffer
+void checked_fread (void       *ptr,       // destination buffer
                            const size_t size,      // item size in bytes
                            size_t      nmemb,     // number of items expected
                            FILE       *fp,        // open input stream
@@ -152,7 +152,7 @@ static void checked_fread (void       *ptr,       // destination buffer
  * this helper so that disk-full and permission errors are reported at the point
  * where the data loss happens, not later in a benchmark script.
  */
-static void checked_fwrite (const void *ptr,       // source buffer
+void checked_fwrite (const void *ptr,       // source buffer
                             size_t      size,      // item size in bytes
                             size_t      nmemb,     // number of items to write
                             FILE       *fp,        // open output stream
@@ -164,5 +164,13 @@ static void checked_fwrite (const void *ptr,       // source buffer
 
   if (written != nmemb)
     die ("write error while writing %s to '%s'", what, path);
+}
+
+
+int compare_doubles (const void *a, const void *b)
+{
+  const double da = *(const double *) a;
+  const double db = *(const double *) b;
+  return (da > db) - (da < db);
 }
 
