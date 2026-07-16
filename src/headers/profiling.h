@@ -4,10 +4,9 @@
  * The times are stored into a struct timespec.
  */
 
-#ifndef NBODY_TIME_H
-#define NBODY_TIME_H
+#ifndef PROFILING_H
+#define PROFILING_H
 
-#define _POSIX_C_SOURCE 199309L
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
@@ -20,24 +19,30 @@ typedef struct profiler_s
     // One-Time Measurements
     double reading_time;
     double writing_time;
-    double allocation_time;
     double compute_acceleration_time;
     double total_energy_time;
 
     // Per-Step Measurements
     size_t n_steps;
     double *force_time;
-    double *drift_time;
+    double *first_drift_time;
     double *kick_time;
+    double *second_drift_time;
     double *total_step_time;
 
 } profiler_t ;
 
 
+static inline double get_time(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (double) ts.tv_sec + (double) ts.tv_nsec * 1.0e-9;
+}
+
 void profiler_allocate (profiler_t *profiler, const size_t n_steps);
 void profiler_free (const profiler_t *profiler);
-static void print_single_statistics (const char *label, const double *times, const size_t n_steps);
 void print_statistics (const profiler_t *profiler);
-void save_statistics (const char *path, const char *label, const double *times, const size_t n_steps);
+void save_statistics (const char *path, const profiler_t *profiler);
 
-#endif //NBODY_TIME_H
+#endif // PROFILING_H

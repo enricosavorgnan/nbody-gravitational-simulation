@@ -43,12 +43,6 @@
 #include "./headers/particles.h"
 #include "./headers/integration.h"
 
-/* ======================================================================================== */
-/*
-   : ------------------------------------------------------ :
-   :  HELP & MAIN                                           :
-   : ------------------------------------------------------ :
-*/
 
 /*
  * Print a compact command-line reference.
@@ -76,8 +70,6 @@ static void print_usage (const char *program    // argv[0]
 }
 
 
-/* ======================================================================================== */
-
 
 int main (int argc, char **argv)
 {
@@ -96,14 +88,18 @@ int main (int argc, char **argv)
   dtype        potential0;
   dtype        energy0;
 
+  // Profiling Stuff
+  size_t       profiler_flag  = 0u;
+  const char  *profiler_path  = NULL;
+  double       t0             = 0.0;
+  profiler_t   profiler;
 
-  // ·························································
-  // allocate particles' container to an empty state
+
+  // Allocate particles' container to an empty state
   particles_init_empty (&particles);
 
-  
-  // ························································
-  // parse CLI
+
+  // Parse CLI
   for (int argi = 1; argi < argc; ++argi)
     {
       const char *value;
@@ -126,6 +122,10 @@ int main (int argc, char **argv)
         mass = parse_dtype (value, "--mass");
       else if ((value = option_value (&argi, argc, argv, "--energy-tol")) != NULL)
         energy_tol = parse_dtype (value, "--energy-tol");
+      else if ((value = option_value (&argi, argc, argv, "--profiler")) != NULL)
+        profiler_flag = parse_size (value, "--profiler");
+      else if ((value = option_value (&argi, argc, argv, "--profiler-path")) != NULL)
+        profiler_path = value;
       else if (strcmp (argv[argi], "--quiet") == 0)
         quiet = true;
       else if (strcmp (argv[argi], "--help") == 0)
@@ -145,28 +145,31 @@ int main (int argc, char **argv)
       print_usage (argv[0]);
       die ("missing required --input FILE");
     }
-  if (!(dt > (dtype) 0.0))
-    die ("--dt must be positive");
-  if (!(eps >= (dtype) 0.0))
-    die ("--eps must be non-negative");
-  if (!(g > (dtype) 0.0))
-    die ("--G must be positive");
-  if (!(mass > (dtype) 0.0))
-    die ("--mass must be positive");
-  if (energy_every == 0u)
-    die ("--energy-every must be positive");
-  if (!(energy_tol > (dtype) 0.0))
-    die ("--energy-tol must be positive");
+  if (!(dt > (dtype) 0.0))          die ("--dt must be positive");
+  if (!(eps >= (dtype) 0.0))        die ("--eps must be non-negative");
+  if (!(g > (dtype) 0.0))           die ("--G must be positive");
+  if (!(mass > (dtype) 0.0))        die ("--mass must be positive");
+  if (energy_every == 0u)           die ("--energy-every must be positive");
+  if (!(energy_tol > (dtype) 0.0))  die ("--energy-tol must be positive");
 
 
-  // ························································
-  // read particles from input file
+  // Instantiate profiler if requested
+  if (profiler_flag) profiler_allocate (&profiler, nsteps);
+
+
+  // Read particles from input file
+  if (profiler_flag) { t0 = get_time();}
   particles_read_binary (input_path, mass, &particles);
+  if (profiler_flag) { profiler.reading_time = get_time() - t0;}
 
-  // ························································
-  // get energy baseline
+
+  // Get energy baseline
+  if (profiler_flag) { t0 = get_time();}
   energy0 = total_energy (&particles, g, eps, &kinetic0, &potential0);
+  if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
 
+
+  // Print header
   if (!quiet)
     {
       printf ("# serial direct N-body DKD baseline\n");
@@ -182,17 +185,15 @@ int main (int argc, char **argv)
     }
 
 
-  // ························································
-  // integration
-
+  // Integration
   double max_rel_drift = 0.0;
-  
   for (size_t step = 1u; step <= nsteps; ++step)
     {
-      leapfrog_dkd_step (&particles, g, eps, dt);
+      if (profiler_flag) { t0 = get_time();}
+      leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1);
+      if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
-      // once in a while, get diagnostics
-      //
+      // Get diagnostics, once in a while
       if (((step % energy_every) == 0u) || (step == nsteps))
         {
           dtype         kinetic;
@@ -210,15 +211,15 @@ int main (int argc, char **argv)
         }
     }
 
-  // ························································
-  // write final file
-
+  // Write final file
   if (output_path != NULL)
+  {
+    if (profiler_flag) { t0 = get_time();}
     particles_write_binary (output_path, &particles);
+    if (profiler_flag) { profiler.writing_time = get_time() - t0;}
+  }
 
-  // ························································
-  // say good-bye
-
+  // Say good-bye
   printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n",
           particles.n, nsteps, DTYPE_NAME, max_rel_drift, (double) energy_tol,
           (max_rel_drift <= (double) energy_tol) ? "OK" : "WARNING");
@@ -229,12 +230,14 @@ int main (int argc, char **argv)
              "try smaller --dt, larger --eps, or better initial conditions\n",
              max_rel_drift, (double) energy_tol);
 
-  
-  // ························································
-  // don't leave garbage behind you
 
+  // Print profiler statistics if requested
+  if (profiler_flag) print_statistics (&profiler);
+  if (profiler_flag && profiler_path != NULL) save_statistics(profiler_path, &profiler);
+
+  
+  // Don't leave garbage behind you
   particles_free (&particles);
 
-  
   return EXIT_SUCCESS;
 }

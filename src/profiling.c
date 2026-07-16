@@ -6,23 +6,6 @@
 #include "./headers/common.h"
 #include "./headers/utils.h"
 
-
-/* ==================================================================================== */
-/* UTILS */
-
-/*
- * Get time for serial code.
- * Uses CLOCK_MONOTONIC to ensure precision independently of system clock adjustments.
-*/
-static inline double get_time(void)
-{
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (double) ts.tv_sec + (double) ts.tv_nsec * 1.0e-9;
-}
-
-
-/* ==================================================================================== */
 /* PROFILING */
 
 void profiler_allocate (profiler_t *profiler, const size_t n_steps)
@@ -32,15 +15,15 @@ void profiler_allocate (profiler_t *profiler, const size_t n_steps)
     // One-Time Measurements
     profiler->reading_time              = 0.0;
     profiler->writing_time              = 0.0;
-    profiler->allocation_time           = 0.0;
     profiler->compute_acceleration_time = 0.0;
     profiler->total_energy_time         = 0.0;
 
     // Per-Step Measurements
     profiler->n_steps                   = n_steps;
     profiler->force_time                = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
-    profiler->drift_time                = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
+    profiler->first_drift_time          = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
     profiler->kick_time                 = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
+    profiler->second_drift_time         = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
     profiler->total_step_time           = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
 }
 
@@ -48,14 +31,14 @@ void profiler_allocate (profiler_t *profiler, const size_t n_steps)
 void profiler_free (const profiler_t *profiler)
 {
     free(profiler->force_time);
-    free(profiler->drift_time);
+    free(profiler->first_drift_time);
     free(profiler->kick_time);
+    free(profiler->second_drift_time);
     free(profiler->total_step_time);
 }
 
 
 
-/* ==================================================================================== */
 /* SAVING */
 
 static void print_single_statistics (const char *label, const double *times, const size_t n_steps)
@@ -101,7 +84,6 @@ void print_statistics (const profiler_t *profiler)
     // Report One-Time Measurements
     printf ("%-15s : %.6e s\n", "File Read", profiler->reading_time);
     printf ("%-15s : %.6e s\n", "File Write", profiler->writing_time);
-    printf ("%-15s : %.6e s\n", "Allocation", profiler->allocation_time);
     printf ("%-15s : %.6e s\n", "Compute Acceleration", profiler->compute_acceleration_time);
     printf ("%-15s : %.6e s\n", "Total Run", profiler->total_energy_time);
 
@@ -109,13 +91,14 @@ void print_statistics (const profiler_t *profiler)
 
     // Report Per-Step Measurements
     print_single_statistics ("Total Step", profiler->total_step_time, profiler->n_steps);
-    print_single_statistics ("Drift", profiler->drift_time, profiler->n_steps);
+    print_single_statistics ("First Drift", profiler->first_drift_time, profiler->n_steps);
     print_single_statistics ("Compute Force", profiler->force_time, profiler->n_steps);
     print_single_statistics ("Kick", profiler->kick_time, profiler->n_steps);
+    print_single_statistics ("Second Drift", profiler->second_drift_time, profiler->n_steps);
 }
 
 
-void save_statistics (const char *path, const char *label, const double *times, const size_t n_steps)
+void save_single_statistics (const char *path, const char *label, const double *times, const size_t n_steps)
 {
     FILE *fp = fopen(path, "a");
     if (!fp) die ("Cannot open file '%s' for writing statistics", path);
@@ -128,4 +111,19 @@ void save_statistics (const char *path, const char *label, const double *times, 
     fprintf(fp, "\n");
 
     fclose(fp);
+}
+
+
+void save_statistics (const char *path, const profiler_t *profiler)
+{
+    save_single_statistics(path, "File Read", &profiler->reading_time, 1);
+    save_single_statistics(path, "File Write", &profiler->writing_time, 1);
+    save_single_statistics(path, "Compute Acceleration", &profiler->compute_acceleration_time, 1);
+    save_single_statistics(path, "Total Run", &profiler->total_energy_time, 1);
+
+    save_single_statistics(path, "Total Step", profiler->total_step_time, profiler->n_steps);
+    save_single_statistics(path, "First Drift", profiler->first_drift_time, profiler->n_steps);
+    save_single_statistics(path, "Compute Force", profiler->force_time, profiler->n_steps);
+    save_single_statistics(path, "Kick", profiler->kick_time, profiler->n_steps);
+    save_single_statistics(path, "Second Drift", profiler->second_drift_time, profiler->n_steps);
 }

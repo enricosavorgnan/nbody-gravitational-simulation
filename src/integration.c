@@ -2,46 +2,36 @@
 
 #include "./headers/integration.h"
 
-/* ======================================================================================== */
-/*
-   : ------------------------------------------------------ :
-   :  INTEGRATIION                                          :
-   : ------------------------------------------------------ :
-*/
-
-
 
 /*
  * Naive direct O(N^2) softened gravitational acceleration.
  *
  * This is the most interesting kernel.
  * A very transparent form: one i particle, one j loop, no Newton-third-law
- * reuse, one accumulator per component, and a scalar sqrt from libm.  That is
- * correct, but it leaves the optimisation space visible:
+ * reuse, one accumulator per component, and a scalar sqrt from 'libm'.  That is
+ * correct, but it leaves the optimization space visible:
  *
  *   - which data qualifiers must be introduced for the input/output pointers?
  *   - exploit or deliberately avoid Newton's third law;
  *   - split the accumulators to shorten dependency chains;
  *   - use rsqrt plus Newton refinement, then quantify energy error;
- *   - block or transpose data to improve cache/TLB behaviour;
+ *   - block or transpose data to improve cache/TLB behavior;
  *   - add OpenMP without atomics in the inner loop;
- *   - later replace the all-pairs loop with an MPI ring shift.
+ *   - later replace the all-pairs' loop with an MPI ring shift.
  *
- * ... reason about the needed qualifiers to unleash compiler's optimization
+ * ... reason about the necessary qualifiers to unleash compiler's optimization
  *
  */
-
-
-void compute_accelerations_naive (size_t  n,          // number of particles
-                                         dtype   g,          // gravitational constant
-                                         dtype   mass,       // mass of every source particle
-                                         dtype   eps,        // Plummer softening length
-                                         dtype * x,          // x positions, read-only
-                                         dtype * y,          // y positions, read-only
-                                         dtype * z,          // z positions, read-only
-                                         dtype * ax,         // x acceleration, overwritten
-                                         dtype * ay,         // y acceleration, overwritten
-                                         dtype * az          // z acceleration, overwritten
+void compute_accelerations_naive (const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * x,          // x positions, read-only
+                                  const dtype * y,          // y positions, read-only
+                                  const dtype * z,          // z positions, read-only
+                                  dtype * ax,         // x acceleration, overwritten
+                                  dtype * ay,         // y acceleration, overwritten
+                                  dtype * az          // z acceleration, overwritten
 					 )
 {
   const dtype  eps2 = eps * eps;
@@ -142,18 +132,33 @@ void kick (particles_t *p,       // particle velocities are modified in place
  *
  * This keeps positions and velocities synchronized at integer time levels
  */
-void leapfrog_dkd_step (particles_t *p,        // complete particle state, modified in place
-                               dtype        g,        // gravitational constant
-                               dtype        eps,      // softening length
-                               dtype        dt        // full time-step
+void leapfrog_dkd_step (particles_t   *p,             // complete particle state, modified in place
+                        const dtype    g,             // gravitational constant
+                        const dtype  eps,             // softening length
+                        const dtype   dt,             // full time-step
+                        profiler_t   *profiler,       // optional profiler for per-step timing
+                        const size_t profiler_flag,   // whether to use the profiler
+                        const size_t   step           // current step index for profiler
+
 			       )
 {
+  double t0 = 0.0;
+
+  if (profiler_flag) t0 = get_time();
   drift (p, (dtype) 0.5 * dt);
+  if (profiler_flag) profiler->first_drift_time[step] = get_time() - t0;
+  if (profiler_flag) t0 = get_time();
   compute_accelerations_naive (p->n, g, p->mass, eps,
                                p->x, p->y, p->z,
                                p->ax, p->ay, p->az);
+  if (profiler_flag) profiler->force_time[step] = get_time() - t0;
+  if (profiler_flag) t0 = get_time();
   kick (p, dt);
+  if (profiler_flag) profiler->kick_time[step] = get_time() - t0;
+  if (profiler_flag) t0 = get_time();
   drift (p, (dtype) 0.5 * dt);
+  if (profiler_flag) profiler->second_drift_time[step] = get_time() - t0;
+
 }
 
 /*
