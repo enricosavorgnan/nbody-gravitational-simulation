@@ -20,7 +20,7 @@ endif
 
 all: $(PROGRAMS)
 
-nbody_direct_serial: nbody_direct.c $(HEADERS)
+nbody_direct_serial: main.c $(HEADERS)
 	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -o $@ $< $(LDLIBS)
 
 generate_ic: generate_initial_conditions.c $(HEADERS)
