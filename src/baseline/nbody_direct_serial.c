@@ -39,8 +39,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ========================================================================================
-
+/* ======================================================================================== */
+/*
    : ------------------------------------------------------ :
    :  DATA TYPES &                                          :
    :  DATA STRUCTURES                                       :
@@ -66,8 +66,8 @@ typedef struct particles_s
 
 
 
-/* ========================================================================================
-   
+/* ======================================================================================== */
+/*
    : ------------------------------------------------------ :
    :  UTILITIES                                             :
    : ------------------------------------------------------ :
@@ -229,8 +229,8 @@ static void checked_fwrite (const void *ptr,       // source buffer
 
 
 
-/* ======================================================================================== 
-   
+/* ======================================================================================== */
+/*
    : ------------------------------------------------------ :
    :  PARTICLES ALLOCATION                                  :
    : I/O                                                    :
@@ -414,7 +414,6 @@ static void particles_write_binary (const char        *path,       // output fil
   FILE          *fp;
   const size_t   n   = p->n;
   uint64_t       n64 = (uint64_t) n;
-  size_t         i;
 
   if ((size_t) n64 != n)
     die ("particle count cannot be represented in the binary header");
@@ -427,7 +426,7 @@ static void particles_write_binary (const char        *path,       // output fil
                   NBODY_BINARY_MAGIC_SIZE, fp, path, "binary magic");
   checked_fwrite (&n64, sizeof n64, 1u, fp, path, "particle count");
 
-  for (i = 0u; i < n; ++i)
+  for (size_t i = 0u; i < n; ++i)
     {
       float  record[NBODY_BINARY_COMPONENTS];
 
@@ -448,12 +447,12 @@ static void particles_write_binary (const char        *path,       // output fil
 
 
 
-/* ======================================================================================== 
-
+/* ======================================================================================== */
+/*
    : ------------------------------------------------------ :
    :  INTEGRATIION                                          :
    : ------------------------------------------------------ :
- */ 
+*/
 
 
 
@@ -680,6 +679,7 @@ static dtype total_energy (particles_t *p,           // complete particle state,
 
   return *kinetic + *potential;
 }
+
 
 
 /* ======================================================================================== */
