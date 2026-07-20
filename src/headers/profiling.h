@@ -19,7 +19,6 @@ typedef struct profiler_s
     // One-Time Measurements
     double reading_time;
     double writing_time;
-    double compute_acceleration_time;
     double total_energy_time;
 
     // Per-Step Measurements
