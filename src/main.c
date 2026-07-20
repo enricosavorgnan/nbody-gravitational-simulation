@@ -70,6 +70,22 @@ static void print_usage (const char *program    // argv[0]
 }
 
 
+static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
+{
+  if (strcmp(kernel_choice, "n") == 0)
+    *kernel = compute_accelerations_naive;
+  else if (strcmp(kernel_choice, "t") == 0)
+    *kernel = compute_accelerations_third_law;
+  else if (strcmp(kernel_choice, "rt") == 0)
+    *kernel = compute_accelerations_rsqrt_third_law;
+  else if (strcmp(kernel_choice, "brt") == 0)
+    *kernel = compute_accelerations_blocks_rsqrt_third_law;
+  else if (strcmp(kernel_choice, "omp") == 0)
+    *kernel = compute_accelerations_omp;
+  else
+    die ("unknown kernel choice: %s", kernel_choice);
+}
+
 
 int main (int argc, char **argv)
 {
@@ -93,6 +109,9 @@ int main (int argc, char **argv)
   const char  *profiler_path  = NULL;
   double       t0             = 0.0;
   profiler_t   profiler;
+
+  // Kernel Choice
+  kernel_t kernel = compute_accelerations_naive;
 
 
   // Allocate particles' container to an empty state
@@ -126,6 +145,8 @@ int main (int argc, char **argv)
         profiler_flag = parse_size (value, "--profiler");
       else if ((value = option_value (&argi, argc, argv, "--profiler-path")) != NULL)
         profiler_path = value;
+      else if ((value = option_value (&argi, argc, argv, "--kernel")) != NULL)
+        retrieve_kernel(value, &kernel);
       else if (strcmp (argv[argi], "--quiet") == 0)
         quiet = true;
       else if (strcmp (argv[argi], "--help") == 0)
@@ -190,7 +211,7 @@ int main (int argc, char **argv)
   for (size_t step = 1u; step <= nsteps; ++step)
     {
       if (profiler_flag) { t0 = get_time();}
-      leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1);
+      leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1, kernel);
       if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
       // Get diagnostics, once in a while

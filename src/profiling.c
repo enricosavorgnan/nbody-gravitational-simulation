@@ -15,7 +15,6 @@ void profiler_allocate (profiler_t *profiler, const size_t n_steps)
     // One-Time Measurements
     profiler->reading_time              = 0.0;
     profiler->writing_time              = 0.0;
-    profiler->compute_acceleration_time = 0.0;
     profiler->total_energy_time         = 0.0;
 
     // Per-Step Measurements
@@ -84,7 +83,6 @@ void print_statistics (const profiler_t *profiler)
     // Report One-Time Measurements
     printf ("%-15s : %.6e s\n", "File Read", profiler->reading_time);
     printf ("%-15s : %.6e s\n", "File Write", profiler->writing_time);
-    printf ("%-15s : %.6e s\n", "Compute Acceleration", profiler->compute_acceleration_time);
     printf ("%-15s : %.6e s\n", "Total Run", profiler->total_energy_time);
 
     printf ("\n--- Step Statistics (%zu steps) ---\n", profiler->n_steps);
@@ -118,7 +116,6 @@ void save_statistics (const char *path, const profiler_t *profiler)
 {
     save_single_statistics(path, "File Read", &profiler->reading_time, 1);
     save_single_statistics(path, "File Write", &profiler->writing_time, 1);
-    save_single_statistics(path, "Compute Acceleration", &profiler->compute_acceleration_time, 1);
     save_single_statistics(path, "Total Run", &profiler->total_energy_time, 1);
 
     save_single_statistics(path, "Total Step", profiler->total_step_time, profiler->n_steps);

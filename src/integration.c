@@ -2,6 +2,7 @@
 
 #include "./headers/integration.h"
 
+/* ACCELERATION */
 
 /*
  * Naive direct O(N^2) softened gravitational acceleration.
@@ -26,12 +27,12 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
                                   const dtype   g,          // gravitational constant
                                   const dtype   mass,       // mass of every source particle
                                   const dtype   eps,        // Plummer softening length
-                                  const dtype * x,          // x positions, read-only
-                                  const dtype * y,          // y positions, read-only
-                                  const dtype * z,          // z positions, read-only
-                                  dtype * ax,         // x acceleration, overwritten
-                                  dtype * ay,         // y acceleration, overwritten
-                                  dtype * az          // z acceleration, overwritten
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
 					 )
 {
   const dtype  eps2 = eps * eps;
@@ -70,6 +71,74 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
     }
 }
 
+
+
+void compute_accelerations_third_law(const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+void compute_accelerations_rsqrt_third_law(const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+void compute_accelerations_omp(const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+/* DKD */
+
 /*
  * Drift all particles by a time interval using the current velocities.
  * The DKD leapfrog workflow calls it twice per step: a half-drift before the
@@ -81,13 +150,13 @@ void drift (particles_t *p,       // particle positions are modified in place
                    dtype        dt       // drift interval, often 0.5 * full step
 		   )
 {
-  size_t  n  = p->n;
+  const size_t  n  = p->n;
   dtype  *x  = p->x;
   dtype  *y  = p->y;
   dtype  *z  = p->z;
-  dtype  *vx = p->vx;
-  dtype  *vy = p->vy;
-  dtype  *vz = p->vz;
+  const dtype  *vx = p->vx;
+  const dtype  *vy = p->vy;
+  const dtype  *vz = p->vz;
   size_t  i;
 
   for (i = 0u; i < n; ++i)
@@ -138,23 +207,31 @@ void leapfrog_dkd_step (particles_t   *p,             // complete particle state
                         const dtype   dt,             // full time-step
                         profiler_t   *profiler,       // optional profiler for per-step timing
                         const size_t profiler_flag,   // whether to use the profiler
-                        const size_t   step           // current step index for profiler
+                        const size_t   step,          // current step index for profiler
+                        const kernel_t  compute_accelerations                                   // kernel function to compute accelerations
 
 			       )
 {
   double t0 = 0.0;
 
+  // Drift
   if (profiler_flag) t0 = get_time();
   drift (p, (dtype) 0.5 * dt);
   if (profiler_flag) profiler->first_drift_time[step] = get_time() - t0;
+
+  // Accelerations
   if (profiler_flag) t0 = get_time();
-  compute_accelerations_naive (p->n, g, p->mass, eps,
+  compute_accelerations (p->n, g, p->mass, eps,
                                p->x, p->y, p->z,
                                p->ax, p->ay, p->az);
   if (profiler_flag) profiler->force_time[step] = get_time() - t0;
+
+  // Kick
   if (profiler_flag) t0 = get_time();
   kick (p, dt);
   if (profiler_flag) profiler->kick_time[step] = get_time() - t0;
+
+  // Drift
   if (profiler_flag) t0 = get_time();
   drift (p, (dtype) 0.5 * dt);
   if (profiler_flag) profiler->second_drift_time[step] = get_time() - t0;

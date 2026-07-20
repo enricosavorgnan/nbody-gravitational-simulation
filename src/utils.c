@@ -4,12 +4,6 @@
 
 #include "./headers/utils.h"
 
-/* ======================================================================================== */
-/*
-   : ------------------------------------------------------ :
-   :  UTILITIES                                             :
-   : ------------------------------------------------------ :
- */
 
 
 void die (const char *format, ...)
@@ -173,4 +167,3 @@ int compare_doubles (const void *a, const void *b)
   const double db = *(const double *) b;
   return (da > db) - (da < db);
 }
-
