@@ -134,10 +134,10 @@ void compute_accelerations_third_law(const size_t  n,          // number of part
 
 
 
-void compute_accelerations_rsqrt(const size_t  n,          // number of particles)
-                                  const dtype   g,          // gravitational constant
-                                  const dtype   mass,       // mass of every source particle
-                                  const dtype   eps,        // Plummer softening length
+void compute_accelerations_rsqrt(const size_t  n,                    // number of particles)
+                                  const dtype   g,                   // gravitational constant
+                                  const dtype   mass,                // mass of every source particle
+                                  const dtype   eps,                 // Plummer softening length
                                   const dtype * restrict x,          // x positions, read-only
                                   const dtype * restrict y,          // y positions, read-only
                                   const dtype * restrict z,          // z positions, read-only
@@ -183,19 +183,18 @@ void compute_accelerations_rsqrt(const size_t  n,          // number of particle
 }
 
 
-void compute_accelerations_block(const size_t  n,          // number of particles
-                                  const dtype   g,          // gravitational constant
-                                  const dtype   mass,       // mass of every source particle
-                                  const dtype   eps,        // Plummer softening length
+void compute_accelerations_block(const size_t  n,                    // number of particles
+                                  const dtype  g,                    // gravitational constant
+                                  const dtype  mass,                 // mass of every source particle
+                                  const dtype  eps,                  // Plummer softening length
                                   const dtype * restrict x,          // x positions, read-only
                                   const dtype * restrict y,          // y positions, read-only
                                   const dtype * restrict z,          // z positions, read-only
                                   dtype * restrict ax,               // x acceleration, overwritten
                                   dtype * restrict ay,               // y acceleration, overwritten
                                   dtype * restrict az,               // z acceleration, overwritten
-                                  int BLOCK_SIZE = 64                // default block size for blocked acceleration computation
-
-           )
+                                  int          BLOCK_SIZE = 64       // default block size
+                                )
 {
   blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
 
@@ -205,20 +204,20 @@ void compute_accelerations_block(const size_t  n,          // number of particle
     int i_end     = i_start + BLOCK_SIZE;
     i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
 
-    for (int i = i_start; i < i_end; i++)
+    for (int b_j = 0; b_j < blocks; b_j++)
     {
-      const dtype  xi  = x[i];
-      const dtype  yi  = y[i];
-      const dtype  zi  = z[i];
-      dtype        axi = 0.0;
-      dtype        ayi = 0.0;
-      dtype        azi = 0.0;
+      int j_start     = b_j * BLOCK_SIZE;
+      int j_end       = j_start + BLOCK_SIZE;
+      j_end           = j_end <= n ? j_end : n;
 
-      for (int b_j = 0; b_j < blocks; b_j++)
+      for (int i = i_start; i < i_end; i++)
       {
-        int j_start     = b_j * BLOCK_SIZE;
-        int j_end       = j_start + BLOCK_SIZE;
-        j_end           = j_end <= n ? j_end : n;
+        const dtype  xi  = x[i];
+        const dtype  yi  = y[i];
+        const dtype  zi  = z[i];
+        dtype        axi = 0.0;
+        dtype        ayi = 0.0;
+        dtype        azi = 0.0;
 
         for (int j = j_start; j < j_end; j++)
         {
@@ -242,8 +241,6 @@ void compute_accelerations_block(const size_t  n,          // number of particle
         az[i] = azi;
       }
     }
-
-
   }
 }
 
