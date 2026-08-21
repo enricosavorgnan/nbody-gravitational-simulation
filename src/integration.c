@@ -4,25 +4,24 @@
 
 /* ACCELERATION */
 
-/*
- * Naive direct O(N^2) softened gravitational acceleration.
- *
- * This is the most interesting kernel.
- * A very transparent form: one i particle, one j loop, no Newton-third-law
- * reuse, one accumulator per component, and a scalar sqrt from 'libm'.  That is
- * correct, but it leaves the optimization space visible:
- *
- *   - which data qualifiers must be introduced for the input/output pointers?
- *   - exploit or deliberately avoid Newton's third law;
- *   - split the accumulators to shorten dependency chains;
- *   - use rsqrt plus Newton refinement, then quantify energy error;
- *   - block or transpose data to improve cache/TLB behavior;
- *   - add OpenMP without atomics in the inner loop;
- *   - later replace the all-pairs' loop with an MPI ring shift.
- *
- * ... reason about the necessary qualifiers to unleash compiler's optimization
- *
- */
+//
+//  Naive direct O(N^2) softened gravitational acceleration.
+//
+// This is the most interesting kernel.
+// A very transparent form: one i particle, one j loop, no Newton-third-law
+// reuse, one accumulator per component, and a scalar sqrt from 'libm'.  That is
+// correct, but it leaves the optimization space visible:
+//
+// [ ] - which data qualifiers must be introduced for the input/output pointers?
+// [ ] - exploit or deliberately avoid Newton's third law;
+// [ ] - split the accumulators to shorten dependency chains;
+// [ ] - use rsqrt plus Newton refinement, then quantify energy error;
+// [ ] - block or transpose data to improve cache/TLB behavior;
+// [ ] - add OpenMP without atomics in the inner loop;
+// [ ] - later replace the all-pairs' loop with an MPI ring shift.
+//
+// ... reason about the necessary qualifiers to unleash compiler's optimization
+//
 void compute_accelerations_naive (const size_t  n,          // number of particles
                                   const dtype   g,          // gravitational constant
                                   const dtype   mass,       // mass of every source particle
@@ -44,9 +43,9 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
       const dtype  xi  = x[i];
       const dtype  yi  = y[i];
       const dtype  zi  = z[i];
-      dtype        axi = (dtype) 0.0;
-      dtype        ayi = (dtype) 0.0;
-      dtype        azi = (dtype) 0.0;
+      dtype        axi = 0.0;
+      dtype        ayi = 0.0;
+      dtype        azi = 0.0;
 
       for (j = 0u; j < n; ++j)
         {
@@ -56,7 +55,7 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
               const dtype  dy   = y[j] - yi;
               const dtype  dz   = z[j] - zi;
               const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-              const dtype  invr = (dtype) 1.0 / dtype_sqrt (r2);
+              const dtype  invr = 1.0 / dtype_sqrt (r2);
               const dtype  s    = g * mass * invr * invr * invr;
 
               axi += dx * s;
@@ -74,6 +73,39 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
 
 
 void compute_accelerations_third_law(const size_t  n,          // number of particles
+                                  const dtype   g,             // gravitational constant
+                                  const dtype   mass,          // mass of every source particle
+                                  const dtype   eps,           // Plummer softening length
+                                  const dtype * restrict x,    // x positions, read-only
+                                  const dtype * restrict y,    // y positions, read-only
+                                  const dtype * restrict z,    // z positions, read-only
+                                  dtype * restrict ax,         // x acceleration, overwritten
+                                  dtype * restrict ay,         // y acceleration, overwritten
+                                  dtype * restrict az          // z acceleration, overwritten
+           )
+{
+
+}
+
+
+
+void compute_accelerations_rsqrt(const size_t  n,          // number of particles)
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+void compute_accelerations_block(const size_t  n,          // number of particles)
                                   const dtype   g,          // gravitational constant
                                   const dtype   mass,       // mass of every source particle
                                   const dtype   eps,        // Plummer softening length
@@ -90,6 +122,38 @@ void compute_accelerations_third_law(const size_t  n,          // number of part
 
 
 void compute_accelerations_rsqrt_third_law(const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+void compute_accelerations_blocks_rsqrt(const size_t  n,          // number of particles)
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+
+}
+
+
+void compute_accelerations_blocks_third_law(const size_t  n,          // number of particles
                                   const dtype   g,          // gravitational constant
                                   const dtype   mass,       // mass of every source particle
                                   const dtype   eps,        // Plummer softening length
@@ -208,7 +272,7 @@ void leapfrog_dkd_step (particles_t   *p,             // complete particle state
                         profiler_t   *profiler,       // optional profiler for per-step timing
                         const size_t profiler_flag,   // whether to use the profiler
                         const size_t   step,          // current step index for profiler
-                        const kernel_t  compute_accelerations                                   // kernel function to compute accelerations
+                        const kernel_t  compute_accelerations    // kernel function to compute accelerations
 
 			       )
 {
