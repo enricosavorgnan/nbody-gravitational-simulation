@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#inclue <math.h>
 
 #include "common.h"
 #include "utils.h"

@@ -12,11 +12,11 @@
 // reuse, one accumulator per component, and a scalar sqrt from 'libm'.  That is
 // correct, but it leaves the optimization space visible:
 //
-// [ ] - which data qualifiers must be introduced for the input/output pointers?
-// [ ] - exploit or deliberately avoid Newton's third law;
+// [x] - which data qualifiers must be introduced for the input/output pointers?
+// [x] - exploit or deliberately avoid Newton's third law;
 // [ ] - split the accumulators to shorten dependency chains;
-// [ ] - use rsqrt plus Newton refinement, then quantify energy error;
-// [ ] - block or transpose data to improve cache/TLB behavior;
+// [x] - use rsqrt plus Newton refinement, then quantify energy error;
+// [x] - block or transpose data to improve cache/TLB behavior;
 // [ ] - add OpenMP without atomics in the inner loop;
 // [ ] - later replace the all-pairs' loop with an MPI ring shift.
 //
@@ -196,7 +196,7 @@ void compute_accelerations_block(const size_t  n,                    // number o
                                   int          BLOCK_SIZE = 64       // default block size
                                 )
 {
-  blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  int blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
 
   for (int b_i = 0; b_i < blocks; b_i++)
   {
@@ -318,7 +318,7 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,          // number of p
                                   dtype * restrict az                // z acceleration, overwritten
            )
 {
-  blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  int blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
 
   for (int b_i = 0; b_i < blocks; b_i++)
   {
@@ -379,7 +379,7 @@ void compute_accelerations_blocks_third_law(const size_t  n,          // number 
                                   dtype * restrict az                // z acceleration, overwritten
            )
 {
-  blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  int blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
 
   for (int b_i = 0; b_i < blocks; b_i++)
   {
@@ -450,7 +450,7 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,          // n
                                   dtype * restrict az                // z acceleration, overwritten
            )
 {
-  blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  int blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
 
   for (int b_i = 0; b_i < blocks; b_i++)
   {
