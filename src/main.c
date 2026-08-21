@@ -86,6 +86,21 @@ static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
     die ("unknown kernel choice: %s", kernel_choice);
 }
 
+static char retrieve_kernel_name(const kernel_t kernel)
+{
+  if (kernel == compute_accelerations_naive)
+    return 'n';
+  else if (kernel == compute_accelerations_third_law)
+    return 't';
+  else if (kernel == compute_accelerations_rsqrt_third_law)
+    return 'r';
+  else if (kernel == compute_accelerations_blocks_rsqrt_third_law)
+    return 'b';
+  else if (kernel == compute_accelerations_omp)
+    return 'o';
+  else
+    die ("unknown kernel function pointer");
+}
 
 int main (int argc, char **argv)
 {
@@ -112,11 +127,6 @@ int main (int argc, char **argv)
 
   // Kernel Choice
   kernel_t kernel = compute_accelerations_naive;
-
-
-  // Allocate particles' container to an empty state
-  particles_init_empty (&particles);
-
 
   // Parse CLI
   for (int argi = 1; argi < argc; ++argi)
@@ -173,34 +183,35 @@ int main (int argc, char **argv)
   if (energy_every == 0u)           die ("--energy-every must be positive");
   if (!(energy_tol > (dtype) 0.0))  die ("--energy-tol must be positive");
 
-
   // Instantiate profiler if requested
   if (profiler_flag) profiler_allocate (&profiler, nsteps);
 
+  // Allocate particles' container to an empty state
+  particles_init_empty (&particles);
 
   // Read particles from input file
   if (profiler_flag) { t0 = get_time();}
   particles_read_binary (input_path, mass, &particles);
   if (profiler_flag) { profiler.reading_time = get_time() - t0;}
 
-
   // Get energy baseline
   if (profiler_flag) { t0 = get_time();}
   energy0 = total_energy (&particles, g, eps, &kinetic0, &potential0);
   if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
 
-
   // Print header
   if (!quiet)
     {
-      printf ("# serial direct N-body DKD baseline\n");
+      printf ("# Direct N-body DKD\n");
       printf ("# arithmetic_dtype=%s binary_storage=float32 format=%s\n",
               DTYPE_NAME, NBODY_BINARY_VERSION_TEXT);
       printf ("# N=%zu nsteps=%zu dt=%.17g eps=%.17g G=%.17g mass=%.17g\n",
               particles.n, nsteps, (double) dt, (double) eps,
               (double) g, (double) mass);
-      printf ("# step time kinetic potential total rel_energy_drift\n");
-      printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
+      char kernel_name = retrieve_kernel_name(kernel);
+      printf ("Acceleration Kernel: %s\n", &kernel_name);
+      printf ("# Step \t Time \t\t\t Kinetic \t\t\t Potential \t\t\t Total \t\t\t Relative Energy Drift\n");
+      printf ("%zu \t %.17g \t %.17g \t %.17g \t %.17g \t %.17g\n",
               (size_t) 0u, 0.0, (double) kinetic0, (double) potential0,
               (double) energy0, 0.0);
     }
