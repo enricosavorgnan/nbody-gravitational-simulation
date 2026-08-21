@@ -211,7 +211,52 @@ void compute_accelerations_rsqrt_third_law(const size_t  n,          // number o
                                   dtype * restrict az                // z acceleration, overwritten
            )
 {
+  const dtype  eps2 = eps * eps;
+  size_t       i;
+  size_t       j;
 
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
+
+  for (i = 0u; i < n; ++i)
+  {
+    const dtype  xi  = x[i];
+    const dtype  yi  = y[i];
+    const dtype  zi  = z[i];
+    dtype        axi = (dtype) 0.0;
+    dtype        ayi = (dtype) 0.0;
+    dtype        azi = (dtype) 0.0;
+
+    for (j = i + 1; j < n; ++j)
+    {
+      // Compute distances and forces
+      const dtype  dx   = x[j] - xi;
+      const dtype  dy   = y[j] - yi;
+      const dtype  dz   = z[j] - zi;
+      const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+      const dtype  invr = rsqrt(r2);
+      const dtype  s    = g * mass * invr * invr * invr;
+
+      // Accumulate to registers for Is
+      axi += dx * s;
+      ayi += dy * s;
+      azi += dz * s;
+
+      // Accumulate to memory for Js
+      ax[j] -= dx * s;
+      ay[j] -= dy * s;
+      az[j] -= dz * s;
+    }
+
+    // Flush registers to memory
+    ax[i] += axi;
+    ay[i] += ayi;
+    az[i] += azi;
+  }
 }
 
 
