@@ -114,6 +114,22 @@ void compute_accelerations_third_law(const size_t  n,          // number of part
       const dtype  invr = 1.0 / dtype_sqrt (r2);
       const dtype  s    = g * mass * invr * invr * invr;
 
+      // Accumulate to registers for Is
+      axi += dx * s;
+      ayi += dy * s;
+      azi += dz * s;
+
+      // Accumulate to memory for Js
+      ax[j] -= dx * s;
+      ay[j] -= dy * s;
+      az[j] -= dz * s;
+    }
+
+    // Flush registers to memory
+    ax[i] += axi;
+    ay[i] += ayi;
+    az[i] += azi;
+  }
 }
 
 
