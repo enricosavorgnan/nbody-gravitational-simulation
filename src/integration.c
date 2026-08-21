@@ -84,6 +84,35 @@ void compute_accelerations_third_law(const size_t  n,          // number of part
                                   dtype * restrict az          // z acceleration, overwritten
            )
 {
+  const dtype  eps2 = eps * eps;
+  size_t       i;
+  size_t       j;
+
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
+
+  for (i = 0u; i < n; ++i)
+  {
+    const dtype  xi  = x[i];
+    const dtype  yi  = y[i];
+    const dtype  zi  = z[i];
+    dtype        axi = (dtype) 0.0;
+    dtype        ayi = (dtype) 0.0;
+    dtype        azi = (dtype) 0.0;
+
+    for (j = i + 1; j < n; ++j)
+    {
+      // Compute distances and forces
+      const dtype  dx   = x[j] - xi;
+      const dtype  dy   = y[j] - yi;
+      const dtype  dz   = z[j] - zi;
+      const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+      const dtype  invr = 1.0 / dtype_sqrt (r2);
+      const dtype  s    = g * mass * invr * invr * invr;
 
 }
 
