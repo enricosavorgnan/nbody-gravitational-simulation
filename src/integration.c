@@ -183,7 +183,7 @@ void compute_accelerations_rsqrt(const size_t  n,          // number of particle
 }
 
 
-void compute_accelerations_block(const size_t  n,          // number of particles)
+void compute_accelerations_block(const size_t  n,          // number of particles
                                   const dtype   g,          // gravitational constant
                                   const dtype   mass,       // mass of every source particle
                                   const dtype   eps,        // Plummer softening length
@@ -192,10 +192,59 @@ void compute_accelerations_block(const size_t  n,          // number of particle
                                   const dtype * restrict z,          // z positions, read-only
                                   dtype * restrict ax,               // x acceleration, overwritten
                                   dtype * restrict ay,               // y acceleration, overwritten
-                                  dtype * restrict az                // z acceleration, overwritten
+                                  dtype * restrict az,               // z acceleration, overwritten
+                                  int BLOCK_SIZE = 64                // default block size for blocked acceleration computation
+
            )
 {
+  blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
 
+  for (int b_i = 0; b_i < blocks; b_i++)
+  {
+    int i_start   = b_i * BLOCK_SIZE;
+    int i_end     = i_start + BLOCK_SIZE;
+    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+
+    for (int i = i_start; i < i_end; i++)
+    {
+      const dtype  xi  = x[i];
+      const dtype  yi  = y[i];
+      const dtype  zi  = z[i];
+      dtype        axi = 0.0;
+      dtype        ayi = 0.0;
+      dtype        azi = 0.0;
+
+      for (int b_j = 0; b_j < blocks; b_j++)
+      {
+        int j_start     = b_j * BLOCK_SIZE;
+        int j_end       = j_start + BLOCK_SIZE;
+        j_end           = j_end <= n ? j_end : n;
+
+        for (int j = j_start; j < j_end; j++)
+        {
+          if (j!=i)
+          {
+            const dtype  dx   = x[j] - xi;
+            const dtype  dy   = y[j] - yi;
+            const dtype  dz   = z[j] - zi;
+            const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+            const dtype  invr = 1.0 / dtype_sqrt (r2);
+            const dtype  s    = g * mass * invr * invr * invr;
+
+            axi += dx * s;
+            ayi += dy * s;
+            azi += dz * s;
+          }
+        }
+
+        ax[i] = axi;
+        ay[i] = ayi;
+        az[i] = azi;
+      }
+    }
+
+
+  }
 }
 
 
