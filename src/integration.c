@@ -410,16 +410,11 @@ void compute_accelerations_blocks_third_law(const size_t  n,          // number 
     size_t i_end     = i_start + BLOCK_SIZE;
     i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
 
-    for (size_t b_j = 0; b_j < blocks; b_j++)
+    for (size_t b_j = b_i; b_j < blocks; b_j++)           // Go with an upper traingular matrix
     {
       size_t j_start     = b_j * BLOCK_SIZE;
       size_t j_end       = j_start + BLOCK_SIZE;
       j_end           = j_end <= n ? j_end : n;
-
-      const size_t bytes = n * sizeof(dtype);
-      memset(ax, 0, bytes);
-      memset(ay, 0, bytes);
-      memset(az, 0, bytes);
 
       for (size_t i = i_start; i < i_end; i++)
       {
@@ -430,7 +425,9 @@ void compute_accelerations_blocks_third_law(const size_t  n,          // number 
         dtype        ayi = 0.0;
         dtype        azi = 0.0;
 
-        for (size_t j = j_start; j < j_end; j++)
+        size_t j_init = (b_i == b_j) ? (i + 1) : j_start;
+
+        for (size_t j = j_init; j < j_end; j++)
         {
           // Compute distances and forces
           const dtype  dx   = x[j] - xi;
@@ -489,16 +486,11 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
     size_t i_end     = i_start + BLOCK_SIZE;
     i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
 
-    for (size_t b_j = 0; b_j < blocks; b_j++)
+    for (size_t b_j = b_i; b_j < blocks; b_j++)
     {
       size_t j_start     = b_j * BLOCK_SIZE;
       size_t j_end       = j_start + BLOCK_SIZE;
       j_end           = j_end <= n ? j_end : n;
-
-      const size_t bytes = n * sizeof(dtype);
-      memset(ax, 0, bytes);
-      memset(ay, 0, bytes);
-      memset(az, 0, bytes);
 
       for (size_t i = i_start; i < i_end; i++)
       {
@@ -509,7 +501,9 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
         dtype        ayi = 0.0;
         dtype        azi = 0.0;
 
-        for (size_t j = j_start; j < j_end; j++)
+        size_t j_init = (b_i == b_j) ? (i + 1) : j_start;
+
+        for (size_t j = j_init; j < j_end; j++)
         {
           // Compute distances and forces
           const dtype  dx   = x[j] - xi;
