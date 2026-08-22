@@ -37,6 +37,27 @@ static inline dtype dtype_sqrt (dtype x)
   return sqrtf (x);
 }
 
+// The following is the official implementation of
+// Fast Inverse Square Root, taken from Wikipedia:
+// https://en.wikipedia.org/wiki/Fast_inverse_square_root
+// it should be correct up to the 11th bit
+static inline dtype dtype_rsqrt(dtype x)
+{
+  int32_t i;
+  float x2, y;
+  const float threehalfs = 1.5f;
+
+  x2 = x * 0.5f;
+  y = x;
+
+  i = *(int32_t *) &y;
+  i = 0x5f3759df - (i >> 1);
+  y = *(float *) &i;
+
+  y = y* (threehalfs - (x2 * y * y));
+  return y;
+}
+
 static inline dtype dtype_pow (dtype x,
                                dtype y)
 {
@@ -79,6 +100,23 @@ typedef double dtype;
 static inline dtype dtype_sqrt (dtype x)
 {
   return sqrt (x);
+}
+
+static inline dtype dtype_rsqrt (dtype x)
+{
+  int64_t i;
+  double x2, y;
+  const double threehalfs = 1.5;
+
+  x2 = x * 0.5;
+  y = x;
+
+  i = *(int64_t *)&y;
+  i = 0x5fe6eb50c7b537a9 - (i >> 1);
+  y = *(double *) &i;
+
+  y = y * (threehalfs - (x2 * y * y ));
+  return y;
 }
 
 static inline dtype dtype_pow (dtype x,
