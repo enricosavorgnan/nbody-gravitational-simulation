@@ -199,6 +199,12 @@ void compute_accelerations_blocks(const size_t  n,                   // number o
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
   const dtype  eps2 = eps * eps;
 
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
     size_t i_start   = b_i * BLOCK_SIZE;
@@ -237,9 +243,9 @@ void compute_accelerations_blocks(const size_t  n,                   // number o
           }
         }
 
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
+        ax[i] += axi;
+        ay[i] += ayi;
+        az[i] += azi;
       }
     }
   }
@@ -323,6 +329,12 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
   const dtype  eps2 = eps * eps;
 
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
     size_t i_start   = b_i * BLOCK_SIZE;
@@ -361,9 +373,9 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
           }
         }
 
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
+        ax[i] += axi;
+        ay[i] += ayi;
+        az[i] += azi;
       }
     }
   }
@@ -386,6 +398,11 @@ void compute_accelerations_blocks_third_law(const size_t  n,          // number 
 {
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
   const dtype  eps2 = eps * eps;
+
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
 
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
@@ -460,6 +477,11 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
 {
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
   const dtype  eps2 = eps * eps;
+
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
 
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
