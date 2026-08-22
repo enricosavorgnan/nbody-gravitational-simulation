@@ -167,7 +167,7 @@ void compute_accelerations_rsqrt(const size_t  n,                    // number o
         const dtype  dy   = y[j] - yi;
         const dtype  dz   = z[j] - zi;
         const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-        const dtype  invr = (dtype) rsqrt(r2);
+        const dtype  invr = (dtype) dtype_rsqrt(r2);
         const dtype  s    = g * mass * invr * invr * invr;
 
         axi += dx * s;
@@ -285,7 +285,7 @@ void compute_accelerations_rsqrt_third_law(const size_t  n,          // number o
       const dtype  dy   = y[j] - yi;
       const dtype  dz   = z[j] - zi;
       const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-      const dtype  invr = rsqrt(r2);
+      const dtype  invr = dtype_rsqrt(r2);
       const dtype  s    = g * mass * invr * invr * invr;
 
       // Accumulate to registers for Is
@@ -352,7 +352,7 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
             const dtype  dy   = y[j] - yi;
             const dtype  dz   = z[j] - zi;
             const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype  invr = rsqrt(r2);
+            const dtype  invr = dtype_rsqrt(r2);
             const dtype  s    = g * mass * invr * invr * invr;
 
             axi += dx * s;
@@ -494,7 +494,7 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
           const dtype  dy   = y[j] - yi;
           const dtype  dz   = z[j] - zi;
           const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype  invr = rsqrt(r2);
+          const dtype  invr = dtype_rsqrt(r2);
           const dtype  s    = g * mass * invr * invr * invr;
 
           // Accumulate to registers for Is
