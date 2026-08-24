@@ -104,19 +104,18 @@ static inline dtype dtype_sqrt (dtype x)
 
 static inline dtype dtype_rsqrt (dtype x)
 {
-  int64_t i;
-  double x2, y;
+  union {
+    int64_t i;
+    double f;
+  } u;
+  double x2 = x * 0.5;
   const double threehalfs = 1.5;
 
-  x2 = x * 0.5;
-  y = x;
+  u.f = x;
+  u.i = 0x5fe6eb50c7b537a9 - (u.i >> 1);
 
-  i = *(int64_t *)&y;
-  i = 0x5fe6eb50c7b537a9 - (i >> 1);
-  y = *(double *) &i;
-
-  y = y * (threehalfs - (x2 * y * y ));
-  return y;
+  u.f = u.f * (threehalfs - (x2 * u.f * u.f ));
+  return u.f;
 }
 
 static inline dtype dtype_pow (dtype x,
