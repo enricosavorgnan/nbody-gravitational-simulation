@@ -112,7 +112,27 @@ void save_single_statistics (const char *path, const char *label, const double *
 }
 
 
-void save_statistics (const char *path, const profiler_t *profiler)
+void save_config(const char *path, const config_t *config)
+{
+    FILE *fp = fopen(path, "a");
+    if (!fp) die ("Cannot open file '%s' for writing configuration", path);
+
+    fprintf(fp, "--- Configuration ---\n");
+    fprintf(fp, "nsteps: %zu\n", config->nsteps);
+    fprintf(fp, "dt: %.6e\n", config->dt);
+    fprintf(fp, "eps: %.6e\n", config->eps);
+    fprintf(fp, "G: %.6e\n", config->g);
+    fprintf(fp, "mass: %.6e\n", config->mass);
+    fprintf(fp, "energy_every: %zu\n", config->energy_every);
+    fprintf(fp, "energy_tol: %.6e\n", config->energy_tol);
+    fprintf(fp, "kernel_choice: %s\n", config->kernel_name);
+    fprintf(fp, "kinetic0: %.6e\n", config->kinetic0);
+    fprintf(fp, "potential0: %.6e\n", config->potential0);
+    fclose(fp);
+}
+
+
+void save_statistics (const char *path, const config_t *config, const profiler_t *profiler)
 {
     save_single_statistics(path, "File Read", &profiler->reading_time, 1);
     save_single_statistics(path, "File Write", &profiler->writing_time, 1);
@@ -123,4 +143,6 @@ void save_statistics (const char *path, const profiler_t *profiler)
     save_single_statistics(path, "Compute Force", profiler->force_time, profiler->n_steps);
     save_single_statistics(path, "Kick", profiler->kick_time, profiler->n_steps);
     save_single_statistics(path, "Second Drift", profiler->second_drift_time, profiler->n_steps);
+
+    save_config(path, config);
 }

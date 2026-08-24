@@ -64,6 +64,7 @@ static void print_usage (const char *program    // argv[0]
            "  --mass X                  particle mass (default: 1)\n"
            "  --energy-every N          diagnostic period in steps (default: 1)\n"
            "  --energy-tol X            warning tolerance for max relative drift (default: 1e-3)\n"
+           "  --kernel STR              acceleration kernel choice: n, t, r, b, rt, bt, br, brt (default: n)\n"
            "  --quiet                   only print final summary\n"
            "  --help                    show this help message\n",
            program, NBODY_BINARY_VERSION_TEXT);
@@ -76,30 +77,47 @@ static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
     *kernel = compute_accelerations_naive;
   else if (strcmp(kernel_choice, "t") == 0)
     *kernel = compute_accelerations_third_law;
+  else if (strcmp(kernel_choice, "r") == 0)
+    *kernel = compute_accelerations_rsqrt;
+  else if (strcmp(kernel_choice, "b") == 0)
+    *kernel = compute_accelerations_blocks;
   else if (strcmp(kernel_choice, "rt") == 0)
     *kernel = compute_accelerations_rsqrt_third_law;
+  else if (strcmp(kernel_choice, "bt") == 0)
+    *kernel = compute_accelerations_blocks_third_law;
+  else if (strcmp(kernel_choice, "br") == 0)
+    *kernel = compute_accelerations_blocks_rsqrt;
   else if (strcmp(kernel_choice, "brt") == 0)
     *kernel = compute_accelerations_blocks_rsqrt_third_law;
-  else if (strcmp(kernel_choice, "omp") == 0)
-    *kernel = compute_accelerations_omp;
+  // else if (strcmp(kernel_choice, "omp") == 0)
+  //   *kernel = compute_accelerations_omp;
   else
     die ("unknown kernel choice: %s", kernel_choice);
 }
 
-static char retrieve_kernel_name(const kernel_t kernel)
+static const char *retrieve_kernel_name(const kernel_t kernel)
 {
   if (kernel == compute_accelerations_naive)
-    return 'n';
+    return "n";
   else if (kernel == compute_accelerations_third_law)
-    return 't';
+    return "t";
+  else if (kernel == compute_accelerations_rsqrt)
+    return "r";
+  else if (kernel == compute_accelerations_blocks)
+    return "b";
   else if (kernel == compute_accelerations_rsqrt_third_law)
-    return 'r';
+    return "rt";
+  else if (kernel == compute_accelerations_blocks_third_law)
+    return "bt";
+  else if (kernel == compute_accelerations_blocks_rsqrt)
+    return "br";
   else if (kernel == compute_accelerations_blocks_rsqrt_third_law)
-    return 'b';
-  else if (kernel == compute_accelerations_omp)
-    return 'o';
+    return "brt";
+  // else if (kernel == compute_accelerations_omp)
+  //   return "o";
   else
     die ("unknown kernel function pointer");
+  return "unknown";
 }
 
 int main (int argc, char **argv)
@@ -208,8 +226,8 @@ int main (int argc, char **argv)
       printf ("# N=%zu nsteps=%zu dt=%.17g eps=%.17g G=%.17g mass=%.17g\n",
               particles.n, nsteps, (double) dt, (double) eps,
               (double) g, (double) mass);
-      char kernel_name = retrieve_kernel_name(kernel);
-      printf ("Acceleration Kernel: %s\n", &kernel_name);
+      const char * kernel_name = retrieve_kernel_name(kernel);
+      printf ("Acceleration Kernel: %s\n", kernel_name);
       printf ("# Step \t Time \t\t\t Kinetic \t\t\t Potential \t\t\t Total \t\t\t Relative Energy Drift\n");
       printf ("%zu \t %.17g \t %.17g \t %.17g \t %.17g \t %.17g\n",
               (size_t) 0u, 0.0, (double) kinetic0, (double) potential0,
@@ -265,7 +283,23 @@ int main (int argc, char **argv)
 
   // Print profiler statistics if requested
   if (profiler_flag) print_statistics (&profiler);
-  if (profiler_flag && profiler_path != NULL) save_statistics(profiler_path, &profiler);
+  if (profiler_flag && profiler_path != NULL)
+  {
+    // Save -- flags as config
+    config_t config = (struct config_s) {
+      .nsteps = nsteps,
+      .energy_every = energy_every,
+      .dt = dt,
+      .eps = eps,
+      .g = g,
+      .mass = mass,
+      .energy_tol = energy_tol,
+      .kernel_name = retrieve_kernel_name(kernel),
+      .kinetic0 = kinetic0,
+      .potential0 = potential0
+    };
+    save_statistics(profiler_path, &config, &profiler);
+  }
 
   
   // Don't leave garbage behind you
