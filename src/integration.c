@@ -2,6 +2,10 @@
 
 #include "./headers/integration.h"
 
+#ifndef BLOCK_SIZE
+#define BLOCK_SIZE 64
+#endif
+
 /* ACCELERATION */
 
 //
@@ -192,9 +196,8 @@ void compute_accelerations_blocks(const size_t  n,                   // number o
                                   const dtype * restrict z,          // z positions, read-only
                                   dtype * restrict ax,               // x acceleration, overwritten
                                   dtype * restrict ay,               // y acceleration, overwritten
-                                  dtype * restrict az,               // z acceleration, overwritten
-                                  int          BLOCK_SIZE = 64       // default block size
-                                )
+                                  dtype * restrict az                // z acceleration, overwritten
+                                 )
 {
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
   const dtype  eps2 = eps * eps;
@@ -322,8 +325,7 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
                                         const dtype * restrict z,          // z positions, read-only
                                         dtype * restrict ax,               // x acceleration, overwritten
                                         dtype * restrict ay,               // y acceleration, overwritten
-                                        dtype * restrict az,                // z acceleration, overwritten
-                                        size_t        BLOCK_SIZE = 64       // default block size
+                                        dtype * restrict az                // z acceleration, overwritten
                                         )
 {
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
@@ -382,19 +384,17 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
 }
 
 
-void compute_accelerations_blocks_third_law(const size_t  n,          // number of particles
-                                  const dtype   g,          // gravitational constant
-                                  const dtype   mass,       // mass of every source particle
-                                  const dtype   eps,        // Plummer softening length
-                                  const dtype * restrict x,          // x positions, read-only
-                                  const dtype * restrict y,          // y positions, read-only
-                                  const dtype * restrict z,          // z positions, read-only
-                                  dtype * restrict ax,               // x acceleration, overwritten
-                                  dtype * restrict ay,               // y acceleration, overwritten
-                                  dtype * restrict az,               // z acceleration, overwritten
-                                  int          BLOCK_SIZE = 64       // default block size
-
-           )
+void compute_accelerations_blocks_third_law(const size_t  n,                // number of particles
+                                            const dtype   g,                // gravitational constant
+                                            const dtype   mass,             // mass of every source particle
+                                            const dtype   eps,              // Plummer softening length
+                                            const dtype * restrict x,       // x positions, read-only
+                                            const dtype * restrict y,       // y positions, read-only
+                                            const dtype * restrict z,       // z positions, read-only
+                                            dtype * restrict ax,            // x acceleration, overwritten
+                                            dtype * restrict ay,            // y acceleration, overwritten
+                                            dtype * restrict az             // z acceleration, overwritten
+                                            )
 {
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
   const dtype  eps2 = eps * eps;
@@ -467,9 +467,7 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
                                                   const dtype * restrict z,          // z positions, read-only
                                                   dtype * restrict ax,               // x acceleration, overwritten
                                                   dtype * restrict ay,               // y acceleration, overwritten
-                                                  dtype * restrict az,               // z acceleration, overwritten
-                                                  int          BLOCK_SIZE = 64       // default block size
-
+                                                  dtype * restrict az                // z acceleration, overwritten
                                                   )
 {
   const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
@@ -534,20 +532,20 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
 }
 
 
-void compute_accelerations_omp(const size_t  n,          // number of particles
-                                  const dtype   g,          // gravitational constant
-                                  const dtype   mass,       // mass of every source particle
-                                  const dtype   eps,        // Plummer softening length
-                                  const dtype * restrict x,          // x positions, read-only
-                                  const dtype * restrict y,          // y positions, read-only
-                                  const dtype * restrict z,          // z positions, read-only
-                                  dtype * restrict ax,               // x acceleration, overwritten
-                                  dtype * restrict ay,               // y acceleration, overwritten
-                                  dtype * restrict az                // z acceleration, overwritten
-           )
-{
-
-}
+// void compute_accelerations_omp(const size_t  n,          // number of particles
+//                                   const dtype   g,          // gravitational constant
+//                                   const dtype   mass,       // mass of every source particle
+//                                   const dtype   eps,        // Plummer softening length
+//                                   const dtype * restrict x,          // x positions, read-only
+//                                   const dtype * restrict y,          // y positions, read-only
+//                                   const dtype * restrict z,          // z positions, read-only
+//                                   dtype * restrict ax,               // x acceleration, overwritten
+//                                   dtype * restrict ay,               // y acceleration, overwritten
+//                                   dtype * restrict az                // z acceleration, overwritten
+//            )
+// {
+//
+// }
 
 
 /* DKD */
