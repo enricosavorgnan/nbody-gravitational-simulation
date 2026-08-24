@@ -67,7 +67,7 @@ test-serial-more-blocks: all
 	mkdir -p ./bins/test-serial/
 	mkdir -p ./profilings
 	mkdir -p ./profilings/test-serial/
-	./generate_initial_conditions --model 0 --n 50000 --seed 42 --output ./bins/test-serial.bin
+	./generate_initial_conditions --model 0 --n 1000000 --seed 42 --output ./bins/test-serial.bin
 	for i in 1 2 3 4; do \
 		./main --input ./bins/test-serial.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 3 --output ./bins/test-serial/n.out --kernel "n" --profiler 1  --profiler-path ./profilings/test-serial/n.txt; \
 		./main --input ./bins/test-serial.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 3 --output ./bins/test-serial/r.out --kernel "r" --profiler 1  --profiler-path ./profilings/test-serial/r.txt; \
