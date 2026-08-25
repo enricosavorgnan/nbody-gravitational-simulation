@@ -28,9 +28,9 @@ def plot(data : dict, names_info=None, names_method=None):
     """
     figs = []
     for i, (info, methods) in enumerate(data.items()):
-        fig, ax = plt.subplots(dpi=300)
+        fig, ax = plt.subplots(dpi=600)
         for j, (method, stats) in enumerate(methods.items()):
-            ax.plot(stats['trimmed_mean'], label=f'{names_method[j]}', marker="o", linewidth=1, linestyle="dashed")
+            ax.plot(stats['trimmed_mean'], label=f'{names_method[j]}', linewidth=1., linestyle="dashed")
         ax.set_title(f"{names_info[i]} Trimmed Means")
         ax.set_xlabel('Steps')
         ax.set_ylabel('Time(s)')

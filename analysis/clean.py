@@ -114,7 +114,7 @@ def process(data_raw : list[list[pd.DataFrame]], verbose : bool = True):
     return data_processed
 
 
-def save(figs, save_path):
+def save(figs, config, save_path):
     """
     Save the figures and data to disk.
     The figures are saved as .png files
@@ -130,6 +130,8 @@ def save(figs, save_path):
     # Save the figures
     for i, fig in enumerate(figs):
         fig.savefig(os.path.join(path, f"figure_{i}.png"))
+
+    yaml.dump(config, open(os.path.join(path, "config.yaml"), "w"))
 
 
 def main(config):
@@ -149,7 +151,7 @@ def main(config):
 
     figs = plot(data=data_processed, names_info=names_info, names_method=names_method)
 
-    save(figs, save_path=config["save-path"])
+    save(figs, config=config, save_path=config["save-path"])
 
 
 
