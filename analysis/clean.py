@@ -51,6 +51,7 @@ def info(file_path, name_info, runs) -> pd.DataFrame:
                     found = True
                     break
             if not found:
+                print(f"Info '{name_info}' not found in file '{file_path}'")
                 break
 
             for line in file:
