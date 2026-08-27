@@ -57,6 +57,8 @@ static inline double get_time(void)
 void profiler_allocate (profiler_t *profiler, const size_t n_steps);
 void profiler_free (const profiler_t *profiler);
 void print_statistics (const profiler_t *profiler);
+void save_single_statistics (const char *path, const char *label, const double *times, const size_t n_steps);
+void save_config(const char *path, const config_t *config);
 void save_statistics (const char *path, const config_t *config, const profiler_t *profiler);
 
 #endif // PROFILING_H
