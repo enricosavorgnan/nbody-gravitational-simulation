@@ -49,3 +49,8 @@ test-rsqrt: all
 
 clean:
 	rm -f $(PROGRAMS) *.o *.bin
+
+
+clean-folders:
+	rm -r ./bins/
+	rm -r ./profilings/
