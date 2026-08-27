@@ -41,7 +41,7 @@ test-rsqrt: all
 	mkdir -p ./bins/test-rsqrt/
 	mkdir -p ./profilings/test-rsqrt/
 	./generate_initial_conditions --model 0 --n 1000000 --seed 42 --output ./bins/test-rsqrt.bin
-	for i in 1 2 3 4 5 do \
+	for i in 1 2 3 4 5; do \
 		./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/n.out --kernel "n" --profiler 1  --profiler-path ./profilings/test-rsqrt/n.txt; \
 		./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/r.out --kernel "r" --profiler 1  --profiler-path ./profilings/test-rsqrt/r.txt; \
 		./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/t.out --kernel "rt" --profiler 1  --profiler-path ./profilings/test-rsqrt/rt.txt; \
