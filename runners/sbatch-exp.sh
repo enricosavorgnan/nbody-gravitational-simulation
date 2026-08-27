@@ -9,9 +9,10 @@
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00
 
-cd "../experiments/rsqrt-impact/"
-mkdir -p ../../log
+cd "$SLURM_SUBMIT_DIR"
+mkdir -p log
+cd "./experiments/rsqrt-impact"
 
 make clean
-make all PRECISION=double
-make test-serial
+make clean-folders
+make test-rsqrt

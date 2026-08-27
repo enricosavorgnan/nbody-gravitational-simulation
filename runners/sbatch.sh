@@ -9,8 +9,9 @@
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00
 
-cd "../src/"
-mkdir -p ../log
+cd "$SLURM_SUBMIT_DIR"
+mkdir -p log
+cd "./src"
 
 make clean
 make all PRECISION=double
