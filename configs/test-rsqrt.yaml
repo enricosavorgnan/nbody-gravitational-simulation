@@ -1,0 +1,17 @@
+"files": [
+          "./experiments/rsqrt-impact/profilings/test/r.txt",
+          "./experiments/rsqrt-impact/profilings/test/rt.txt",
+]
+
+"names_info": [
+          "Compute Force",
+          "Energy History"
+]
+
+"names_method": [
+          "Rsqrt",
+          "Rsqrt+ThirdLaw",
+]
+
+"runs": 5
+"save-path": "./plots/test-rsqrt/"
