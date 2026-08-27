@@ -132,28 +132,23 @@ void save_config(const char *path, const config_t *config)
 }
 
 
-void save_energy_history(const char *path, const char *label, const double *energies, const size_t n_steps)
+void save_energies(const char *path, const char *label, const dtype *energies_history, const size_t nsteps)
 {
     FILE *fp = fopen(path, "a");
-    if (!fp) die ("Cannot open file '%s' for writing energy history", path);
-     fprintf(fp, "%s\n", label);
+    if (!fp) die ("Cannot open file '%s' for writing energies history", path);
 
-    for (size_t i = 0; i < n_steps; i++)
+    fprintf(fp, "%s\n", label);
+    for (size_t i = 0; i < nsteps; i++)
     {
-        fprintf(fp, "%.6e\n", energies[i]);
+        fprintf(fp, "%.6e\n", energies_history[i]);
     }
     fprintf(fp, "\n");
 
     fclose(fp);
 }
 
-void save_statistics (  const char *path,
-                        const config_t *config,
-                        const profiler_t *profiler,
-                        const double *energies_r_history,
-                        const double *energies_s_history,
-                        const double *energies_abs_diff_history,
-                        const double *energies_rel_diff_history)
+
+void save_statistics (const char *path, const config_t *config, const profiler_t *profiler, const dtype *energies_history)
 {
     save_single_statistics(path, "File Read", &profiler->reading_time, 1);
     save_single_statistics(path, "File Write", &profiler->writing_time, 1);
@@ -165,10 +160,7 @@ void save_statistics (  const char *path,
     save_single_statistics(path, "Kick", profiler->kick_time, profiler->n_steps);
     save_single_statistics(path, "Second Drift", profiler->second_drift_time, profiler->n_steps);
 
-    save_config(path, config);
+    save_energies(path, "Energies History", energies_history, config->nsteps);
 
-    save_energy_history(path, "Energy RSQRT History",  energies_r_history, config->nsteps);
-    save_energy_history(path, "Energy SQRT History",  energies_s_history, config->nsteps);
-    save_energy_history(path, "Energy Absolute Difference History",  energies_abs_diff_history, config->nsteps);
-    save_energy_history(path, "Energy Relative Difference History",  energies_rel_diff_history, config->nsteps);
+    save_config(path, config);
 }

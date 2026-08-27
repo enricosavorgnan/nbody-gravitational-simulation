@@ -299,18 +299,12 @@ static void generate_ball_maxwell (size_t  n,                  // number of part
                                    dtype   ball_radius,        // radius of uniform ball
                                    dtype   sigma,              // 1D velocity dispersion
                                    rng_t  *rng,                // generator state, modified in place
-                                   dtype  *restrict x_r,         // output x positions
-                                   dtype  *restrict y_r,         // output y positions
-                                   dtype  *restrict z_r,         // output z position
-                                   dtype  *restrict vx_r,        // output x velocities
-                                   dtype  *restrict vy_r,        // output y velocities
-                                   dtype  *restrict vz_r,         // output z velocities
-                                   dtype  *restrict x_s,         // output x positions
-                                   dtype  *restrict y_s,         // output y positions
-                                   dtype  *restrict z_s,         // output z positions
-                                   dtype  *restrict vx_s,        // output x velocities
-                                   dtype  *restrict vy_s,        // output y velocities
-                                   dtype  *restrict vz_s         // output z velocities
+                                   dtype  *restrict x,         // output x positions
+                                   dtype  *restrict y,         // output y positions
+                                   dtype  *restrict z,         // output z positions
+                                   dtype  *restrict vx,        // output x velocities
+                                   dtype  *restrict vy,        // output y velocities
+                                   dtype  *restrict vz         // output z velocities
 )
 {
   long double  xcm  = 0.0L;
@@ -329,28 +323,20 @@ static void generate_ball_maxwell (size_t  n,                  // number of part
 
       radius = ball_radius * dtype_pow ((dtype) rng_uniform_open (rng), (dtype) (1.0 / 3.0));
       random_unit_vector (rng, &ux, &uy, &uz);
-      x_r[i] = radius * ux;
-      y_r[i] = radius * uy;
-      z_r[i] = radius * uz;
+      x[i] = radius * ux;
+      y[i] = radius * uy;
+      z[i] = radius * uz;
 
-      vx_r[i] = sigma * rng_normal (rng);
-      vy_r[i] = sigma * rng_normal (rng);
-      vz_r[i] = sigma * rng_normal (rng);
-    
-      x_s[i] = radius * ux;
-      y_s[i] = radius * uy;
-      z_s[i] = radius * uz;
+      vx[i] = sigma * rng_normal (rng);
+      vy[i] = sigma * rng_normal (rng);
+      vz[i] = sigma * rng_normal (rng);
 
-      vx_s[i] = sigma * rng_normal (rng);
-      vy_s[i] = sigma * rng_normal (rng);
-      vz_s[i] = sigma * rng_normal (rng);
-
-      xcm  += (long double) x_r[i];
-      ycm  += (long double) y_r[i];
-      zcm  += (long double) z_r[i];
-      vxcm += (long double) vx_r[i];
-      vycm += (long double) vy_r[i];
-      vzcm += (long double) vz_r[i];
+      xcm  += (long double) x[i];
+      ycm  += (long double) y[i];
+      zcm  += (long double) z[i];
+      vxcm += (long double) vx[i];
+      vycm += (long double) vy[i];
+      vzcm += (long double) vz[i];
     }
 
   xcm  /= (long double) n;
@@ -362,19 +348,12 @@ static void generate_ball_maxwell (size_t  n,                  // number of part
 
   for (size_t i = 0u; i < n; ++i)
     {
-      x_r[i]  -= (dtype) xcm;
-      y_r[i]  -= (dtype) ycm;
-      z_r[i]  -= (dtype) zcm;
-      vx_r[i] -= (dtype) vxcm;
-      vy_r[i] -= (dtype) vycm;
-      vz_r[i] -= (dtype) vzcm;
-    
-      x_s[i]  -= (dtype) xcm;
-      y_s[i]  -= (dtype) ycm;
-      z_s[i]  -= (dtype) zcm;
-      vx_s[i] -= (dtype) vxcm;
-      vy_s[i] -= (dtype) vycm;
-      vz_s[i] -= (dtype) vzcm;
+      x[i]  -= (dtype) xcm;
+      y[i]  -= (dtype) ycm;
+      z[i]  -= (dtype) zcm;
+      vx[i] -= (dtype) vxcm;
+      vy[i] -= (dtype) vycm;
+      vz[i] -= (dtype) vzcm;
     }
 }
 
@@ -436,18 +415,12 @@ static void generate_plummer (size_t  n,                 // number of particles
                               dtype   g,                 // gravitational constant
                               dtype   particle_mass,     // mass of one particle
                               rng_t  *rng,               // generator state, modified in place
-                              dtype  *restrict x_r,        // output x positions
-                              dtype  *restrict y_r,        // output y positions
-                              dtype  *restrict z_r,        // output z positions
-                              dtype  *restrict vx_r,       // output x velocities
-                              dtype  *restrict vy_r,       // output y velocities
-                              dtype  *restrict vz_r,        // output z velocities
-                              dtype  *restrict x_s,        // output x positions
-                              dtype  *restrict y_s,        // output y positions
-                              dtype  *restrict z_s,        // output z positions
-                              dtype  *restrict vx_s,       // output x velocities
-                              dtype  *restrict vy_s,       // output y velocities
-                              dtype  *restrict vz_s        // output z velocities
+                              dtype  *restrict x,        // output x positions
+                              dtype  *restrict y,        // output y positions
+                              dtype  *restrict z,        // output z positions
+                              dtype  *restrict vx,       // output x velocities
+                              dtype  *restrict vy,       // output y velocities
+                              dtype  *restrict vz        // output z velocities
 )
 {
   const dtype  total_mass = (dtype) n * particle_mass;
@@ -473,31 +446,24 @@ static void generate_plummer (size_t  n,                 // number of particles
 
       radius = sample_plummer_radius (rng, scale, rmax);
       random_unit_vector (rng, &ux, &uy, &uz);
-      x_r[i] = radius * ux;
-      y_r[i] = radius * uy;
-      z_r[i] = radius * uz;
-      x_s[i] = radius * ux;
-      y_s[i] = radius * uy;
-      z_s[i] = radius * uz;
+      x[i] = radius * ux;
+      y[i] = radius * uy;
+      z[i] = radius * uz;
 
       q     = sample_plummer_q (rng);
       psi   = g * total_mass / dtype_sqrt (radius * radius + scale * scale);
       speed = q * dtype_sqrt ((dtype) 2.0 * psi);
       random_unit_vector (rng, &ux, &uy, &uz);
-      vx_r[i] = speed * ux;
-      vy_r[i] = speed * uy;
-      vz_r[i] = speed * uz;
+      vx[i] = speed * ux;
+      vy[i] = speed * uy;
+      vz[i] = speed * uz;
 
-      vx_s[i] = speed * ux;
-      vy_s[i] = speed * uy;
-      vz_s[i] = speed * uz;
-
-      xcm  += (long double) x_r[i];
-      ycm  += (long double) y_r[i];
-      zcm  += (long double) z_r[i];
-      vxcm += (long double) vx_r[i];
-      vycm += (long double) vy_r[i];
-      vzcm += (long double) vz_r[i];
+      xcm  += (long double) x[i];
+      ycm  += (long double) y[i];
+      zcm  += (long double) z[i];
+      vxcm += (long double) vx[i];
+      vycm += (long double) vy[i];
+      vzcm += (long double) vz[i];
     }
 
   xcm  /= (long double) n;
@@ -509,19 +475,12 @@ static void generate_plummer (size_t  n,                 // number of particles
 
   for (size_t i = 0u; i < n; ++i)
     {
-      x_r[i]  -= (dtype) xcm;
-      y_r[i]  -= (dtype) ycm;
-      z_r[i]  -= (dtype) zcm;
-      vx_r[i] -= (dtype) vxcm;
-      vy_r[i] -= (dtype) vycm;
-      vz_r[i] -= (dtype) vzcm;
-    
-      x_s[i]  -= (dtype) xcm;
-      y_s[i]  -= (dtype) ycm;
-      z_s[i]  -= (dtype) zcm;
-      vx_s[i] -= (dtype) vxcm;
-      vy_s[i] -= (dtype) vycm;
-      vz_s[i] -= (dtype) vzcm;
+      x[i]  -= (dtype) xcm;
+      y[i]  -= (dtype) ycm;
+      z[i]  -= (dtype) zcm;
+      vx[i] -= (dtype) vxcm;
+      vy[i] -= (dtype) vycm;
+      vz[i] -= (dtype) vzcm;
     }
 }
 
@@ -537,77 +496,53 @@ static void generate_plummer (size_t  n,                 // number of particles
 
 
 static int verify_sanity ( const size_t  n,               // number of particles
-			   const dtype  *x_r,               // x positions
-			   const dtype  *y_r,               // y positions
-			   const dtype  *z_r,               // z positions
-			   const dtype  *vx_r,              // x velocities
-			   const dtype  *vy_r,              // y velocities
-			   const dtype  *vz_r,               // z velocities
-			   const dtype  *x_s,               // x positions
-         const dtype  *y_s,               // y positions
-         const dtype  *z_s,               // z positions
-         const dtype  *vx_s,              // x velocities
-         const dtype  *vy_s,              // y velocities
-         const dtype  *vz_s               // z velocities
+			   const dtype  *x,               // x positions
+			   const dtype  *y,               // y positions
+			   const dtype  *z,               // z positions
+			   const dtype  *vx,              // x velocities
+			   const dtype  *vy,              // y velocities
+			   const dtype  *vz               // z velocities
 			   )
 {
   uint64_t failures = 0;
   
   for (size_t i = 0u; i < n; ++i)
-  {
-    failures += (!isfinite (x_r[i]) || (fabs (x_r[i]) > DTYPE_MAX_VALUE));
-    failures += (!isfinite (x_s[i]) || (fabs (x_s[i]) > DTYPE_MAX_VALUE));
-  }
+    failures += (!isfinite (x[i]) || (fabs (x[i]) > DTYPE_MAX_VALUE));
   if ( failures ) {
     printf ( "%zu x component cannot be stored as a finite float", failures );
     return 1; }
   
   failures = 0;
   for (size_t i = 0u; i < n; ++i)
-  {
-    failures += (!isfinite (y_r[i]) || (fabs (y_r[i]) > DTYPE_MAX_VALUE));
-    failures += (!isfinite (y_s[i]) || (fabs (y_s[i]) > DTYPE_MAX_VALUE));
-  }
+    failures += (!isfinite (y[i]) || (fabs (y[i]) > DTYPE_MAX_VALUE));
   if ( failures ) {
     printf ( "%zu y component cannot be stored as a finite float", failures );
     return 1; }
 
   failures = 0;
   for (size_t i = 0u; i < n; ++i)
-  {
-    failures += (!isfinite (z_r[i]) || (fabs (z_r[i]) > DTYPE_MAX_VALUE));
-    failures += (!isfinite (z_s[i]) || (fabs (z_s[i]) > DTYPE_MAX_VALUE));
-  }
+    failures += (!isfinite (z[i]) || (fabs (z[i]) > DTYPE_MAX_VALUE));
   if ( failures ) {
     printf ( "%zu z component cannot be stored as a finite float", failures );
     return 1; }
 
   failures = 0;
   for (size_t i = 0u; i < n; ++i)
-  {
-    failures += (!isfinite (vx_r[i]) || (fabs (vx_r[i]) > DTYPE_MAX_VALUE));
-    failures += (!isfinite (vx_s[i]) || (fabs (vx_s[i]) > DTYPE_MAX_VALUE));
-  }
+    failures += (!isfinite (vx[i]) || (fabs (vx[i]) > DTYPE_MAX_VALUE));
   if ( failures ) {
     printf ( "%zu vx component cannot be stored as a finite float", failures );
     return 1; }
 
   failures = 0;
   for (size_t i = 0u; i < n; ++i)
-  {
-    failures += (!isfinite (vy_r[i]) || (fabs (vy_r[i]) > DTYPE_MAX_VALUE));
-    failures += (!isfinite (vy_s[i]) || (fabs (vy_s[i]) > DTYPE_MAX_VALUE));
-  }
+    failures += (!isfinite (vy[i]) || (fabs (vy[i]) > DTYPE_MAX_VALUE));
   if ( failures ) {
     printf ( "%zu vy component cannot be stored as a finite float", failures );
     return 1; }
 
   failures = 0;
   for (size_t i = 0u; i < n; ++i)
-  {
-    failures += (!isfinite (vz_r[i]) || (fabs (vz_r[i]) > DTYPE_MAX_VALUE));
-    failures += (!isfinite (vz_s[i]) || (fabs (vz_s[i]) > DTYPE_MAX_VALUE));
-  }
+    failures += (!isfinite (vz[i]) || (fabs (vz[i]) > DTYPE_MAX_VALUE));
   if ( failures ) {
     printf ( "%zu vz component cannot be stored as a finite float", failures );
     return 1; }
@@ -634,18 +569,12 @@ static int verify_sanity ( const size_t  n,               // number of particles
  */
 static void write_particles_binary (const char  *path,            // output file path
                                     size_t       n,               // number of particles
-                                    const dtype *x_r,               // x positions
-                                    const dtype *y_r,               // y positions
-                                    const dtype *z_r,               // z positions
-                                    const dtype *vx_r,              // x velocities
-                                    const dtype *vy_r,              // y velocities
-                                    const dtype *vz_r,               // z velocities
-                                    const dtype *x_s,               // x positions
-                                    const dtype *y_s,               // y positions
-                                    const dtype *z_s,               // z positions
-                                    const dtype *vx_s,              // x velocities
-                                    const dtype *vy_s,              // y velocities
-                                    const dtype *vz_s    
+                                    const dtype *x,               // x positions
+                                    const dtype *y,               // y positions
+                                    const dtype *z,               // z positions
+                                    const dtype *vx,              // x velocities
+                                    const dtype *vy,              // y velocities
+                                    const dtype *vz               // z velocities
 				    )
 {
   FILE      *fp;
@@ -654,7 +583,7 @@ static void write_particles_binary (const char  *path,            // output file
   if ((size_t) n64 != n)
     die ("particle count cannot be represented in the binary header");
 
-  int uncorrect_data = verify_sanity ( n, x_r, y_r, z_r, vx_r, vy_r, vz_r, x_s, y_s, z_s, vx_s, vy_s, vz_s );
+  int uncorrect_data = verify_sanity ( n, x, y, z, vx, vy, vz );
 
   if ( !uncorrect_data )
     {
@@ -670,18 +599,12 @@ static void write_particles_binary (const char  *path,            // output file
 	{
 	  float  record[NBODY_BINARY_COMPONENTS];
 	  
-	  record[0] =  x_r[i];
-	  record[1] =  y_r[i];
-	  record[2] =  z_r[i];
-	  record[3] = vx_r[i];
-	  record[4] = vy_r[i];
-	  record[5] = vz_r[i];
-    record[6] =  x_s[i];
-    record[7] =  y_s[i];
-    record[8] =  z_s[i];
-    record[9] = vx_s[i];
-    record[10] = vy_s[i];
-    record[11] = vz_s[i];
+	  record[0] =  x[i];
+	  record[1] =  y[i];
+	  record[2] =  z[i];
+	  record[3] = vx[i];
+	  record[4] = vy[i];
+	  record[5] = vz[i];
 	  
 	  checked_fwrite (record, sizeof record[0], NBODY_BINARY_COMPONENTS,
 			  fp, path, "particle record");
@@ -709,18 +632,12 @@ int main (int argc, char **argv)
   dtype        g             = (dtype) 1.0;
   dtype        particle_mass = (dtype) 1.0;
   bool         sigma_auto;                       // for MAXWELL_BALL
-  dtype       *x_r;
-  dtype       *y_r;
-  dtype       *z_r;
-  dtype       *vx_r;
-  dtype       *vy_r;
-  dtype       *vz_r;
-  dtype       *x_s;
-  dtype       *y_s;
-  dtype       *z_s;
-  dtype       *vx_s;
-  dtype       *vy_s;
-  dtype       *vz_s;
+  dtype       *x;
+  dtype       *y;
+  dtype       *z;
+  dtype       *vx;
+  dtype       *vy;
+  dtype       *vz;
   rng_t        rng;
   int          argi;
 
@@ -791,44 +708,31 @@ int main (int argc, char **argv)
     die ("--sigma must be non-negative and finite, or negative to request the auto value");
 
   
-  x_r  = allocate_array (n, "x_r");
-  y_r  = allocate_array (n, "y_r");
-  z_r  = allocate_array (n, "z_r");
-  vx_r = allocate_array (n, "vx_r");
-  vy_r = allocate_array (n, "vy_r");
-  vz_r = allocate_array (n, "vz_r");
-  x_s  = allocate_array (n, "x_s");
-  y_s  = allocate_array (n, "y_s");
-  z_s  = allocate_array (n, "z_s");
-  vx_s = allocate_array (n, "vx_s");
-  vy_s = allocate_array (n, "vy_s");
-  vz_s = allocate_array (n, "vz_s");
+  x  = allocate_array (n, "x");
+  y  = allocate_array (n, "y");
+  z  = allocate_array (n, "z");
+  vx = allocate_array (n, "vx");
+  vy = allocate_array (n, "vy");
+  vz = allocate_array (n, "vz");
 
   rng.state     = seed;
   rng.has_spare = false;
   rng.spare     = (dtype) 0.0;
 
   if ( model == PLUMMER_SPHERE)
-    generate_plummer (n, scale, rmax, g, particle_mass, &rng, x_r, y_r, z_r, vx_r, vy_r, vz_r, x_s, y_s, z_s, vx_s, vy_s, vz_s);
+    generate_plummer (n, scale, rmax, g, particle_mass, &rng, x, y, z, vx, vy, vz);
 
   else
-    generate_ball_maxwell (n, ball_radius, sigma, &rng, x_r, y_r, z_r, vx_r, vy_r, vz_r, x_s, y_s, z_s, vx_s, vy_s, vz_s);
+    generate_ball_maxwell (n, ball_radius, sigma, &rng, x, y, z, vx, vy, vz);
   
-  write_particles_binary (output_path, n, x_r, y_r, z_r, vx_r, vy_r, vz_r, x_s, y_s, z_s, vx_s, vy_s, vz_s);
+  write_particles_binary (output_path, n, x, y, z, vx, vy, vz);
 
-  free (x_r);
-  free (y_r);
-  free (z_r);
-  free (vx_r);
-  free (vy_r);
-  free (vz_r);
-  free (x_s);
-  free (y_s);
-  free (z_s);
-  free (vx_s);
-  free (vy_s);
-  free (vz_s);
-
+  free (x);
+  free (y);
+  free (z);
+  free (vx);
+  free (vy);
+  free (vz);
 
   return EXIT_SUCCESS;
 }

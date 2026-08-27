@@ -21,24 +21,15 @@ void particles_init_empty (particles_t *p    // particle container to initialise
 {
   p->n    = 0u;
   p->mass = (dtype) 1.0;
-  p->x_r    = NULL;
-  p->y_r    = NULL;
-  p->z_r    = NULL;
-  p->vx_r   = NULL;
-  p->vy_r   = NULL;
-  p->vz_r   = NULL;
-  p->ax_r   = NULL;
-  p->ay_r   = NULL;
-  p->az_r   = NULL;
-  p->x_s    = NULL;
-  p->y_s    = NULL;
-  p->z_s    = NULL;
-  p->vx_s   = NULL;
-  p->vy_s   = NULL;
-  p->vz_s   = NULL;
-  p->ax_s   = NULL;
-  p->ay_s   = NULL;
-  p->az_s   = NULL;
+  p->x    = NULL;
+  p->y    = NULL;
+  p->z    = NULL;
+  p->vx   = NULL;
+  p->vy   = NULL;
+  p->vz   = NULL;
+  p->ax   = NULL;
+  p->ay   = NULL;
+  p->az   = NULL;
 }
 
 
@@ -65,24 +56,15 @@ void particles_allocate (particles_t  *p,       // output container
   particles_init_empty (p);
   p->n    = n;
   p->mass = mass;
-  p->x_r    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->y_r    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->z_r    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->vx_r   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->vy_r   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->vz_r   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->ax_r   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->ay_r   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->az_r   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->x_s    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->y_s    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->z_s    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->vx_s   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->vy_s   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->vz_s   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->ax_s   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->ay_s   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
-  p->az_s   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->x    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->y    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->z    = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->vx   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->vy   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->vz   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->ax   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->ay   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
+  p->az   = checked_aligned_alloc (bytes, NBODY_ALIGNMENT);
 }
 
 
@@ -93,24 +75,15 @@ void particles_allocate (particles_t  *p,       // output container
 void particles_free (particles_t *p    // container to release
 			    )
 {
-  free (p->x_r);
-  free (p->y_r);
-  free (p->z_r);
-  free (p->vx_r);
-  free (p->vy_r);
-  free (p->vz_r);
-  free (p->ax_r);
-  free (p->ay_r);
-  free (p->az_r);
-  free (p->x_s);
-  free (p->y_s);
-  free (p->z_s);
-  free (p->vx_s);
-  free (p->vy_s);
-  free (p->vz_s);
-  free (p->ax_s);
-  free (p->ay_s);
-  free (p->az_s);
+  free (p->x);
+  free (p->y);
+  free (p->z);
+  free (p->vx);
+  free (p->vy);
+  free (p->vz);
+  free (p->ax);
+  free (p->ay);
+  free (p->az);
   particles_init_empty (p);
 }
 
@@ -189,25 +162,15 @@ void particles_read_binary (const char  *path,       // input file path
        */
       if (!isfinite ((double) record[0]) || !isfinite ((double) record[1]) ||
           !isfinite ((double) record[2]) || !isfinite ((double) record[3]) ||
-          !isfinite ((double) record[4]) || !isfinite ((double) record[5]) ||
-          !isfinite ((double) record[6]) || !isfinite ((double) record[7]) ||
-          !isfinite ((double) record[8]) || !isfinite ((double) record[9]) ||
-          !isfinite ((double) record[10]) || !isfinite ((double) record[11])
-          )
+          !isfinite ((double) record[4]) || !isfinite ((double) record[5]))
         die ("non-finite particle value in '%s' at index %zu", path, i);
 
-      p->x_r[i]  = (dtype) record[0];
-      p->y_r[i]  = (dtype) record[1];
-      p->z_r[i]  = (dtype) record[2];
-      p->vx_r[i] = (dtype) record[3];
-      p->vy_r[i] = (dtype) record[4];
-      p->vz_r[i] = (dtype) record[5];
-      p->x_s[i]  = (dtype) record[6];
-      p->y_s[i]  = (dtype) record[7];
-      p->z_s[i]  = (dtype) record[8];
-      p->vx_s[i] = (dtype) record[9];
-      p->vy_s[i] = (dtype) record[10];
-      p->vz_s[i] = (dtype) record[11];
+      p->x[i]  = (dtype) record[0];
+      p->y[i]  = (dtype) record[1];
+      p->z[i]  = (dtype) record[2];
+      p->vx[i] = (dtype) record[3];
+      p->vy[i] = (dtype) record[4];
+      p->vz[i] = (dtype) record[5];
     }
 
   if (fclose (fp) != 0)
@@ -244,18 +207,12 @@ void particles_write_binary (const char        *path,       // output file path
     {
       float  record[NBODY_BINARY_COMPONENTS];
 
-      record[0] = dtype_to_storage_float (p->x_r[i],  "x_r",  i);
-      record[1] = dtype_to_storage_float (p->y_r[i],  "y_r",  i);
-      record[2] = dtype_to_storage_float (p->z_r[i],  "z_r",  i);
-      record[3] = dtype_to_storage_float (p->vx_r[i], "vx_r", i);
-      record[4] = dtype_to_storage_float (p->vy_r[i], "vy_r", i);
-      record[5] = dtype_to_storage_float (p->vz_r[i], "vz_r", i);
-      record[6] = dtype_to_storage_float (p->x_s[i],  "x_s",  i);
-      record[7] = dtype_to_storage_float (p->y_s[i],  "y_s",  i);
-      record[8] = dtype_to_storage_float (p->z_s[i],  "z_s",  i);
-      record[9] = dtype_to_storage_float (p->vx_s[i], "vx_s", i);
-      record[10] = dtype_to_storage_float (p->vy_s[i], "vy_s", i);
-      record[11] = dtype_to_storage_float (p->vz_s[i], "vz_s", i);
+      record[0] = dtype_to_storage_float (p->x[i],  "x",  i);
+      record[1] = dtype_to_storage_float (p->y[i],  "y",  i);
+      record[2] = dtype_to_storage_float (p->z[i],  "z",  i);
+      record[3] = dtype_to_storage_float (p->vx[i], "vx", i);
+      record[4] = dtype_to_storage_float (p->vy[i], "vy", i);
+      record[5] = dtype_to_storage_float (p->vz[i], "vz", i);
       checked_fwrite (record, sizeof record[0], NBODY_BINARY_COMPONENTS,
                       fp, path, "particle record");
     }

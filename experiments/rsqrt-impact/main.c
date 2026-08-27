@@ -73,20 +73,48 @@ static void print_usage (const char *program    // argv[0]
 
 static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
 {
-  if (strcmp(kernel_choice, "r") == 0)
-    *kernel = compute_accelerations_rsqrt_check;
+  if (strcmp(kernel_choice, "n") == 0)
+    *kernel = compute_accelerations_naive;
+  else if (strcmp(kernel_choice, "t") == 0)
+    *kernel = compute_accelerations_third_law;
+  else if (strcmp(kernel_choice, "r") == 0)
+    *kernel = compute_accelerations_rsqrt;
+  else if (strcmp(kernel_choice, "b") == 0)
+    *kernel = compute_accelerations_blocks;
   else if (strcmp(kernel_choice, "rt") == 0)
-    *kernel = compute_accelerations_rsqrt_third_law_check;
+    *kernel = compute_accelerations_rsqrt_third_law;
+  else if (strcmp(kernel_choice, "bt") == 0)
+    *kernel = compute_accelerations_blocks_third_law;
+  else if (strcmp(kernel_choice, "br") == 0)
+    *kernel = compute_accelerations_blocks_rsqrt;
+  else if (strcmp(kernel_choice, "brt") == 0)
+    *kernel = compute_accelerations_blocks_rsqrt_third_law;
+  // else if (strcmp(kernel_choice, "omp") == 0)
+  //   *kernel = compute_accelerations_omp;
   else
     die ("unknown kernel choice: %s", kernel_choice);
 }
 
 static const char *retrieve_kernel_name(const kernel_t kernel)
 {
-  if (kernel == compute_accelerations_rsqrt_check)
+  if (kernel == compute_accelerations_naive)
+    return "n";
+  else if (kernel == compute_accelerations_third_law)
+    return "t";
+  else if (kernel == compute_accelerations_rsqrt)
     return "r";
-  else if (kernel == compute_accelerations_rsqrt_third_law_check)
+  else if (kernel == compute_accelerations_blocks)
+    return "b";
+  else if (kernel == compute_accelerations_rsqrt_third_law)
     return "rt";
+  else if (kernel == compute_accelerations_blocks_third_law)
+    return "bt";
+  else if (kernel == compute_accelerations_blocks_rsqrt)
+    return "br";
+  else if (kernel == compute_accelerations_blocks_rsqrt_third_law)
+    return "brt";
+  // else if (kernel == compute_accelerations_omp)
+  //   return "o";
   else
     die ("unknown kernel function pointer");
   return "unknown";
@@ -116,7 +144,7 @@ int main (int argc, char **argv)
   profiler_t   profiler;
 
   // Kernel Choice
-  kernel_t kernel = compute_accelerations_rsqrt_check;
+  kernel_t kernel = compute_accelerations_naive;
 
   // Parse CLI
   for (int argi = 1; argi < argc; ++argi)
@@ -186,8 +214,7 @@ int main (int argc, char **argv)
 
   // Get energy baseline
   if (profiler_flag) { t0 = get_time();}
-  total_energy (&particles, g, eps, &kinetic0, &kinetic0, &potential0, &potential0);
-  energy0 = kinetic0 + potential0;
+  energy0 = total_energy (&particles, g, eps, &kinetic0, &potential0);
   if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
 
   // Print header
@@ -209,17 +236,10 @@ int main (int argc, char **argv)
 
 
   // Integration
-  dtype  *energies_r_history        = NULL;
-  dtype  *energies_s_history        = NULL;
-  dtype  *energies_abs_diff_history = NULL;
-  dtype  *energies_rel_diff_history = NULL;
-  double  max_rel_drift             = 0.0;
+  dtype *energies_history = NULL;
+  energies_history = (dtype *) checked_aligned_alloc(nsteps * sizeof (dtype), 64u);
 
-  energies_r_history        = (dtype *) checked_aligned_alloc (nsteps * sizeof (dtype), 64u);
-  energies_s_history        = (dtype *) checked_aligned_alloc (nsteps * sizeof (dtype), 64u);
-  energies_abs_diff_history = (dtype *) checked_aligned_alloc (nsteps * sizeof (dtype), 64u);
-  energies_rel_diff_history = (dtype *) checked_aligned_alloc (nsteps * sizeof (dtype), 64u);
-
+  double max_rel_drift = 0.0;
   for (size_t step = 1u; step <= nsteps; ++step)
     {
       if (profiler_flag) { t0 = get_time();}
@@ -229,38 +249,19 @@ int main (int argc, char **argv)
       // Get diagnostics, once in a while
       if (((step % energy_every) == 0u) || (step == nsteps))
         {
-          dtype         kinetic_r;
-          dtype         potential_r;
-          dtype         kinetic_s;
-          dtype         potential_s;
-          total_energy (&particles, g, eps, &kinetic_r, &potential_r, &kinetic_s, &potential_s);
-
-          dtype         energy_r = kinetic_r + potential_r;
-          dtype         energy_s = kinetic_s + potential_s;
+          dtype         kinetic;
+          dtype         potential;
+          const dtype   energy = total_energy (&particles, g, eps, &kinetic, &potential);
           const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
-          const double  rel_r    = fabs ((double) (energy_r - energy0)) / denom;
-          const double  rel_s    = fabs ((double) (energy_s - energy0)) / denom;
+          const double  rel    = fabs ((double) (energy - energy0)) / denom;
 
-          const double abs_diff = fabs((double) (energy_r - energy_s));
-          const double rel_diff = (energy_r - energy_s) / fmax(fabs((double) energy_r), fabs((double) energy_s));
-
-          // Store energies in history arrays
-          energies_r_history[step-1] = energy_r;
-          energies_s_history[step-1] = energy_s;
-          energies_abs_diff_history[step-1] = abs_diff;
-          energies_rel_diff_history[step-1] = rel_diff;
-
+          energies_history[step-1] = energy;
+          if (rel > max_rel_drift)
+            max_rel_drift = rel;
           if (!quiet)
-          {
             printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
-                    step, (double) step * (double) dt, (double) kinetic_r,
-                    (double) potential_r, (double) energy_r, rel_r);
-            printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
-                    step, (double) step * (double) dt, (double) kinetic_s,
-                    (double) potential_s, (double) energy_s, rel_s);
-            printf ("%zu %.17g %.17g %.17g\n",
-                    step, (double) step * (double) dt, abs_diff, rel_diff);
-          }
+                    step, (double) step * (double) dt, (double) kinetic,
+                    (double) potential, (double) energy, rel);
         }
     }
 
@@ -301,7 +302,8 @@ int main (int argc, char **argv)
       .kinetic0 = kinetic0,
       .potential0 = potential0
     };
-    save_statistics(profiler_path, &config, &profiler, energies_r_history, energies_s_history, energies_abs_diff_history, energies_rel_diff_history);
+
+    save_statistics(profiler_path, &config, &profiler, energies_history);
   }
 
   

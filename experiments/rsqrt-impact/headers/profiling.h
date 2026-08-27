@@ -57,9 +57,9 @@ static inline double get_time(void)
 void profiler_allocate (profiler_t *profiler, const size_t n_steps);
 void profiler_free (const profiler_t *profiler);
 void print_statistics (const profiler_t *profiler);
-void save_statistics (const char *path, const config_t *config, const profiler_t *profiler, const double *energies_r_history, const double *energies_s_history, const double *energies_abs_diff_history, const double *energies_rel_diff_history);
-
-void save_config(const char *path, const config_t *config);
 void save_single_statistics (const char *path, const char *label, const double *times, const size_t n_steps);
+void save_config(const char *path, const config_t *config);
+void save_energies(const char *path, const char *label, const dtype *energies_history, const size_t nsteps);
+void save_statistics (const char *path, const config_t *config, const profiler_t *profiler, const dtype *energies_history);
 
 #endif // PROFILING_H
