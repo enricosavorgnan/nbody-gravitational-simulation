@@ -41,7 +41,7 @@ generate_ic: generate_initial_conditions.c $(HEADERS)
 test-aos: all
 	mkdir -p ./bins/test-aos/
 	mkdir -p ./profilings/test-aos/
-	./generate_initial_conditions --model 0 --n 100 --seed 42 --output ./bins/test-aos.bin
+	./generate_initial_conditions --model 0 --n 1000000 --seed 42 --output ./bins/test-aos.bin
 	for i in 1 2 3 4 5; do \
 		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-aos/n.out --kernel "n" --profiler 1  --profiler-path ./profilings/test-aos/n.txt; \
 		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-aos/r.out --kernel "t" --profiler 1  --profiler-path ./profilings/test-aos/t.txt; \
