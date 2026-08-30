@@ -51,6 +51,7 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
       dtype        ayi = 0.0;
       dtype        azi = 0.0;
 
+      UNROLL_PRAGMA
       for (j = 0u; j < n; ++j)
         {
           if (j != i)
@@ -108,6 +109,7 @@ void compute_accelerations_third_law(const size_t  n,          // number of part
     dtype        ayi = (dtype) 0.0;
     dtype        azi = (dtype) 0.0;
 
+    UNROLL_PRAGMA
     for (j = i + 1; j < n; ++j)
     {
       // Compute distances and forces
@@ -163,6 +165,7 @@ void compute_accelerations_rsqrt(const size_t  n,                    // number o
     dtype        ayi = 0.0;
     dtype        azi = 0.0;
 
+    UNROLL_PRAGMA
     for (j = 0u; j < n; ++j)
     {
       if (j != i)
@@ -277,6 +280,7 @@ void compute_accelerations_rsqrt_third_law(const size_t  n,          // number o
   memset(ay, 0, bytes);
   memset(az, 0, bytes);
 
+UNROLL_PRAGMA
   for (i = 0u; i < n; ++i)
   {
     const dtype  xi  = x[i];
