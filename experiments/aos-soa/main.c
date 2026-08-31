@@ -66,10 +66,33 @@ static void print_usage (const char *program    // argv[0]
            "  --energy-tol X            warning tolerance for max relative drift (default: 1e-3)\n"
            "  --kernel STR              acceleration kernel choice: n, t, r, b, rt, bt, br, brt (default: n)\n"
            "  --quiet                   only print final summary\n"
+           "  --layout [aos|soa]        data layout choice (default: aos)\n"
+           "  --papi [0|1]              enable PAPI counters (default: 0)\n"
            "  --help                    show this help message\n",
            program, NBODY_BINARY_VERSION_TEXT);
 }
 
+
+static void retrieve_kernel_aos (const char *kernel_choice, kernel_t_aos *kernel)
+{
+  if (strcmp(kernel_choice, "n") == 0)
+    *kernel = compute_accelerations_naive_aos;
+  else if (strcmp(kernel_choice, "t") == 0)
+    *kernel = compute_accelerations_third_law_aos;
+  else
+    die ("unknown kernel choice: %s", kernel_choice);
+}
+
+static const char *retrieve_kernel_name_aos (const kernel_t_aos kernel)
+{
+  if (kernel == compute_accelerations_naive_aos)
+    return "n";
+  else if (kernel == compute_accelerations_third_law_aos)
+    return "t";
+  else
+    die ("unknown kernel function pointer");
+  return "unknown";
+}
 
 static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
 {
@@ -81,7 +104,7 @@ static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
     die ("unknown kernel choice: %s", kernel_choice);
 }
 
-static const char *retrieve_kernel_name(const kernel_t kernel)
+static const char *retrieve_kernel_name (const kernel_t kernel)
 {
   if (kernel == compute_accelerations_naive)
     return "n";
@@ -104,6 +127,9 @@ int main (int argc, char **argv)
   dtype        mass          = (dtype) 1.0;
   dtype        energy_tol    = (dtype) 1.0e-3;
   bool         quiet         = false;
+  char         layout        = 'a';  // default: AoS
+  const char *kernel_name   = "n";  // default: naive kernel
+  bool         papi          = false;
   particle_t  *particles = NULL;
   size_t n = 0u;
   dtype        kinetic0;
@@ -116,8 +142,8 @@ int main (int argc, char **argv)
   double       t0             = 0.0;
   profiler_t   profiler;
 
-  // Kernel Choice
-  kernel_t kernel = compute_accelerations_naive;
+  kernel_t_aos kernel_a = compute_accelerations_naive_aos;
+  kernel_t kernel_s = compute_accelerations_naive;
 
   // Parse CLI
   for (int argi = 1; argi < argc; ++argi)
@@ -147,7 +173,26 @@ int main (int argc, char **argv)
       else if ((value = option_value (&argi, argc, argv, "--profiler-path")) != NULL)
         profiler_path = value;
       else if ((value = option_value (&argi, argc, argv, "--kernel")) != NULL)
-        retrieve_kernel(value, &kernel);
+      {
+        if (layout == 'a') retrieve_kernel_aos(value, &kernel_a);
+        else if (layout == 's') retrieve_kernel(value, &kernel_s);
+        else die ("unknown layout choice: %c", layout);
+      }
+      else if ((value = option_value (&argi, argc, argv, "--layout")) != NULL)
+        {
+          if (strcmp(value, "aos") == 0)
+            layout = 'a';
+          else if (strcmp(value, "soa") == 0)
+            layout = 's';
+          else
+            die ("unknown layout choice: %s", value);
+        }
+      else if ((value = option_value (&argi, argc, argv, "--papi")) != NULL)
+      {
+        papi = parse_size (value, "--papi");
+        if (papi != 0u && papi != 1u)
+          die ("--papi must be 0 or 1");
+      }
       else if (strcmp (argv[argi], "--quiet") == 0)
         quiet = true;
       else if (strcmp (argv[argi], "--help") == 0)
@@ -175,20 +220,26 @@ int main (int argc, char **argv)
   if (!(energy_tol > (dtype) 0.0))  die ("--energy-tol must be positive");
 
   // Instantiate profiler if requested
-  if (profiler_flag) profiler_allocate (&profiler, nsteps);
+  if (profiler_flag)
+  {
+    profiler_allocate (&profiler, nsteps);
+    if (papi) profiler_papi_init(&profiler);
+  }
 
-  // Read particles from input file
-  if (profiler_flag) { t0 = get_time();}
-  particles_read_binary (input_path, mass, &particles, &n);
-  if (profiler_flag) { profiler.reading_time = get_time() - t0;}
+  if (layout == 'a')
+  {
+    // Read particles from input file
+    if (profiler_flag) { t0 = get_time();}
+    particle_read_binary (input_path, mass, &particles, &n);
+    if (profiler_flag) { profiler.reading_time = get_time() - t0;}
 
-  // Get energy baseline
-  if (profiler_flag) { t0 = get_time();}
-  energy0 = total_energy (particles, g, eps, n, &kinetic0, &potential0);
-  if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
+    // Get energy baseline
+    if (profiler_flag) { t0 = get_time();}
+    energy0 = total_energy_aos (particles, g, eps, n, &kinetic0, &potential0);
+    if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
 
-  // Print header
-  if (!quiet)
+    // Print header
+    if (!quiet)
     {
       printf ("# Direct N-body DKD\n");
       printf ("# arithmetic_dtype=%s binary_storage=float32 format=%s\n",
@@ -196,7 +247,7 @@ int main (int argc, char **argv)
       printf ("# N=%zu nsteps=%zu dt=%.17g eps=%.17g G=%.17g mass=%.17g\n",
               n, nsteps, (double) dt, (double) eps,
               (double) g, (double) mass);
-      const char * kernel_name = retrieve_kernel_name(kernel);
+      kernel_name = retrieve_kernel_name_aos(kernel_a);
       printf ("Acceleration Kernel: %s\n", kernel_name);
       printf ("# Step \t Time \t\t\t Kinetic \t\t\t Potential \t\t\t Total \t\t\t Relative Energy Drift\n");
       printf ("%zu \t %.17g \t %.17g \t %.17g \t %.17g \t %.17g\n",
@@ -205,50 +256,138 @@ int main (int argc, char **argv)
     }
 
 
-  // Integration
-  double max_rel_drift = 0.0;
-  for (size_t step = 1u; step <= nsteps; ++step)
+    // Integration
+    double max_rel_drift = 0.0;
+    for (size_t step = 1u; step <= nsteps; ++step)
     {
       if (profiler_flag) { t0 = get_time();}
-      leapfrog_dkd_step (particles, g, eps, dt, n, &profiler, profiler_flag, step-1, kernel);
+      leapfrog_dkd_step_aos (particles, g, eps, dt, n, &profiler, profiler_flag, step-1, kernel_a);
       if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
       // Get diagnostics, once in a while
       if (((step % energy_every) == 0u) || (step == nsteps))
-        {
-          dtype         kinetic;
-          dtype         potential;
-          const dtype   energy = total_energy (particles, g, eps, n, &kinetic, &potential);
-          const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
-          const double  rel    = fabs ((double) (energy - energy0)) / denom;
+      {
+        dtype         kinetic;
+        dtype         potential;
+        const dtype   energy = total_energy_aos (particles, g, eps, n, &kinetic, &potential);
+        const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
+        const double  rel    = fabs ((double) (energy - energy0)) / denom;
 
-          if (rel > max_rel_drift)
-            max_rel_drift = rel;
-          if (!quiet)
-            printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
-                    step, (double) step * (double) dt, (double) kinetic,
-                    (double) potential, (double) energy, rel);
-        }
+        if (rel > max_rel_drift)
+          max_rel_drift = rel;
+        if (!quiet)
+          printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
+                  step, (double) step * (double) dt, (double) kinetic,
+                  (double) potential, (double) energy, rel);
+      }
     }
 
-  // Write final file
-  if (output_path != NULL)
-  {
-    if (profiler_flag) { t0 = get_time();}
-    particles_write_binary (output_path, particles, n);
-    if (profiler_flag) { profiler.writing_time = get_time() - t0;}
+    // Write final file
+    if (output_path != NULL)
+    {
+      if (profiler_flag) { t0 = get_time();}
+      particle_write_binary (output_path, particles, n);
+      if (profiler_flag) { profiler.writing_time = get_time() - t0;}
+    }
+
+    // Say good-bye
+    printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n",
+            n, nsteps, DTYPE_NAME, max_rel_drift, (double) energy_tol,
+            (max_rel_drift <= (double) energy_tol) ? "OK" : "WARNING");
+
+    if (max_rel_drift > (double) energy_tol)
+      fprintf (stderr,
+               "warning: relative energy drift %.6e exceeds tolerance %.6e; "
+               "try smaller --dt, larger --eps, or better initial conditions\n",
+               max_rel_drift, (double) energy_tol);
+
+    // Don't leave garbage behind you
+    particle_free(particles);
+
   }
+  else
+  {
+    particles_t  particles;
 
-  // Say good-bye
-  printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n",
-          n, nsteps, DTYPE_NAME, max_rel_drift, (double) energy_tol,
-          (max_rel_drift <= (double) energy_tol) ? "OK" : "WARNING");
+    // Allocate particles' container to an empty state
+    particles_init_empty (&particles);
 
-  if (max_rel_drift > (double) energy_tol)
-    fprintf (stderr,
-             "warning: relative energy drift %.6e exceeds tolerance %.6e; "
-             "try smaller --dt, larger --eps, or better initial conditions\n",
-             max_rel_drift, (double) energy_tol);
+    // Read particles from input file
+    if (profiler_flag) { t0 = get_time();}
+    particles_read_binary (input_path, mass, &particles);
+    if (profiler_flag) { profiler.reading_time = get_time() - t0;}
+
+    // Get energy baseline
+    if (profiler_flag) { t0 = get_time();}
+    energy0 = total_energy (&particles, g, eps, &kinetic0, &potential0);
+    if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
+
+    // Print header
+    if (!quiet)
+      {
+        printf ("# Direct N-body DKD\n");
+        printf ("# arithmetic_dtype=%s binary_storage=float32 format=%s\n",
+                DTYPE_NAME, NBODY_BINARY_VERSION_TEXT);
+        printf ("# N=%zu nsteps=%zu dt=%.17g eps=%.17g G=%.17g mass=%.17g\n",
+                particles.n, nsteps, (double) dt, (double) eps,
+                (double) g, (double) mass);
+        const char * kernel_name = retrieve_kernel_name(kernel_s);
+        printf ("Acceleration Kernel: %s\n", kernel_name);
+        printf ("# Step \t Time \t\t\t Kinetic \t\t\t Potential \t\t\t Total \t\t\t Relative Energy Drift\n");
+        printf ("%zu \t %.17g \t %.17g \t %.17g \t %.17g \t %.17g\n",
+                (size_t) 0u, 0.0, (double) kinetic0, (double) potential0,
+                (double) energy0, 0.0);
+      }
+
+
+    // Integration
+    double max_rel_drift = 0.0;
+    for (size_t step = 1u; step <= nsteps; ++step)
+      {
+        if (profiler_flag) { t0 = get_time();}
+        leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1, kernel_s);
+        if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
+
+        // Get diagnostics, once in a while
+        if (((step % energy_every) == 0u) || (step == nsteps))
+          {
+            dtype         kinetic;
+            dtype         potential;
+            const dtype   energy = total_energy (&particles, g, eps, &kinetic, &potential);
+            const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
+            const double  rel    = fabs ((double) (energy - energy0)) / denom;
+
+            if (rel > max_rel_drift)
+              max_rel_drift = rel;
+            if (!quiet)
+              printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
+                      step, (double) step * (double) dt, (double) kinetic,
+                      (double) potential, (double) energy, rel);
+          }
+      }
+
+    // Write final file
+    if (output_path != NULL)
+    {
+      if (profiler_flag) { t0 = get_time();}
+      particles_write_binary (output_path, &particles);
+      if (profiler_flag) { profiler.writing_time = get_time() - t0;}
+    }
+
+    // Say good-bye
+    printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n",
+            particles.n, nsteps, DTYPE_NAME, max_rel_drift, (double) energy_tol,
+            (max_rel_drift <= (double) energy_tol) ? "OK" : "WARNING");
+
+    if (max_rel_drift > (double) energy_tol)
+      fprintf (stderr,
+               "warning: relative energy drift %.6e exceeds tolerance %.6e; "
+               "try smaller --dt, larger --eps, or better initial conditions\n",
+               max_rel_drift, (double) energy_tol);
+
+    // Don't leave garbage behind you
+    particles_free (&particles);
+  }
 
 
   // Print profiler statistics if requested
@@ -264,16 +403,12 @@ int main (int argc, char **argv)
       .g = g,
       .mass = mass,
       .energy_tol = energy_tol,
-      .kernel_name = retrieve_kernel_name(kernel),
+      .kernel_name = kernel_name,
       .kinetic0 = kinetic0,
       .potential0 = potential0
     };
     save_statistics(profiler_path, &config, &profiler);
   }
-
-  
-  // Don't leave garbage behind you
-  particles_free (particles);
 
   return EXIT_SUCCESS;
 }
