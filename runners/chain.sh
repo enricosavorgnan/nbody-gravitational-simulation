@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-SBATCH_FILE="./runners/sbatch-aos.sh"
+SBATCH_FILE="./runners/sbatch-unroll-1.sh"
 TOTAL_RUNS=5
 
 # Submit the first job
