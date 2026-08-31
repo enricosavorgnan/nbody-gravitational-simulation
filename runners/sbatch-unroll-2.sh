@@ -13,8 +13,4 @@
 cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/loop-unroll"
 
-make clean
-make clean-folders
-make test-n-unroll
 make test-auto-unroll
-make test-no-unroll
