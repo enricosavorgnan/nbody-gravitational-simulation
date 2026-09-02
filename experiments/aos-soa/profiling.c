@@ -161,8 +161,33 @@ void save_statistics (const char *path, const config_t *config, const profiler_t
     save_single_statistics(path, "Second Drift", profiler->second_drift_time, profiler->n_steps);
 
     save_config(path, config);
+#ifdef USE_PAPI
+    save_single_papi_statistics(path, "PAPI Event Set", profiler->papi_eventset, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI Cycles", profiler->papi_cycles, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI Instructions", profiler->papi_instructions, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI L1 Misses", profiler->papi_l1_dcm, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI L2 Misses", profiler->papi_l2_dcm, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI Vectorial DP", profiler->papi_vec_dp, profiler->n_steps);
+#endif
 }
 
+#ifdef USE_PAPI
+void save_single_papi_statistics (const char *path, const char *label, const long long *values, const size_t n_steps)
+{
+    if (values == NULL || n_steps == 0) return;
+
+    FILE *fp = fopen(path, "a");
+    if (!fp) die ("Cannot open file '%s' for writing PAPI stuff", path );
+
+    fprintf(fp, "%s\n", label);
+    for (size_t i = 0; i < n_steps; i++)
+    {
+        fprintf(fp, "%lld\n", values[i]);
+    }
+    fprintf(fp, "\n");
+    fclose(fp);
+}
+#endif
 
 void profiler_papi_init (profiler_t *profiler)
 {

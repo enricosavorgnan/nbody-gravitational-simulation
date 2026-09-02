@@ -74,6 +74,9 @@ void profiler_free (const profiler_t *profiler);
 void print_statistics (const profiler_t *profiler);
 void save_single_statistics (const char *path, const char *label, const double *times, const size_t n_steps);
 void save_config(const char *path, const config_t *config);
+#ifdef USE_PAPI
+void save_single_papi_statistics (const char *path, const char *label, const long long *values, const size_t n_steps);
+#endif
 void save_statistics (const char *path, const config_t *config, const profiler_t *profiler);
 
 // PAPI stuff

@@ -1,9 +1,9 @@
 CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?=
-CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
+CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI=1
 
-LDLIBS    ?= -lm
+LDLIBS    ?= -lm -lpapi
 PRECISION ?= double
 USE_PAPI  ?= 0
 
