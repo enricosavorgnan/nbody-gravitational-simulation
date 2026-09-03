@@ -162,7 +162,6 @@ void save_statistics (const char *path, const config_t *config, const profiler_t
 
     save_config(path, config);
 #ifdef USE_PAPI
-    save_single_papi_statistics(path, "PAPI Event Set", profiler->papi_eventset, profiler->n_steps);
     save_single_papi_statistics(path, "PAPI Cycles", profiler->papi_cycles, profiler->n_steps);
     save_single_papi_statistics(path, "PAPI Instructions", profiler->papi_instructions, profiler->n_steps);
     save_single_papi_statistics(path, "PAPI L1 Misses", profiler->papi_l1_dcm, profiler->n_steps);
