@@ -13,4 +13,4 @@
 cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/aos-soa"
 
-make test-aos
+make test-aos USE_PAPI=1
