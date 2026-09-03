@@ -13,6 +13,4 @@
 cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/aos-soa"
 
-make clean
-make clean-folders
 make test-aos
