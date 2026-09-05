@@ -44,6 +44,7 @@ typedef struct config_s
     const char * kernel_name;
     dtype kinetic0;
     dtype potential0;
+    dtype max_relative_error;
 } config_t;
 
 

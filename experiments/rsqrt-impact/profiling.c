@@ -128,6 +128,7 @@ void save_config(const char *path, const config_t *config)
     fprintf(fp, "kernel_choice: %s\n", config->kernel_name);
     fprintf(fp, "kinetic0: %.6e\n", config->kinetic0);
     fprintf(fp, "potential0: %.6e\n", config->potential0);
+    fprintf(fp, "max_relative_error: %.6e\n", config->max_relative_error);
     fclose(fp);
 }
 
@@ -140,7 +141,7 @@ void save_energies(const char *path, const char *label, const dtype *energies_hi
     fprintf(fp, "%s\n", label);
     for (size_t i = 0; i < nsteps; i++)
     {
-        fprintf(fp, "%.6e\n", energies_history[i]);
+        fprintf(fp, "%.17g\n", energies_history[i]);
     }
     fprintf(fp, "\n");
 
@@ -160,7 +161,7 @@ void save_statistics (const char *path, const config_t *config, const profiler_t
     save_single_statistics(path, "Kick", profiler->kick_time, profiler->n_steps);
     save_single_statistics(path, "Second Drift", profiler->second_drift_time, profiler->n_steps);
 
-    save_energies(path, "Energies History", energies_history, config->nsteps);
+    save_energies(path, "Energy History", energies_history, config->nsteps);
 
     save_config(path, config);
 }

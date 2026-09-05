@@ -296,7 +296,8 @@ int main (int argc, char **argv)
       .energy_tol = energy_tol,
       .kernel_name = retrieve_kernel_name(kernel),
       .kinetic0 = kinetic0,
-      .potential0 = potential0
+      .potential0 = potential0,
+      .max_relative_error = max_rel_drift
     };
     save_statistics(profiler_path, &config, &profiler);
   }

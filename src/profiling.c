@@ -128,6 +128,7 @@ void save_config(const char *path, const config_t *config)
     fprintf(fp, "kernel_choice: %s\n", config->kernel_name);
     fprintf(fp, "kinetic0: %.6e\n", config->kinetic0);
     fprintf(fp, "potential0: %.6e\n", config->potential0);
+    fprintf(fp, "max_relative_error: %.6e\n", config->max_relative_error);
     fclose(fp);
 }
 
