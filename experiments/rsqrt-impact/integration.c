@@ -52,21 +52,18 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
       dtype        azi = 0.0;
 
       for (j = 0u; j < n; ++j)
-        {
-          if (j != i)
-            {
-              const dtype  dx   = x[j] - xi;
-              const dtype  dy   = y[j] - yi;
-              const dtype  dz   = z[j] - zi;
-              const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-              const dtype  invr = 1.0 / dtype_sqrt (r2);
-              const dtype  s    = g * mass * invr * invr * invr;
+      {
+          const dtype  dx   = x[j] - xi;
+          const dtype  dy   = y[j] - yi;
+          const dtype  dz   = z[j] - zi;
+          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype  invr = 1.0 / dtype_sqrt (r2);
+          const dtype  s    = g * mass * invr * invr * invr;
 
-              axi += dx * s;
-              ayi += dy * s;
-              azi += dz * s;
-            }
-        }
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
+      }
 
       ax[i] = axi;
       ay[i] = ayi;
@@ -165,19 +162,16 @@ void compute_accelerations_rsqrt(const size_t  n,                    // number o
 
     for (j = 0u; j < n; ++j)
     {
-      if (j != i)
-      {
-        const dtype  dx   = x[j] - xi;
-        const dtype  dy   = y[j] - yi;
-        const dtype  dz   = z[j] - zi;
-        const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-        const dtype  invr = (dtype) dtype_rsqrt(r2);
-        const dtype  s    = g * mass * invr * invr * invr;
+      const dtype  dx   = x[j] - xi;
+      const dtype  dy   = y[j] - yi;
+      const dtype  dz   = z[j] - zi;
+      const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+      const dtype  invr = (dtype) dtype_rsqrt(r2);
+      const dtype  s    = g * mass * invr * invr * invr;
 
-        axi += dx * s;
-        ayi += dy * s;
-        azi += dz * s;
-      }
+      axi += dx * s;
+      ayi += dy * s;
+      azi += dz * s;
     }
 
     ax[i] = axi;
@@ -231,19 +225,16 @@ void compute_accelerations_blocks(const size_t  n,                   // number o
 
         for (size_t j = j_start; j < j_end; j++)
         {
-          if (j!=i)
-          {
-            const dtype  dx   = x[j] - xi;
-            const dtype  dy   = y[j] - yi;
-            const dtype  dz   = z[j] - zi;
-            const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype  invr = 1.0 / dtype_sqrt (r2);
-            const dtype  s    = g * mass * invr * invr * invr;
+          const dtype  dx   = x[j] - xi;
+          const dtype  dy   = y[j] - yi;
+          const dtype  dz   = z[j] - zi;
+          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype  invr = 1.0 / dtype_sqrt (r2);
+          const dtype  s    = g * mass * invr * invr * invr;
 
-            axi += dx * s;
-            ayi += dy * s;
-            azi += dz * s;
-          }
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
         }
 
         ax[i] += axi;
@@ -360,19 +351,16 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
 
         for (size_t j = j_start; j < j_end; j++)
         {
-          if (j!=i)
-          {
-            const dtype  dx   = x[j] - xi;
-            const dtype  dy   = y[j] - yi;
-            const dtype  dz   = z[j] - zi;
-            const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype  invr = dtype_rsqrt(r2);
-            const dtype  s    = g * mass * invr * invr * invr;
+          const dtype  dx   = x[j] - xi;
+          const dtype  dy   = y[j] - yi;
+          const dtype  dz   = z[j] - zi;
+          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype  invr = dtype_rsqrt(r2);
+          const dtype  s    = g * mass * invr * invr * invr;
 
-            axi += dx * s;
-            ayi += dy * s;
-            azi += dz * s;
-          }
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
         }
 
         ax[i] += axi;
