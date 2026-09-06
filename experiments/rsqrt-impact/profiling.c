@@ -24,6 +24,15 @@ void profiler_allocate (profiler_t *profiler, const size_t n_steps)
     profiler->kick_time                 = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
     profiler->second_drift_time         = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
     profiler->total_step_time           = checked_aligned_alloc(bytes, NBODY_ALIGNMENT);
+
+#ifdef USE_PAPI
+    profiler->papi_eventset             = PAPI_NULL;
+    profiler->papi_cycles                = checked_aligned_alloc(n_steps * sizeof(long long), NBODY_ALIGNMENT);
+    profiler->papi_instructions          = checked_aligned_alloc(n_steps * sizeof(long long), NBODY_ALIGNMENT);
+    profiler->papi_l1_dcm                = checked_aligned_alloc(n_steps * sizeof(long long), NBODY_ALIGNMENT);
+    profiler->papi_l2_dcm                = checked_aligned_alloc(n_steps * sizeof(long long), NBODY_ALIGNMENT);
+    profiler->papi_vec_dp                = checked_aligned_alloc(n_steps * sizeof(long long), NBODY_ALIGNMENT);
+#endif
 }
 
 
@@ -34,6 +43,13 @@ void profiler_free (const profiler_t *profiler)
     free(profiler->kick_time);
     free(profiler->second_drift_time);
     free(profiler->total_step_time);
+#ifdef USE_PAPI
+    free(profiler->papi_cycles);
+    free(profiler->papi_instructions);
+    free(profiler->papi_l1_dcm);
+    free(profiler->papi_l2_dcm);
+    free(profiler->papi_vec_dp);
+#endif
 }
 
 
@@ -164,4 +180,85 @@ void save_statistics (const char *path, const config_t *config, const profiler_t
     save_energies(path, "Energy History", energies_history, config->nsteps);
 
     save_config(path, config);
+#ifdef USE_PAPI
+    save_single_papi_statistics(path, "PAPI Cycles", profiler->papi_cycles, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI Instructions", profiler->papi_instructions, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI L1 Misses", profiler->papi_l1_dcm, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI L2 Misses", profiler->papi_l2_dcm, profiler->n_steps);
+    save_single_papi_statistics(path, "PAPI Vectorial DP", profiler->papi_vec_dp, profiler->n_steps);
+#endif
 }
+
+#ifdef USE_PAPI
+void save_single_papi_statistics (const char *path, const char *label, const long long *values, const size_t n_steps)
+{
+    if (values == NULL || n_steps == 0) return;
+
+    FILE *fp = fopen(path, "a");
+    if (!fp) die ("Cannot open file '%s' for writing PAPI stuff", path );
+
+    fprintf(fp, "%s\n", label);
+    for (size_t i = 0; i < n_steps; i++)
+    {
+        fprintf(fp, "%lld\n", values[i]);
+    }
+    fprintf(fp, "\n");
+    fclose(fp);
+}
+#endif
+
+void profiler_papi_init (profiler_t *profiler)
+{
+#ifdef USE_PAPI
+    int retval = PAPI_library_init(PAPI_VER_CURRENT);
+    if (retval != PAPI_VER_CURRENT)
+        die("PAPI init error: %s", PAPI_strerror(retval));
+
+    profiler->papi_eventset = PAPI_NULL;
+    if (PAPI_create_eventset(&profiler->papi_eventset) != PAPI_OK)
+        die("PAPI_create_eventset failed");
+
+    // Add events
+    PAPI_add_event(profiler->papi_eventset, PAPI_TOT_CYC);
+    PAPI_add_event(profiler->papi_eventset, PAPI_TOT_INS);
+    PAPI_add_event(profiler->papi_eventset, PAPI_L1_DCM);
+    PAPI_add_event(profiler->papi_eventset, PAPI_DP_OPS);
+#else
+    (void) profiler;
+#endif
+}
+
+void profiler_papi_start (profiler_t *profiler)
+{
+#ifdef USE_PAPI
+    PAPI_reset(profiler->papi_eventset);
+    PAPI_start(profiler->papi_eventset);
+#else
+    (void) profiler;
+#endif
+}
+
+void profiler_papi_stop (profiler_t *profiler, const size_t step)
+{
+#ifdef USE_PAPI
+    long long values[PAPI_EVENTS_COUNT] = {0};
+    PAPI_stop(profiler->papi_eventset, values);
+    profiler->papi_cycles[step]       = values[0];
+    profiler->papi_instructions[step] = values[1];
+    profiler->papi_l1_dcm[step]       = values[2];
+    profiler->papi_vec_dp[step]       = values[3];
+#else
+    (void) profiler; (void) step;
+#endif
+}
+
+void profiler_papi_free (profiler_t *profiler)
+{
+#ifdef USE_PAPI
+    PAPI_cleanup_eventset(profiler->papi_eventset);
+    PAPI_destroy_eventset(&profiler->papi_eventset);
+    PAPI_shutdown();
+#else
+    (void) profiler;
+#endif
+}

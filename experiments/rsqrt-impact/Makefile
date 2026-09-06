@@ -1,10 +1,12 @@
 CC        ?= cc
 STD       ?= -std=c11
-CPPFLAGS  ?=
+CPPFLAGS  ?= -I$(HOME)/opt/papi/include
+LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
 CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOPS=$(N_RSQRT_LOOP)
 
 LDLIBS    ?= -lm
 PRECISION ?= double
+USE_PAPI  ?= 0
 
 PROGRAMS := main generate_initial_conditions
 HEADERS  := 	./headers/common.h \
@@ -21,6 +23,11 @@ else
 $(error PRECISION must be either double or float)
 endif
 
+ifeq ($(USE_PAPI), 1)
+CFLAGS += -DUSE_PAPI
+LDLIBS += -lpapi
+endif
+
 NBODY_OBJS := main.o integration.o particles.o profiling.o utils.o
 
 .PHONY: all clean run-smoke
@@ -29,10 +36,12 @@ all: $(PROGRAMS)
 
 
 main: $(NBODY_OBJS)
-	$(CC) $(STD) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) $(STD) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 generate_initial_conditions: generate_initial_conditions.c $(HEADERS)
-	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -o $@ $< $(LDLIBS)
+	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
+
+generate_ic: generate_initial_conditions
 
 %.o: %.c $(HEADERS)
 	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -c $< -o $@

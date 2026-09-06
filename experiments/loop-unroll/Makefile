@@ -1,11 +1,13 @@
 CC        ?= cc
 STD       ?= -std=c11
 UNROLL	  ?= 0
-CPPFLAGS  ?=
-CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=$(UNROLL)
+CPPFLAGS  ?= -I$(HOME)/opt/papi/include
+LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
+CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=$(UNROLL)
 
 LDLIBS    ?= -lm
 PRECISION ?= double
+USE_PAPI  ?= 0
 
 PROGRAMS := main generate_initial_conditions
 HEADERS  := 	./headers/common.h \
@@ -20,6 +22,11 @@ else ifeq ($(PRECISION),double)
 PRECISION_CPPFLAGS := -DNBODY_USE_DOUBLE
 else
 $(error PRECISION must be either double or float)
+endif
+
+ifeq ($(USE_PAPI), 1)
+CFLAGS += -DUSE_PAPI
+LDLIBS += -lpapi
 endif
 
 NBODY_OBJS := main.o integration.o particles.o profiling.o utils.o
@@ -38,10 +45,12 @@ all-n-unroll all-auto-unroll all-no-unroll: clean
 
 
 main: $(NBODY_OBJS)
-	$(CC) $(STD) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) $(STD) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-generate_ic: generate_initial_conditions.c $(HEADERS)
-	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -o $@ $< $(LDLIBS)
+generate_initial_conditions: generate_initial_conditions.c $(HEADERS)
+	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
+
+generate_ic: generate_initial_conditions
 
 %.o: %.c $(HEADERS)
 	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -c $< -o $@

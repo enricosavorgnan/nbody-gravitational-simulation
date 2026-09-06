@@ -66,6 +66,7 @@ static void print_usage (const char *program    // argv[0]
            "  --energy-tol X            warning tolerance for max relative drift (default: 1e-3)\n"
            "  --kernel STR              acceleration kernel choice: n, t, r, b, rt, bt, br, brt (default: n)\n"
            "  --quiet                   only print final summary\n"
+           "  --papi [0|1]              enable PAPI counters (default: 0)\n"
            "  --help                    show this help message\n",
            program, NBODY_BINARY_VERSION_TEXT);
 }
@@ -132,6 +133,7 @@ int main (int argc, char **argv)
   dtype        mass          = (dtype) 1.0;
   dtype        energy_tol    = (dtype) 1.0e-3;
   bool         quiet         = false;
+  bool         papi          = false;
   particles_t  particles;
   dtype        kinetic0;
   dtype        potential0;
@@ -175,6 +177,12 @@ int main (int argc, char **argv)
         profiler_path = value;
       else if ((value = option_value (&argi, argc, argv, "--kernel")) != NULL)
         retrieve_kernel(value, &kernel);
+      else if ((value = option_value (&argi, argc, argv, "--papi")) != NULL)
+      {
+        papi = parse_size (value, "--papi");
+        if (papi != 0u && papi != 1u)
+          die ("--papi must be 0 or 1");
+      }
       else if (strcmp (argv[argi], "--quiet") == 0)
         quiet = true;
       else if (strcmp (argv[argi], "--help") == 0)
@@ -202,7 +210,11 @@ int main (int argc, char **argv)
   if (!(energy_tol > (dtype) 0.0))  die ("--energy-tol must be positive");
 
   // Instantiate profiler if requested
-  if (profiler_flag) profiler_allocate (&profiler, nsteps);
+  if (profiler_flag)
+  {
+    profiler_allocate (&profiler, nsteps);
+    if (papi) profiler_papi_init(&profiler);
+  }
 
   // Allocate particles' container to an empty state
   particles_init_empty (&particles);
@@ -308,8 +320,15 @@ int main (int argc, char **argv)
   }
 
   
+  if (profiler_flag)
+  {
+    if (papi) profiler_papi_free(&profiler);
+    profiler_free(&profiler);
+  }
+
   // Don't leave garbage behind you
   particles_free (&particles);
+  free (energies_history);
 
   return EXIT_SUCCESS;
 }

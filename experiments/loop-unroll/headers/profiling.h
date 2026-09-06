@@ -4,8 +4,15 @@
  * The times are stored into a struct timespec.
  */
 
+#define _POSIX_C_SOURCE 199309L
+
 #ifndef PROFILING_H
 #define PROFILING_H
+
+#ifdef USE_PAPI
+#include <papi.h>
+#define PAPI_EVENTS_COUNT 5
+#endif
 
 #include <stdlib.h>
 #include <time.h>
@@ -28,6 +35,15 @@ typedef struct profiler_s
     double *kick_time;
     double *second_drift_time;
     double *total_step_time;
+
+#ifdef USE_PAPI
+    int papi_eventset;
+    long long *papi_cycles;
+    long long *papi_instructions;
+    long long *papi_l1_dcm;
+    long long *papi_l2_dcm;
+    long long *papi_vec_dp;
+#endif
 
 } profiler_t ;
 
@@ -59,6 +75,15 @@ void profiler_free (const profiler_t *profiler);
 void print_statistics (const profiler_t *profiler);
 void save_single_statistics (const char *path, const char *label, const double *times, const size_t n_steps);
 void save_config(const char *path, const config_t *config);
+#ifdef USE_PAPI
+void save_single_papi_statistics (const char *path, const char *label, const long long *values, const size_t n_steps);
+#endif
 void save_statistics (const char *path, const config_t *config, const profiler_t *profiler);
 
-#endif // PROFILING_H
+// PAPI stuff
+void profiler_papi_init(profiler_t *profiler);
+void profiler_papi_start(profiler_t *profiler);
+void profiler_papi_stop(profiler_t *profiler, const size_t step);
+void profiler_papi_free(profiler_t *profiler);
+
+#endif // PROFILING_H
