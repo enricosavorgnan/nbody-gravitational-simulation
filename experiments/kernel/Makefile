@@ -52,20 +52,25 @@ generate_ic: generate_initial_conditions
 
 test-kernel : all
 	mkdir -p ./bins
-	mkdir -p ./bins/test-kernel/
 	mkdir -p ./profilings
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-kernel.bin
-	for i in 1 2 3 4; do \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/n.out --kernel "n" --profiler 1  --profiler-path ./profilings/test-kernel/n.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/r.out --kernel "r" --profiler 1  --profiler-path ./profilings/test-kernel/r.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/t.out --kernel "t" --profiler 1  --profiler-path ./profilings/test-kernel/t.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/b.out --kernel "b" --profiler 1  --profiler-path ./profilings/test-kernel/b.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/rt.out --kernel "rt" --profiler 1  --profiler-path ./profilings/test-kernel/rt.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/bt.out --kernel "bt" --profiler 1  --profiler-path ./profilings/test-kernel/bt.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/br.out --kernel "br" --profiler 1  --profiler-path ./profilings/test-kernel/br.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-kernel/brt.out --kernel "brt" --profiler 1  --profiler-path ./profilings/test-kernel/brt.txt ; \
+	for i in 1; do \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/n.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/r.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/r.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/t.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/t.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/b.out --kernel "b" --profiler 1 --papi 1 --profiler-path ./profilings/b.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/rt.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/rt.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/bt.out --kernel "bt" --profiler 1 --papi 1 --profiler-path ./profilings/bt.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/br.out --kernel "br" --profiler 1 --papi 1 --profiler-path ./profilings/br.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/brt.out --kernel "brt" --profiler 1 --papi 1 --profiler-path ./profilings/brt.txt ; \
 	done
 
 
 clean:
 	rm -f $(PROGRAMS) *.o *.bin
+
+clean-folders:
+	rm -rf ./bins
+	rm -rf ./profilings
+
+

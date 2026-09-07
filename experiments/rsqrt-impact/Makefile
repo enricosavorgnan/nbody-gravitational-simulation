@@ -49,13 +49,13 @@ generate_ic: generate_initial_conditions
 test-rsqrt: all
 	mkdir -p ./bins/test-rsqrt/
 	mkdir -p ./profilings/test-rsqrt/
-	./generate_initial_conditions --model 0 --n 100 --seed 42 --output ./bins/test-rsqrt.bin
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-rsqrt.bin
 	for i in 1 2 3 4; do \
 		$(MAKE) clean all N_RSQRT_LOOP=$$i; \
 		for j in 1 2 3 4 5; do \
-			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/n_$$i.out --kernel n  --profiler 1 --profiler-path ./profilings/test-rsqrt/n_$$i.txt; \
-			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/r_$$i.out --kernel r  --profiler 1 --profiler-path ./profilings/test-rsqrt/r_$$i.txt; \
-			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/rt_$$i.out --kernel rt --profiler 1 --profiler-path ./profilings/test-rsqrt/rt_$$i.txt; \
+			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/n_$$i.out --kernel n  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/n_$$i.txt; \
+			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/r_$$i.out --kernel r  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/r_$$i.txt; \
+			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/rt_$$i.out --kernel rt --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/rt_$$i.txt; \
 		done \
 	done
 

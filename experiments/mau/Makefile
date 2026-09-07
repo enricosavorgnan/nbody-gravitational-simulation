@@ -48,23 +48,21 @@ generate_ic: generate_initial_conditions
 
 test-mau: all
 	mkdir -p ./bins
-	mkdir -p ./bins/test-mau/
 	mkdir -p ./profilings
-	mkdir -p ./profilings/test-mau/
-	./generate_initial_conditions --model 0 --n 100 --seed 42 --output ./bins/test-mau.bin
-	for i in 1 2 3 4 5; do \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/m2.out --kernel "m2" --profiler 1 --papi 1  --profiler-path ./profilings/test-mau/m2.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/m4.out --kernel "m4" --profiler 1  --profiler-path ./profilings/test-mau/m4.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/m8.out --kernel "m8" --profiler 1  --profiler-path ./profilings/test-mau/m8.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/m16.out --kernel "m16" --profiler 1  --profiler-path ./profilings/test-mau/m16.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/rm2.out --kernel "rm2" --profiler 1  --profiler-path ./profilings/test-mau/rm2.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/rm4.out --kernel "rm4" --profiler 1  --profiler-path ./profilings/test-mau/rm4.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/rm8.out --kernel "rm8" --profiler 1  --profiler-path ./profilings/test-mau/rm8.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/rm16.out --kernel "rm16" --profiler 1  --profiler-path ./profilings/test-mau/rm16.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/brm2.out --kernel "brm2" --profiler 1  --profiler-path ./profilings/test-mau/brm2.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/brm4.out --kernel "brm4" --profiler 1  --profiler-path ./profilings/test-mau/brm4.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/brm8.out --kernel "brm8" --profiler 1  --profiler-path ./profilings/test-mau/brm8.txt; \
-		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/brm16.out --kernel "brm16" --profiler 1  --profiler-path ./profilings/test-mau/brm16.txt; \
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-mau.bin
+	for i in 1; do \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/m2.out --kernel "m2" --profiler 1 --papi 1 --profiler-path ./profilings/m2.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/m4.out --kernel "m4" --profiler 1 --papi 1 --profiler-path ./profilings/m4.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/m8.out --kernel "m8" --profiler 1 --papi 1 --profiler-path ./profilings/m8.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/m16.out --kernel "m16" --profiler 1 --papi 1 --profiler-path ./profilings/m16.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/rm2.out --kernel "rm2" --profiler 1 --papi 1 --profiler-path ./profilings/rm2.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/rm4.out --kernel "rm4" --profiler 1 --papi 1 --profiler-path ./profilings/rm4.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/rm8.out --kernel "rm8" --profiler 1 --papi 1 --profiler-path ./profilings/rm8.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/rm16.out --kernel "rm16" --profiler 1 --papi 1 --profiler-path ./profilings/rm16.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/brm2.out --kernel "brm2" --profiler 1 --papi 1 --profiler-path ./profilings/brm2.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/brm4.out --kernel "brm4" --profiler 1 --papi 1 --profiler-path ./profilings/brm4.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/brm8.out --kernel "brm8" --profiler 1 --papi 1 --profiler-path ./profilings/brm8.txt; \
+		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/brm16.out --kernel "brm16" --profiler 1 --papi 1 --profiler-path ./profilings/brm16.txt; \
 	done
 
 clean:
@@ -72,5 +70,5 @@ clean:
 
 
 clean-folders:
-	rm -rf ./bins/test-mau/
-	rm -rf ./profilings/test-mau/
+	rm -rf ./bins
+	rm -rf ./profilings

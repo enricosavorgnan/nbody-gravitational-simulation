@@ -48,14 +48,14 @@ generate_initial_conditions: generate_initial_conditions.c $(HEADERS)
 
 
 test-aos: all
-	mkdir -p ./bins/test-aos/
-	mkdir -p ./profilings/test-aos/
+	mkdir -p ./bins/
+	mkdir -p ./profilings/
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-aos.bin
 	for i in 1; do \
-		./main --input ./bins/test-aos.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-aos/n.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/test-aos/n-aos.txt --papi 1; \
-		./main --input ./bins/test-aos.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-aos/n.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/test-aos/n-soa.txt --papi 1; \
-		./main --input ./bins/test-aos.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-aos/r.out --layout "aos" --kernel "t" --profiler 1  --profiler-path ./profilings/test-aos/t-aos.txt --papi 1; \
-		./main --input ./bins/test-aos.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-aos/r.out --layout "soa" --kernel "t" --profiler 1  --profiler-path ./profilings/test-aos/t-soa.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n-aos.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/n-aos.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n-soa.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/n-soa.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/r-aos.out --layout "aos" --kernel "t" --profiler 1  --profiler-path ./profilings/t-aos.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/r-soa.out --layout "soa" --kernel "t" --profiler 1  --profiler-path ./profilings/t-soa.txt --papi 1; \
 	done
 
 
@@ -63,5 +63,5 @@ clean:
 	rm -f $(PROGRAMS) *.o *.bin
 
 clean-folders:
-	rm -rf ./bins/test-aos/
-	rm -rf ./profilings/test-aos/
+	rm -rf ./bins/
+	rm -rf ./profilings/
