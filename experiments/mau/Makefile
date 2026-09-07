@@ -3,10 +3,10 @@ STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
 CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
-
 LDLIBS    ?= -lm
+
 PRECISION ?= double
-USE_PAPI  ?= 0
+USE_PAPI  ?= 1
 
 PROGRAMS := main generate_initial_conditions
 HEADERS  := 	./headers/common.h \
