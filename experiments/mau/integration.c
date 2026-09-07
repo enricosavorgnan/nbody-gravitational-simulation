@@ -567,10 +567,323 @@ void compute_accelerations_rsqrt_mau16(const size_t  n,
 
 
 
-void compute_accelerations_blocks_rsqrt_mau2();
-void compute_accelerations_blocks_rsqrt_mau4();
-void compute_accelerations_blocks_rsqrt_mau8();
-void compute_accelerations_blocks_rsqrt_mau16();
+void compute_accelerations_blocks_rsqrt_mau2(const size_t  n,                   // number of particles)
+                                              const dtype   g,                   // gravitational constant
+                                              const dtype   mass,                // mass of every source particle
+                                              const dtype   eps,                 // Plummer softening length
+                                              const dtype * restrict x,          // x positions, read-only
+                                              const dtype * restrict y,          // y positions, read-only
+                                              const dtype * restrict z,          // z positions, read-only
+                                              dtype * restrict ax,               // x acceleration, overwritten
+                                              dtype * restrict ay,               // y acceleration, overwritten
+                                              dtype * restrict az                // z acceleration, overwritten
+                                        )
+{
+  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  const dtype  eps2 = eps * eps;
+
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
+  for (size_t b_i = 0; b_i < blocks; b_i++)
+  {
+    size_t i_start   = b_i * BLOCK_SIZE;
+    size_t i_end     = i_start + BLOCK_SIZE;
+    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+
+    for (size_t b_j = 0; b_j < blocks; b_j++)
+    {
+      size_t j_start     = b_j * BLOCK_SIZE;
+      size_t j_end       = j_start + BLOCK_SIZE;
+      j_end           = j_end <= n ? j_end : n;
+
+      for (size_t i = i_start; i < i_end; i++)
+      {
+        dtype axc[2] = {0.};
+        dtype ayc[2] = {0.};
+        dtype azc[2] = {0.};
+        size_t j = j_start;
+        size_t j_tile = j_start + ((j_end - j_start) & ~(size_t) 1u); // Round down to multiple of 2
+
+        for (; j < j_tile; j += 2u)
+        {
+#pragma GCC unroll 2
+          for (size_t u = 0u; u < 2u; ++u)
+          {
+            const dtype dx   = x[j + u] - x[i];
+            const dtype dy   = y[j + u] - y[i];
+            const dtype dz   = z[j + u] - z[i];
+            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+            const dtype invr = dtype_rsqrt (r2);
+            const dtype s    = g * mass * invr * invr * invr;
+
+            axc[u] += dx * s;
+            ayc[u] += dy * s;
+            azc[u] += dz * s;
+          }
+        }
+        for (; j < j_end; ++j)
+        {
+          const dtype dx   = x[j] - x[i];
+          const dtype dy   = y[j] - y[i];
+          const dtype dz   = z[j] - z[i];
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = dtype_rsqrt (r2);
+          const dtype s    = g * mass * invr * invr * invr;
+
+          axc[0] += dx * s;
+          ayc[0] += dy * s;
+          azc[0] += dz * s;
+        }
+        ax[i] += axc[0] + axc[1];
+        ay[i] += ayc[0] + ayc[1];
+        az[i] += azc[0] + azc[1];
+      }
+    }
+  }
+}
+
+void compute_accelerations_blocks_rsqrt_mau4(const size_t  n,                   // number of particles)
+                                              const dtype   g,                   // gravitational constant
+                                              const dtype   mass,                // mass of every source particle
+                                              const dtype   eps,                 // Plummer softening length
+                                              const dtype * restrict x,          // x positions, read-only
+                                              const dtype * restrict y,          // y positions, read-only
+                                              const dtype * restrict z,          // z positions, read-only
+                                              dtype * restrict ax,               // x acceleration, overwritten
+                                              dtype * restrict ay,               // y acceleration, overwritten
+                                              dtype * restrict az                // z acceleration, overwritten
+                                        )
+{
+  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  const dtype  eps2 = eps * eps;
+
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
+  for (size_t b_i = 0; b_i < blocks; b_i++)
+  {
+    size_t i_start   = b_i * BLOCK_SIZE;
+    size_t i_end     = i_start + BLOCK_SIZE;
+    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+
+    for (size_t b_j = 0; b_j < blocks; b_j++)
+    {
+      size_t j_start     = b_j * BLOCK_SIZE;
+      size_t j_end       = j_start + BLOCK_SIZE;
+      j_end           = j_end <= n ? j_end : n;
+
+      for (size_t i = i_start; i < i_end; i++)
+      {
+        dtype axc[4] = {0.};
+        dtype ayc[4] = {0.};
+        dtype azc[4] = {0.};
+        size_t j = j_start;
+        size_t j_tile = j_start + ((j_end - j_start) & ~(size_t) 3u); // Round down to multiple of 4
+
+        for (; j < j_tile; j += 4u)
+        {
+#pragma GCC unroll 2
+          for (size_t u = 0u; u < 4u; ++u)
+          {
+            const dtype dx   = x[j + u] - x[i];
+            const dtype dy   = y[j + u] - y[i];
+            const dtype dz   = z[j + u] - z[i];
+            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+            const dtype invr = dtype_rsqrt (r2);
+            const dtype s    = g * mass * invr * invr * invr;
+
+            axc[u] += dx * s;
+            ayc[u] += dy * s;
+            azc[u] += dz * s;
+          }
+        }
+        for (; j < j_end; ++j)
+        {
+          const dtype dx   = x[j] - x[i];
+          const dtype dy   = y[j] - y[i];
+          const dtype dz   = z[j] - z[i];
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = dtype_rsqrt (r2);
+          const dtype s    = g * mass * invr * invr * invr;
+
+          axc[0] += dx * s;
+          ayc[0] += dy * s;
+          azc[0] += dz * s;
+        }
+        ax[i] += (axc[0] + axc[1]) + (axc[2] + axc[3]);
+        ay[i] += (ayc[0] + ayc[1]) + (ayc[2] + ayc[3]);
+        az[i] += (azc[0] + azc[1]) + (azc[2] + azc[3]);
+      }
+    }
+  }
+}
+
+void compute_accelerations_blocks_rsqrt_mau8(const size_t  n,                   // number of particles)
+                                              const dtype   g,                   // gravitational constant
+                                              const dtype   mass,                // mass of every source particle
+                                              const dtype   eps,                 // Plummer softening length
+                                              const dtype * restrict x,          // x positions, read-only
+                                              const dtype * restrict y,          // y positions, read-only
+                                              const dtype * restrict z,          // z positions, read-only
+                                              dtype * restrict ax,               // x acceleration, overwritten
+                                              dtype * restrict ay,               // y acceleration, overwritten
+                                              dtype * restrict az                // z acceleration, overwritten
+                                        )
+{
+  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  const dtype  eps2 = eps * eps;
+
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
+  for (size_t b_i = 0; b_i < blocks; b_i++)
+  {
+    size_t i_start   = b_i * BLOCK_SIZE;
+    size_t i_end     = i_start + BLOCK_SIZE;
+    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+
+    for (size_t b_j = 0; b_j < blocks; b_j++)
+    {
+      size_t j_start     = b_j * BLOCK_SIZE;
+      size_t j_end       = j_start + BLOCK_SIZE;
+      j_end           = j_end <= n ? j_end : n;
+
+      for (size_t i = i_start; i < i_end; i++)
+      {
+        dtype axc[8] = {0.};
+        dtype ayc[8] = {0.};
+        dtype azc[8] = {0.};
+        size_t j = j_start;
+        size_t j_tile = j_start + ((j_end - j_start) & ~(size_t) 7u); // Round down to multiple of 8
+
+        for (; j < j_tile; j += 8u)
+        {
+#pragma GCC unroll 8
+          for (size_t u = 0u; u < 8u; ++u)
+          {
+            const dtype dx   = x[j + u] - x[i];
+            const dtype dy   = y[j + u] - y[i];
+            const dtype dz   = z[j + u] - z[i];
+            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+            const dtype invr = dtype_rsqrt (r2);
+            const dtype s    = g * mass * invr * invr * invr;
+
+            axc[u] += dx * s;
+            ayc[u] += dy * s;
+            azc[u] += dz * s;
+          }
+        }
+        for (; j < j_end; ++j)
+        {
+          const dtype dx   = x[j] - x[i];
+          const dtype dy   = y[j] - y[i];
+          const dtype dz   = z[j] - z[i];
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = dtype_rsqrt (r2);
+          const dtype s    = g * mass * invr * invr * invr;
+
+          axc[0] += dx * s;
+          ayc[0] += dy * s;
+          azc[0] += dz * s;
+        }
+        ax[i] += ((axc[0] + axc[1])+(axc[2] + axc[3])) + ((axc[4] + axc[5]) + (axc[6] + axc[7]));
+        ay[i] += ((ayc[0] + ayc[1])+(ayc[2] + ayc[3])) + ((ayc[4] + ayc[5]) + (ayc[6] + ayc[7]));
+        az[i] += ((azc[0] + azc[1])+(azc[2] + azc[3])) + ((azc[4] + azc[5]) + (azc[6] + azc[7]));
+      }
+    }
+  }
+}
+
+
+void compute_accelerations_blocks_rsqrt_mau16(const size_t  n,                   // number of particles)
+                                              const dtype   g,                   // gravitational constant
+                                              const dtype   mass,                // mass of every source particle
+                                              const dtype   eps,                 // Plummer softening length
+                                              const dtype * restrict x,          // x positions, read-only
+                                              const dtype * restrict y,          // y positions, read-only
+                                              const dtype * restrict z,          // z positions, read-only
+                                              dtype * restrict ax,               // x acceleration, overwritten
+                                              dtype * restrict ay,               // y acceleration, overwritten
+                                              dtype * restrict az                // z acceleration, overwritten
+                                        )
+{
+  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
+  const dtype  eps2 = eps * eps;
+
+  // Initialize acceleration arrays to zero
+  const size_t bytes = n * sizeof(dtype);
+  memset(ax, 0, bytes);
+  memset(ay, 0, bytes);
+  memset(az, 0, bytes);
+
+  for (size_t b_i = 0; b_i < blocks; b_i++)
+  {
+    size_t i_start   = b_i * BLOCK_SIZE;
+    size_t i_end     = i_start + BLOCK_SIZE;
+    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+
+    for (size_t b_j = 0; b_j < blocks; b_j++)
+    {
+      size_t j_start     = b_j * BLOCK_SIZE;
+      size_t j_end       = j_start + BLOCK_SIZE;
+      j_end           = j_end <= n ? j_end : n;
+
+      for (size_t i = i_start; i < i_end; i++)
+      {
+        dtype axc[16] = {0.};
+        dtype ayc[16] = {0.};
+        dtype azc[16] = {0.};
+        size_t j = j_start;
+        size_t j_tile = j_start + ((j_end - j_start) & ~(size_t) 15u); // Round down to multiple of 15
+
+        for (; j < j_tile; j += 16u)
+        {
+#pragma GCC unroll 16
+          for (size_t u = 0u; u < 16u; ++u)
+          {
+            const dtype dx   = x[j + u] - x[i];
+            const dtype dy   = y[j + u] - y[i];
+            const dtype dz   = z[j + u] - z[i];
+            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+            const dtype invr = dtype_rsqrt (r2);
+            const dtype s    = g * mass * invr * invr * invr;
+
+            axc[u] += dx * s;
+            ayc[u] += dy * s;
+            azc[u] += dz * s;
+          }
+        }
+        for (; j < j_end; ++j)
+        {
+          const dtype dx   = x[j] - x[i];
+          const dtype dy   = y[j] - y[i];
+          const dtype dz   = z[j] - z[i];
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = dtype_rsqrt (r2);
+          const dtype s    = g * mass * invr * invr * invr;
+
+          axc[0] += dx * s;
+          ayc[0] += dy * s;
+          azc[0] += dz * s;
+        }
+        ax[i] += (((axc[0] + axc[1]) + (axc[2] + axc[3])) + ((axc[4] + axc[5]) + (axc[6] + axc[7]))) + (((axc[8] + axc[9]) + (axc[10] + axc[11])) + ((axc[12] + axc[13]) + (axc[14] + axc[15])));
+        ay[i] += (((ayc[0] + ayc[1]) + (ayc[2] + ayc[3])) + ((ayc[4] + ayc[5]) + (ayc[6] + ayc[7]))) + (((ayc[8] + ayc[9]) + (ayc[10] + ayc[11])) + ((ayc[12] + ayc[13]) + (ayc[14] + ayc[15])));
+        az[i] += (((azc[0] + azc[1]) + (azc[2] + azc[3])) + ((azc[4] + azc[5]) + (azc[6] + azc[7]))) + (((azc[8] + azc[9]) + (azc[10] + azc[11])) + ((azc[12] + azc[13]) + (azc[14] + azc[15])));
+      }
+    }
+  }
+}
+
 
 /* DKD */
 
