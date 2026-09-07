@@ -51,7 +51,7 @@ test-mau: all
 	mkdir -p ./bins/test-mau/
 	mkdir -p ./profilings
 	mkdir -p ./profilings/test-mau/
-	./generate_initial_conditions --model 0 --n 100 --seed 42 --output ./bins/test-mau.bin
+	./generate_initial_conditions --model 0 --n 10000 --seed 42 --output ./bins/test-mau.bin
 	for i in 1 2 3 4 5; do \
 		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/m2.out --kernel "m2" --profiler 1  --profiler-path ./profilings/test-mau/m2.txt; \
 		./main --input ./bins/test-mau.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-mau/m4.out --kernel "m4" --profiler 1  --profiler-path ./profilings/test-mau/m4.txt; \

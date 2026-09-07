@@ -948,11 +948,19 @@ void leapfrog_dkd_step (particles_t   *p,             // complete particle state
   if (profiler_flag) profiler->first_drift_time[step] = get_time() - t0;
 
   // Accelerations
-  if (profiler_flag) t0 = get_time();
+  if (profiler_flag)
+  {
+    profiler_papi_start(profiler);
+    t0 = get_time();
+  }
   compute_accelerations (p->n, g, p->mass, eps,
                                p->x, p->y, p->z,
                                p->ax, p->ay, p->az);
-  if (profiler_flag) profiler->force_time[step] = get_time() - t0;
+  if (profiler_flag)
+  {
+    profiler->force_time[step] = get_time() - t0;
+    profiler_papi_stop(profiler, step);
+  }
 
   // Kick
   if (profiler_flag) t0 = get_time();

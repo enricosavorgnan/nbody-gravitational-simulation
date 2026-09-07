@@ -204,6 +204,7 @@ void profiler_papi_init (profiler_t *profiler)
     PAPI_add_event(profiler->papi_eventset, PAPI_TOT_CYC);
     PAPI_add_event(profiler->papi_eventset, PAPI_TOT_INS);
     PAPI_add_event(profiler->papi_eventset, PAPI_L1_DCM);
+    PAPI_add_event(profiler->papi_eventset, PAPI_L2_DCM);
     PAPI_add_event(profiler->papi_eventset, PAPI_DP_OPS);
 #else
     (void) profiler;
@@ -213,7 +214,6 @@ void profiler_papi_init (profiler_t *profiler)
 void profiler_papi_start (profiler_t *profiler)
 {
 #ifdef USE_PAPI
-    PAPI_reset(profiler->papi_eventset);
     PAPI_start(profiler->papi_eventset);
 #else
     (void) profiler;
@@ -228,7 +228,8 @@ void profiler_papi_stop (profiler_t *profiler, const size_t step)
     profiler->papi_cycles[step]       = values[0];
     profiler->papi_instructions[step] = values[1];
     profiler->papi_l1_dcm[step]       = values[2];
-    profiler->papi_vec_dp[step]       = values[3];
+    profiler->papi_l2_dcm[step]       = values[3];
+    profiler->papi_vec_dp[step]       = values[4];
 #else
     (void) profiler; (void) step;
 #endif
