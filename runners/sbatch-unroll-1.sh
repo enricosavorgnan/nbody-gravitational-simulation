@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=NBODY
-#SBATCH --output=./log/nbody_%j.out
-#SBATCH --error=./log/nbody_%j.err
+#SBATCH --job-name=UNROLL1
+#SBATCH --output=./log/unroll1_%j.out
+#SBATCH --error=./log/unroll1_%j.err
 #SBATCH --partition=GENOA
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
