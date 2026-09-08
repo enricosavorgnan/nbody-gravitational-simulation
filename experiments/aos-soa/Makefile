@@ -50,7 +50,7 @@ generate_initial_conditions: generate_initial_conditions.c $(HEADERS)
 test-aos: all
 	mkdir -p ./bins/
 	mkdir -p ./profilings/
-	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-aos.bin
+	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-aos.bin
 	for i in 1; do \
 		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n-aos.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/n-aos.txt --papi 1; \
 		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n-soa.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/n-soa.txt --papi 1; \
