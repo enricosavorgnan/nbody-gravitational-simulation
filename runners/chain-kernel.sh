@@ -1,4 +1,4 @@
-chain-aos.sh#!/bin/bash
+#!/bin/bash
 
 # Configuration
 SBATCH_FILE="./runners/sbatch-kernel.sh"

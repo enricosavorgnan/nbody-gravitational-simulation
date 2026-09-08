@@ -1,4 +1,4 @@
-chain-unroll-1.sh#!/bin/bash
+#!/bin/bash
 
 # Configuration
 SBATCH_FILE="./runners/sbatch-unroll-2.sh"

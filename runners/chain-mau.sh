@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-SBATCH_FILE="./runners/sbatch-rsqrt.sh"
+SBATCH_FILE="./runners/sbatch-mau.sh"
 TOTAL_RUNS=5
 
 # Submit the first job

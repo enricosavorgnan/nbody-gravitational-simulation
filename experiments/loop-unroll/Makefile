@@ -7,7 +7,9 @@ CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POS
 
 LDLIBS    ?= -lm
 PRECISION ?= double
-USE_PAPI  ?= 0
+USE_PAPI  ?= 1
+N_RSQRT_LOOP ?= 3
+
 
 PROGRAMS := main generate_initial_conditions
 HEADERS  := 	./headers/common.h \

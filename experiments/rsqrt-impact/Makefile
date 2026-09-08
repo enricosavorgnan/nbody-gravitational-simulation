@@ -7,6 +7,7 @@ CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=
 LDLIBS    ?= -lm
 PRECISION ?= double
 USE_PAPI  ?= 0
+N_RSQRT_LOOP ?= 3
 
 PROGRAMS := main generate_initial_conditions
 HEADERS  := 	./headers/common.h \
@@ -46,7 +47,7 @@ generate_ic: generate_initial_conditions
 %.o: %.c $(HEADERS)
 	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-test-rsqrt: all
+test-rsqrt: generate_initial_conditions
 	mkdir -p ./bins/test-rsqrt/
 	mkdir -p ./profilings/test-rsqrt/
 	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-rsqrt.bin

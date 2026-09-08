@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#SBATCH --account=enricosavorgnan
 #SBATCH --job-name=MAU
 #SBATCH --output=./log/mau_%j.out
 #SBATCH --error=./log/mau_%j.err
