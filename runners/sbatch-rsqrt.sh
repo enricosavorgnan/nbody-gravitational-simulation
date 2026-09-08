@@ -15,4 +15,4 @@ cd "./experiments/rsqrt-impact"
 
 make clean
 make clean-folders
-make test-rsqrt
+make test-rsqrt USE_PAPI=1

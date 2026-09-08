@@ -13,4 +13,4 @@
 cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/loop-unroll"
 
-make test-n-unroll
+make test-n-unroll USE_PAPI=1
