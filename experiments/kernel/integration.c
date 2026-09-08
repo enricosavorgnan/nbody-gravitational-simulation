@@ -3,7 +3,7 @@
 #include "./headers/integration.h"
 
 #ifndef BLOCK_SIZE
-#define BLOCK_SIZE 64
+#define BLOCK_SIZE 1024
 #endif
 
 /* ACCELERATION */
