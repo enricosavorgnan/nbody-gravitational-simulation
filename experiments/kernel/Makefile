@@ -2,7 +2,7 @@ CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
 
 LDLIBS    ?= -lm
 PRECISION ?= double
@@ -55,14 +55,14 @@ test-kernel : all
 	mkdir -p ./profilings
 	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-kernel.bin
 	for i in 1; do \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/n.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/r.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/r.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/t.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/t.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/b.out --kernel "b" --profiler 1 --papi 1 --profiler-path ./profilings/b.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/rt.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/rt.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/bt.out --kernel "bt" --profiler 1 --papi 1 --profiler-path ./profilings/bt.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/br.out --kernel "br" --profiler 1 --papi 1 --profiler-path ./profilings/br.txt ; \
-		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/brt.out --kernel "brt" --profiler 1 --papi 1 --profiler-path ./profilings/brt.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/n.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/r.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/r.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/t.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/t.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/b.out --kernel "b" --profiler 1 --papi 1 --profiler-path ./profilings/b.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/rt.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/rt.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/bt.out --kernel "bt" --profiler 1 --papi 1 --profiler-path ./profilings/bt.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/br.out --kernel "br" --profiler 1 --papi 1 --profiler-path ./profilings/br.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/brt.out --kernel "brt" --profiler 1 --papi 1 --profiler-path ./profilings/brt.txt ; \
 	done
 
 

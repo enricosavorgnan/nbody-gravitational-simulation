@@ -2,7 +2,7 @@ CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOPS=$(N_RSQRT_LOOP)
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=$(N_RSQRT_LOOP)
 
 LDLIBS    ?= -lm
 PRECISION ?= double
@@ -53,9 +53,9 @@ test-rsqrt: all
 	for i in 1 2 3 4; do \
 		$(MAKE) clean all N_RSQRT_LOOP=$$i; \
 		for j in 1 2 3 4 5; do \
-			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/n_$$i.out --kernel n  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/n_$$i.txt; \
-			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/r_$$i.out --kernel r  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/r_$$i.txt; \
-			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/test-rsqrt/rt_$$i.out --kernel rt --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/rt_$$i.txt; \
+			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-rsqrt/n_$$i.out --kernel n  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/n_$$i.txt; \
+			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-rsqrt/r_$$i.out --kernel r  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/r_$$i.txt; \
+			./main --input ./bins/test-rsqrt.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-rsqrt/rt_$$i.out --kernel rt --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/rt_$$i.txt; \
 		done \
 	done
 

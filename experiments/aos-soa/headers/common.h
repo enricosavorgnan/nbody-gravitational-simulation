@@ -11,6 +11,10 @@
 #define NBODY_ALIGNMENT 64u
 #endif
 
+#ifndef N_RSQRT_LOOP
+#define N_RSQRT_LOOP 3
+#endif
+
 #define NBODY_BINARY_MAGIC_SIZE 8u
 #define NBODY_BINARY_COMPONENTS 6u
 #define NBODY_BINARY_VERSION_TEXT "nbody-f32-v1"
@@ -41,20 +45,20 @@ static inline dtype dtype_sqrt (dtype x)
 // Fast Inverse Square Root, taken from Wikipedia:
 // https://en.wikipedia.org/wiki/Fast_inverse_square_root
 // it should be correct up to the 11th bit
-static inline dtype dtype_rsqrt(dtype x)
+static inline dtype dtype_rsqrt (dtype x)
 {
-  int32_t i;
-  float x2, y;
-  const float threehalfs = 1.5f;
+  union {
+    uint32_t i;
+    float f;
+  } u = { .f = x };
 
-  x2 = x * 0.5f;
-  y = x;
+  u.i = 0x5f3759dfu - (u.i >> 1);
+  dtype y = u.f;
 
-  i = *(int32_t *) &y;
-  i = 0x5f3759df - (i >> 1);
-  y = *(float *) &i;
-
-  y = y* (threehalfs - (x2 * y * y));
+  for (int l = 0; l < N_RSQRT_LOOP; l++)
+  {
+    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
+  }
   return y;
 }
 
@@ -105,17 +109,18 @@ static inline dtype dtype_sqrt (dtype x)
 static inline dtype dtype_rsqrt (dtype x)
 {
   union {
-    int64_t i;
+    uint64_t i;
     double f;
-  } u;
-  double x2 = x * 0.5;
-  const double threehalfs = 1.5;
+  } u = { .f = x };
 
-  u.f = x;
-  u.i = 0x5fe6eb50c7b537a9 - (u.i >> 1);
+  u.i = UINT64_C (0x5fe6eb50c7b537a9) - (u.i >> 1);
+  dtype y = u.f;
 
-  u.f = u.f * (threehalfs - (x2 * u.f * u.f ));
-  return u.f;
+  for (int l = 0; l < N_RSQRT_LOOP; l++)
+  {
+    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
+  }
+  return y;
 }
 
 static inline dtype dtype_pow (dtype x,

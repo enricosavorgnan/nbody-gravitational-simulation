@@ -2,7 +2,7 @@ CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
 LDLIBS    ?= -lm
 
 
@@ -52,10 +52,10 @@ test-aos: all
 	mkdir -p ./profilings/
 	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-aos.bin
 	for i in 1; do \
-		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n-aos.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/n-aos.txt --papi 1; \
-		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/n-soa.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/n-soa.txt --papi 1; \
-		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/r-aos.out --layout "aos" --kernel "t" --profiler 1  --profiler-path ./profilings/t-aos.txt --papi 1; \
-		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/r-soa.out --layout "soa" --kernel "t" --profiler 1  --profiler-path ./profilings/t-soa.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/n-aos.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/n-aos.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/n-soa.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/n-soa.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/r-aos.out --layout "aos" --kernel "t" --profiler 1  --profiler-path ./profilings/t-aos.txt --papi 1; \
+		./main --input ./bins/test-aos.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/r-soa.out --layout "soa" --kernel "t" --profiler 1  --profiler-path ./profilings/t-soa.txt --papi 1; \
 	done
 
 

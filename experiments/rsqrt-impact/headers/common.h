@@ -45,14 +45,15 @@ static inline dtype dtype_sqrt (dtype x)
 // Fast Inverse Square Root, taken from Wikipedia:
 // https://en.wikipedia.org/wiki/Fast_inverse_square_root
 // it should be correct up to the 11th bit
-static inline dtype dtype_rsqrt(dtype x)
+static inline dtype dtype_rsqrt (dtype x)
 {
-  int32_t i;
-  float y = x;
+  union {
+    uint32_t i;
+    float f;
+  } u = { .f = x };
 
-  i = *(int32_t *) &y;
-  i = 0x5f3759df - (i >> 1);
-  y = *(float *) &i;
+  u.i = 0x5f3759dfu - (u.i >> 1);
+  dtype y = u.f;
 
   for (int l = 0; l < N_RSQRT_LOOP; l++)
   {
@@ -108,18 +109,18 @@ static inline dtype dtype_sqrt (dtype x)
 static inline dtype dtype_rsqrt (dtype x)
 {
   union {
-    int64_t i;
+    uint64_t i;
     double f;
-  } u;
+  } u = { .f = x };
 
-  u.f = x;
-  u.i = 0x5fe6eb50c7b537a9 - (u.i >> 1);
+  u.i = UINT64_C (0x5fe6eb50c7b537a9) - (u.i >> 1);
+  dtype y = u.f;
 
   for (int l = 0; l < N_RSQRT_LOOP; l++)
   {
-    u.f = u.f * ((dtype) 1.5 - (dtype) 0.5 * x * u.f * u.f );
+    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
   }
-  return u.f;
+  return y;
 }
 
 static inline dtype dtype_pow (dtype x,

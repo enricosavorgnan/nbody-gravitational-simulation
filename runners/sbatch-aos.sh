@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=NBODY
+#SBATCH --job-name=AOS
 #SBATCH --output=./log/nbody_%j.out
 #SBATCH --error=./log/nbody_%j.err
 #SBATCH --partition=GENOA
