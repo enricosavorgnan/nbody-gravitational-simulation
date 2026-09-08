@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#SBATCH --account=enricosavorgnan
 #SBATCH --job-name=KERNEL
 #SBATCH --output=./log/kernel_%j.out
 #SBATCH --error=./log/kernel_%j.err
