@@ -65,10 +65,10 @@ test-no-unroll: all-no-unroll
 	mkdir -p ./profilings/test-no-unroll/
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-no-unroll.bin
 	for i in 1; do \
-		./main --input ./bins/test-no-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-no-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/n.txt ; \
-		./main --input ./bins/test-no-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-no-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/t.txt ; \
-		./main --input ./bins/test-no-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-no-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/r.txt ; \
-		./main --input ./bins/test-no-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-no-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/rt.txt ; \
+		./main --input ./bins/test-no-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-no-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/n.txt ; \
+		./main --input ./bins/test-no-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-no-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/t.txt ; \
+		./main --input ./bins/test-no-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-no-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/r.txt ; \
+		./main --input ./bins/test-no-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-no-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-no-unroll/rt.txt ; \
 	done
 
 test-auto-unroll: all-auto-unroll
@@ -78,10 +78,10 @@ test-auto-unroll: all-auto-unroll
 	mkdir -p ./profilings/test-auto-unroll/
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-auto-unroll.bin
 	for i in 1; do \
-		./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/n.txt ; \
-		./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/t.txt ; \
-		./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/r.txt ; \
-		./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/rt.txt ; \
+		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/n.txt ; \
+		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/t.txt ; \
+		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/r.txt ; \
+		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/rt.txt ; \
 	done
 
 
@@ -92,10 +92,10 @@ test-n-unroll: all-n-unroll
 	mkdir -p ./profilings/test-n-unroll/
 	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-n-unroll.bin
 	for i in 1; do \
-		./main --input ./bins/test-n-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/n.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-n-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/t.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/r.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-n-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/rt.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/n.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/t.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/r.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/rt.txt ; \
 	done
 
 
