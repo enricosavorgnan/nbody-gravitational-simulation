@@ -2,6 +2,7 @@
 #define NBODY_COMMON_H
 
 #include <float.h>
+#include <immintrin.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
