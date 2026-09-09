@@ -1,0 +1,21 @@
+baseline_idx: 0
+files:
+- ./experiments/kernel/profilings/n.txt
+- ./experiments/kernel/profilings/t.txt
+- ./experiments/kernel/profilings/r.txt
+- ./experiments/kernel/profilings/b.txt
+- ./experiments/kernel/profilings/rt.txt
+- ./experiments/kernel/profilings/bt.txt
+- ./experiments/kernel/profilings/br.txt
+- ./experiments/kernel/profilings/brt.txt
+names_method:
+- Naive
+- ThirdLaw
+- Rsqrt
+- Blocks
+- Rsqrt+Third
+- Blocks+Third
+- Blocks+Rsqrt
+- Blocks+Rsqrt+Third
+runs: 5
+save-path: ./plots/kernel/

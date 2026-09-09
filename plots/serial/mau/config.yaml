@@ -1,0 +1,31 @@
+baseline_idx: 0
+files:
+- ./experiments/loop-unroll/profilings/test-no-unroll/n.txt
+- ./experiments/mau/profilings/m2.txt
+- ./experiments/mau/profilings/m4.txt
+- ./experiments/mau/profilings/m8.txt
+- ./experiments/mau/profilings/m16.txt
+- ./experiments/mau/profilings/rm2.txt
+- ./experiments/mau/profilings/rm4.txt
+- ./experiments/mau/profilings/rm8.txt
+- ./experiments/mau/profilings/rm16.txt
+- ./experiments/mau/profilings/brm2.txt
+- ./experiments/mau/profilings/brm4.txt
+- ./experiments/mau/profilings/brm8.txt
+- ./experiments/mau/profilings/brm16.txt
+names_method:
+- Naive (Baseline)
+- MAU 2
+- MAU 4
+- MAU 8
+- MAU 16
+- Rsqrt-MAU 2
+- Rsqrt-MAU 4
+- Rsqrt-MAU 8
+- Rsqrt-MAU 16
+- Block-Rsqrt-MAU 2
+- Block-Rsqrt-MAU 4
+- Block-Rsqrt-MAU 8
+- Block-Rsqrt-MAU 16
+runs: 5
+save-path: ./plots/mau/
