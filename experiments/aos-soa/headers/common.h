@@ -46,7 +46,7 @@ static inline dtype dtype_sqrt (dtype x)
 // Fast Inverse Square Root, taken from Wikipedia:
 // https://en.wikipedia.org/wiki/Fast_inverse_square_root
 // it should be correct up to the 11th bit
-static inline dtype dtype_rsqrt_old (dtype x)
+static inline dtype dtype_rsqrt (dtype x)
 {
   union {
     uint32_t i;
@@ -65,7 +65,7 @@ static inline dtype dtype_rsqrt_old (dtype x)
 
 // The following is the implementation
 // of Fast Inverse Square Root using AVX-512F instructions
-static inline dtype dtype_rsqrt (dtype x)
+static inline dtype dtype_rsqrt_old (dtype x)
 {
   // 1. Load scalar float into the lowest element of a 128-bit vector register
   __m128 vec = _mm_set_ss(x);
@@ -128,7 +128,7 @@ static inline dtype dtype_sqrt (dtype x)
   return sqrt (x);
 }
 
-static inline dtype dtype_rsqrt_2 (dtype x)
+static inline dtype dtype_rsqrt (dtype x)
 {
   union {
     uint64_t i;
@@ -145,7 +145,7 @@ static inline dtype dtype_rsqrt_2 (dtype x)
   return y;
 }
 
-static inline dtype dtype_rsqrt (dtype x)
+static inline dtype dtype_rsqrt_old (dtype x)
 {
   // 1. Load scalar double into the lowest element of a 128-bit vector register
   __m128d vec = _mm_set_sd(x);
