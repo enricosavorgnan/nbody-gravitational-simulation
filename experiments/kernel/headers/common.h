@@ -1,7 +1,7 @@
 #ifndef NBODY_COMMON_H
 #define NBODY_COMMON_H
 
-#include <float.h
+#include <float.h>
 #include <immintrin.h>
 #include <math.h>
 #include <stdbool.h>
