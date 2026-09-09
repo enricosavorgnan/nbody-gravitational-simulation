@@ -57,7 +57,7 @@ void compute_accelerations_naive (const size_t  n,
 /* =========================================================================
  * 2. MAU (Multiple Accumulator Units) using Discrete Registers
  * ========================================================================= */
-void compute_accelerations_mau2((const size_t  n,
+void compute_accelerations_mau2(const size_t  n,
                                     const dtype   g,
                                     const dtype   mass,
                                     const dtype   eps,
@@ -360,7 +360,7 @@ void compute_accelerations_mau16(const size_t  n,
 /* =========================================================================
  * 3. Fast RSQRT + MAU using Discrete Registers
  * ========================================================================= */
-void compute_accelerations_rsqrt_mau2((const size_t  n,
+void compute_accelerations_rsqrt_mau2(const size_t  n,
                                     const dtype   g,
                                     const dtype   mass,
                                     const dtype   eps,
