@@ -90,7 +90,7 @@ test-n-unroll: all-n-unroll
 	mkdir -p ./bins/test-n-unroll/
 	mkdir -p ./profilings
 	mkdir -p ./profilings/test-n-unroll/
-	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-n-unroll.bin
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
 	for i in 1; do \
 		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/n.txt ; \
 		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/t.txt ; \

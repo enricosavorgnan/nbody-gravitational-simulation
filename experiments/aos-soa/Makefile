@@ -10,8 +10,6 @@ PRECISION ?= double
 USE_PAPI  ?= 1
 N_RSQRT_LOOP ?= 3
 
-
-
 PROGRAMS := main generate_initial_conditions
 HEADERS  := 	./headers/common.h \
 				./headers/integration.h \

@@ -55,7 +55,7 @@ generate_ic: generate_initial_conditions
 test-kernel : all
 	mkdir -p ./bins
 	mkdir -p ./profilings
-	./generate_initial_conditions --model 0 --n 20000 --seed 42 --output ./bins/test-kernel.bin
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-kernel.bin
 	for i in 1; do \
 		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/n.txt ; \
 		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/r.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/r.txt ; \
