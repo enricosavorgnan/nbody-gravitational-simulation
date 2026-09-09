@@ -3,7 +3,7 @@
 #include "./headers/integration.h"
 
 #ifndef BLOCK_SIZE
-#define BLOCK_SIZE 1024
+#define BLOCK_SIZE 128
 #endif
 
 /* ACCELERATION */
@@ -193,54 +193,66 @@ void compute_accelerations_blocks(const size_t  n,                   // number o
                                   dtype * restrict az                // z acceleration, overwritten
                                  )
 {
-  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
-  const dtype  eps2 = eps * eps;
-
-  // Initialize acceleration arrays to zero
-  const size_t bytes = n * sizeof(dtype);
-  memset(ax, 0, bytes);
-  memset(ay, 0, bytes);
-  memset(az, 0, bytes);
+  const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
+  const dtype  eps2   = eps * eps;
 
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
-    size_t i_start   = b_i * BLOCK_SIZE;
-    size_t i_end     = i_start + BLOCK_SIZE;
-    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+    const size_t i_start = b_i * BLOCK_SIZE;
+    const size_t i_end   = (i_start + BLOCK_SIZE <= n) ? (i_start + BLOCK_SIZE) : n;
+    const size_t i_count = i_end - i_start;
+
+    dtype block_ax[BLOCK_SIZE];
+    dtype block_ay[BLOCK_SIZE];
+    dtype block_az[BLOCK_SIZE];
+
+    for (size_t i = 0; i < i_count; i++)
+    {
+      block_ax[i] = 0.0;
+      block_ay[i] = 0.0;
+      block_az[i] = 0.0;
+    }
 
     for (size_t b_j = 0; b_j < blocks; b_j++)
     {
-      size_t j_start     = b_j * BLOCK_SIZE;
-      size_t j_end       = j_start + BLOCK_SIZE;
-      j_end           = j_end <= n ? j_end : n;
+      const size_t j_start = b_j * BLOCK_SIZE;
+      const size_t j_end   = (j_start + BLOCK_SIZE <= n) ? (j_start + BLOCK_SIZE) : n;
 
       for (size_t i = i_start; i < i_end; i++)
       {
-        const dtype  xi  = x[i];
-        const dtype  yi  = y[i];
-        const dtype  zi  = z[i];
-        dtype        axi = 0.0;
-        dtype        ayi = 0.0;
-        dtype        azi = 0.0;
+        const size_t i_rel = i - i_start;
+        const dtype xi  = x[i];
+        const dtype yi  = y[i];
+        const dtype zi  = z[i];
+        dtype       axi = 0.0;
+        dtype       ayi = 0.0;
+        dtype       azi = 0.0;
 
         for (size_t j = j_start; j < j_end; j++)
         {
-          const dtype  dx   = x[j] - xi;
-          const dtype  dy   = y[j] - yi;
-          const dtype  dz   = z[j] - zi;
-          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype  invr = 1.0 / dtype_sqrt (r2);
-          const dtype  s    = g * mass * invr * invr * invr;
+          const dtype dx   = x[j] - xi;
+          const dtype dy   = y[j] - yi;
+          const dtype dz   = z[j] - zi;
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = (dtype) 1.0 / dtype_sqrt (r2);
+          const dtype s    = g * mass * invr * invr * invr;
 
           axi += dx * s;
           ayi += dy * s;
           azi += dz * s;
         }
 
-        ax[i] += axi;
-        ay[i] += ayi;
-        az[i] += azi;
+        block_ax[i_rel] += axi;
+        block_ay[i_rel] += ayi;
+        block_az[i_rel] += azi;
       }
+    }
+
+    for (size_t i = 0; i < i_count; i++)
+    {
+      ax[i_start + i] = block_ax[i];
+      ay[i_start + i] = block_ay[i];
+      az[i_start + i] = block_az[i];
     }
   }
 }
@@ -318,54 +330,66 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
                                         dtype * restrict az                // z acceleration, overwritten
                                         )
 {
-  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
-  const dtype  eps2 = eps * eps;
-
-  // Initialize acceleration arrays to zero
-  const size_t bytes = n * sizeof(dtype);
-  memset(ax, 0, bytes);
-  memset(ay, 0, bytes);
-  memset(az, 0, bytes);
+  const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
+  const dtype  eps2   = eps * eps;
 
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
-    size_t i_start   = b_i * BLOCK_SIZE;
-    size_t i_end     = i_start + BLOCK_SIZE;
-    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
+    const size_t i_start = b_i * BLOCK_SIZE;
+    const size_t i_end   = (i_start + BLOCK_SIZE <= n) ? (i_start + BLOCK_SIZE) : n;
+    const size_t i_count = i_end - i_start;
+
+    dtype block_ax[BLOCK_SIZE];
+    dtype block_ay[BLOCK_SIZE];
+    dtype block_az[BLOCK_SIZE];
+
+    for (size_t i = 0; i < i_count; i++)
+    {
+      block_ax[i] = 0.0;
+      block_ay[i] = 0.0;
+      block_az[i] = 0.0;
+    }
 
     for (size_t b_j = 0; b_j < blocks; b_j++)
     {
-      size_t j_start     = b_j * BLOCK_SIZE;
-      size_t j_end       = j_start + BLOCK_SIZE;
-      j_end           = j_end <= n ? j_end : n;
+      const size_t j_start = b_j * BLOCK_SIZE;
+      const size_t j_end   = (j_start + BLOCK_SIZE <= n) ? (j_start + BLOCK_SIZE) : n;
 
       for (size_t i = i_start; i < i_end; i++)
       {
-        const dtype  xi  = x[i];
-        const dtype  yi  = y[i];
-        const dtype  zi  = z[i];
-        dtype        axi = 0.0;
-        dtype        ayi = 0.0;
-        dtype        azi = 0.0;
+        const size_t i_rel = i - i_start;
+        const dtype xi  = x[i];
+        const dtype yi  = y[i];
+        const dtype zi  = z[i];
+        dtype       axi = 0.0;
+        dtype       ayi = 0.0;
+        dtype       azi = 0.0;
 
         for (size_t j = j_start; j < j_end; j++)
         {
-          const dtype  dx   = x[j] - xi;
-          const dtype  dy   = y[j] - yi;
-          const dtype  dz   = z[j] - zi;
-          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype  invr = dtype_rsqrt(r2);
-          const dtype  s    = g * mass * invr * invr * invr;
+          const dtype dx   = x[j] - xi;
+          const dtype dy   = y[j] - yi;
+          const dtype dz   = z[j] - zi;
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = dtype_rsqrt(r2);
+          const dtype s    = g * mass * invr * invr * invr;
 
           axi += dx * s;
           ayi += dy * s;
           azi += dz * s;
         }
 
-        ax[i] += axi;
-        ay[i] += ayi;
-        az[i] += azi;
+        block_ax[i_rel] += axi;
+        block_ay[i_rel] += ayi;
+        block_az[i_rel] += azi;
       }
+    }
+
+    for (size_t i = 0; i < i_count; i++)
+    {
+      ax[i_start + i] = block_ax[i];
+      ay[i_start + i] = block_ay[i];
+      az[i_start + i] = block_az[i];
     }
   }
 }
