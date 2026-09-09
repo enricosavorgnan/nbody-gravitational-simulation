@@ -1,0 +1,15 @@
+In file included from main.c:40:
+./headers/common.h: In function ‘dtype_rsqrt’:
+./headers/common.h:150:3: error: unknown type name ‘__m128d’
+  150 |   __m128d vec = _mm_set_sd(x);
+      |   ^~~~~~~
+./headers/common.h:150:17: error: implicit declaration of function ‘_mm_set_sd’ [-Wimplicit-function-declaration]
+  150 |   __m128d vec = _mm_set_sd(x);
+      |                 ^~~~~~~~~~
+./headers/common.h:153:9: error: implicit declaration of function ‘_mm_rsqrt14_sd’ [-Wimplicit-function-declaration]
+  153 |   vec = _mm_rsqrt14_sd(vec, vec);
+      |         ^~~~~~~~~~~~~~
+./headers/common.h:156:13: error: implicit declaration of function ‘_mm_cvtsd_f64’ [-Wimplicit-function-declaration]
+  156 |   dtype y = _mm_cvtsd_f64(vec);
+      |             ^~~~~~~~~~~~~
+make: *** [Makefile:47: main.o] Error 1
