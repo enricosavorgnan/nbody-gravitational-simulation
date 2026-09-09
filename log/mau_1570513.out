@@ -1,0 +1,24 @@
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+mkdir -p ./bins
+mkdir -p ./profilings
+./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-mau.bin
+for i in 1; do \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/m2.out --kernel "m2" --profiler 1 --papi 1 --profiler-path ./profilings/m2.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/m4.out --kernel "m4" --profiler 1 --papi 1 --profiler-path ./profilings/m4.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/m8.out --kernel "m8" --profiler 1 --papi 1 --profiler-path ./profilings/m8.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/m16.out --kernel "m16" --profiler 1 --papi 1 --profiler-path ./profilings/m16.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/rm2.out --kernel "rm2" --profiler 1 --papi 1 --profiler-path ./profilings/rm2.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/rm4.out --kernel "rm4" --profiler 1 --papi 1 --profiler-path ./profilings/rm4.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/rm8.out --kernel "rm8" --profiler 1 --papi 1 --profiler-path ./profilings/rm8.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/rm16.out --kernel "rm16" --profiler 1 --papi 1 --profiler-path ./profilings/rm16.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/brm2.out --kernel "brm2" --profiler 1 --papi 1 --profiler-path ./profilings/brm2.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/brm4.out --kernel "brm4" --profiler 1 --papi 1 --profiler-path ./profilings/brm4.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/brm8.out --kernel "brm8" --profiler 1 --papi 1 --profiler-path ./profilings/brm8.txt; \
+	./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/brm16.out --kernel "brm16" --profiler 1 --papi 1 --profiler-path ./profilings/brm16.txt; \
+done

@@ -1,0 +1,5 @@
+rm: cannot remove './bins/': No such file or directory
+make: *** [Makefile:68: clean-folders] Error 1
+cannot open input file './bins/test-rsqrt.bin'
+cannot open input file './bins/test-rsqrt.bin'
+make: *** [Makefile:54: test-rsqrt] Error 1

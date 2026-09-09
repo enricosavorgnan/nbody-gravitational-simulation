@@ -1,0 +1,16 @@
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+mkdir -p ./bins/
+mkdir -p ./profilings/
+./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-aos.bin
+for i in 1; do \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/n-aos.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/n-aos.txt --papi 1; \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/n-soa.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/n-soa.txt --papi 1; \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/r-aos.out --layout "aos" --kernel "t" --profiler 1  --profiler-path ./profilings/t-aos.txt --papi 1; \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/r-soa.out --layout "soa" --kernel "t" --profiler 1  --profiler-path ./profilings/t-soa.txt --papi 1; \
+done

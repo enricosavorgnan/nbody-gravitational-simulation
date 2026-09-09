@@ -1,0 +1,254 @@
+rm -f main generate_initial_conditions *.o *.bin
+rm -r ./bins/
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+mkdir -p ./bins/test-rsqrt/
+mkdir -p ./profilings/test-rsqrt/
+./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-rsqrt.bin
+for i in 1 2 3 4 ; do \
+	make clean all N_RSQRT_LOOP=$i; \
+	for j in 1; do \
+		./main --input ./bins/test-rsqrt.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-rsqrt/n_$i.out --kernel n  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/n_$i.txt; \
+		./main --input ./bins/test-rsqrt.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-rsqrt/r_$i.out --kernel r  --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/r_$i.txt; \
+		./main --input ./bins/test-rsqrt.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-rsqrt/rt_$i.out --kernel rt --profiler 1 --papi 1 --profiler-path ./profilings/test-rsqrt/rt_$i.txt; \
+	done \
+done
+make[1]: Entering directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+rm -f main generate_initial_conditions *.o *.bin
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+make[1]: Leaving directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.791819e-03 s
+File Write      : 3.024241e-03 s
+Total Run       : 1.631863e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 7.717964e+00 s 		 Trimmed Mean: 7.718436e+00 s 		 Standard Deviation: 1.892254e-03 s
+First Drift     		 Median; 1.178761e-04 s 		 Trimmed Mean: 1.224311e-04 s 		 Standard Deviation: 1.058299e-05 s
+Compute Force   		 Median; 7.717519e+00 s 		 Trimmed Mean: 7.717983e+00 s 		 Standard Deviation: 1.883485e-03 s
+Kick            		 Median; 1.646122e-04 s 		 Trimmed Mean: 1.643392e-04 s 		 Standard Deviation: 2.678412e-06 s
+Second Drift    		 Median; 1.187664e-04 s 		 Trimmed Mean: 1.188350e-04 s 		 Standard Deviation: 6.650808e-07 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: r
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467284903.1161692 -2931616931.368227 -1464332028.2520578 4.735181233077451e-06
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.735181233077451e-06 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.056820e-03 s
+File Write      : 2.779328e-03 s
+Total Run       : 1.632800e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 5.206896e+00 s 		 Trimmed Mean: 5.207279e+00 s 		 Standard Deviation: 1.383205e-03 s
+First Drift     		 Median; 1.185560e-04 s 		 Trimmed Mean: 1.186376e-04 s 		 Standard Deviation: 3.389552e-07 s
+Compute Force   		 Median; 5.206464e+00 s 		 Trimmed Mean: 5.206826e+00 s 		 Standard Deviation: 1.351135e-03 s
+Kick            		 Median; 1.633214e-04 s 		 Trimmed Mean: 1.627137e-04 s 		 Standard Deviation: 3.582957e-06 s
+Second Drift    		 Median; 1.215860e-04 s 		 Trimmed Mean: 1.216187e-04 s 		 Standard Deviation: 2.222141e-06 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: rt
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467284903.1161692 -2931616931.368227 -1464332028.2520578 4.735181233077451e-06
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.735181233077451e-06 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.827658e-03 s
+File Write      : 2.651446e-03 s
+Total Run       : 1.633750e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 8.588065e+00 s 		 Trimmed Mean: 8.588689e+00 s 		 Standard Deviation: 1.775114e-03 s
+First Drift     		 Median; 1.177015e-04 s 		 Trimmed Mean: 1.237765e-04 s 		 Standard Deviation: 1.432105e-05 s
+Compute Force   		 Median; 8.587528e+00 s 		 Trimmed Mean: 8.588159e+00 s 		 Standard Deviation: 1.744508e-03 s
+Kick            		 Median; 1.908117e-04 s 		 Trimmed Mean: 1.926755e-04 s 		 Standard Deviation: 4.794618e-06 s
+Second Drift    		 Median; 1.621223e-04 s 		 Trimmed Mean: 1.626115e-04 s 		 Standard Deviation: 1.691733e-06 s
+make[1]: Entering directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+rm -f main generate_initial_conditions *.o *.bin
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=2 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+make[1]: Leaving directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.011741e-03 s
+File Write      : 2.733398e-03 s
+Total Run       : 1.635804e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 7.719161e+00 s 		 Trimmed Mean: 7.720554e+00 s 		 Standard Deviation: 3.417451e-03 s
+First Drift     		 Median; 1.183618e-04 s 		 Trimmed Mean: 1.191340e-04 s 		 Standard Deviation: 1.976308e-06 s
+Compute Force   		 Median; 7.718662e+00 s 		 Trimmed Mean: 7.720106e+00 s 		 Standard Deviation: 3.416314e-03 s
+Kick            		 Median; 1.611663e-04 s 		 Trimmed Mean: 1.614478e-04 s 		 Standard Deviation: 3.171863e-06 s
+Second Drift    		 Median; 1.200363e-04 s 		 Trimmed Mean: 1.202085e-04 s 		 Standard Deviation: 1.246317e-06 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: r
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467379820.8961873 -2931718706.4954901 -1464338885.5993028 5.2285112597589623e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=5.2285112597589623e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.122482e-03 s
+File Write      : 2.954320e-03 s
+Total Run       : 1.634588e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 6.477003e+00 s 		 Trimmed Mean: 6.477850e+00 s 		 Standard Deviation: 2.407687e-03 s
+First Drift     		 Median; 1.189560e-04 s 		 Trimmed Mean: 1.277977e-04 s 		 Standard Deviation: 1.562349e-05 s
+Compute Force   		 Median; 6.476538e+00 s 		 Trimmed Mean: 6.477384e+00 s 		 Standard Deviation: 2.398635e-03 s
+Kick            		 Median; 1.628720e-04 s 		 Trimmed Mean: 1.619030e-04 s 		 Standard Deviation: 3.385495e-06 s
+Second Drift    		 Median; 1.200661e-04 s 		 Trimmed Mean: 1.256663e-04 s 		 Standard Deviation: 1.303449e-05 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: rt
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467379820.8961873 -2931718706.4954901 -1464338885.5993028 5.2285112597589623e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=5.2285112597589623e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.004140e-03 s
+File Write      : 2.729327e-03 s
+Total Run       : 1.632628e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 1.024537e+01 s 		 Trimmed Mean: 1.024767e+01 s 		 Standard Deviation: 5.261918e-03 s
+First Drift     		 Median; 1.187110e-04 s 		 Trimmed Mean: 1.232047e-04 s 		 Standard Deviation: 1.212556e-05 s
+Compute Force   		 Median; 1.024481e+01 s 		 Trimmed Mean: 1.024709e+01 s 		 Standard Deviation: 5.259172e-03 s
+Kick            		 Median; 2.428326e-04 s 		 Trimmed Mean: 2.437423e-04 s 		 Standard Deviation: 2.769539e-06 s
+Second Drift    		 Median; 1.642765e-04 s 		 Trimmed Mean: 1.648993e-04 s 		 Standard Deviation: 2.282551e-06 s
+make[1]: Entering directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+rm -f main generate_initial_conditions *.o *.bin
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=3 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+make[1]: Leaving directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.058180e-03 s
+File Write      : 2.776718e-03 s
+Total Run       : 1.633584e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 7.720956e+00 s 		 Trimmed Mean: 7.722260e+00 s 		 Standard Deviation: 4.804264e-03 s
+First Drift     		 Median; 1.179664e-04 s 		 Trimmed Mean: 1.264265e-04 s 		 Standard Deviation: 1.385778e-05 s
+Compute Force   		 Median; 7.720461e+00 s 		 Trimmed Mean: 7.721801e+00 s 		 Standard Deviation: 4.807325e-03 s
+Kick            		 Median; 1.652166e-04 s 		 Trimmed Mean: 1.657566e-04 s 		 Standard Deviation: 4.121087e-06 s
+Second Drift    		 Median; 1.192265e-04 s 		 Trimmed Mean: 1.244553e-04 s 		 Standard Deviation: 1.135048e-05 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: r
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6453936 -2931718905.0454159 -1464338898.4000223 4.3543475701795474e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543475701795474e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.862079e-03 s
+File Write      : 3.004890e-03 s
+Total Run       : 1.632655e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 7.719256e+00 s 		 Trimmed Mean: 7.720128e+00 s 		 Standard Deviation: 2.471614e-03 s
+First Drift     		 Median; 1.172461e-04 s 		 Trimmed Mean: 1.217463e-04 s 		 Standard Deviation: 1.221591e-05 s
+Compute Force   		 Median; 7.718802e+00 s 		 Trimmed Mean: 7.719670e+00 s 		 Standard Deviation: 2.475105e-03 s
+Kick            		 Median; 1.609870e-04 s 		 Trimmed Mean: 1.603629e-04 s 		 Standard Deviation: 2.158050e-06 s
+Second Drift    		 Median; 1.181015e-04 s 		 Trimmed Mean: 1.190886e-04 s 		 Standard Deviation: 2.250237e-06 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: rt
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6453936 -2931718905.0454159 -1464338898.4000223 4.3543475701795474e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543475701795474e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.994080e-03 s
+File Write      : 3.172162e-03 s
+Total Run       : 1.633207e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 1.150819e+01 s 		 Trimmed Mean: 1.150981e+01 s 		 Standard Deviation: 4.687559e-03 s
+First Drift     		 Median; 1.180009e-04 s 		 Trimmed Mean: 1.185711e-04 s 		 Standard Deviation: 1.608972e-06 s
+Compute Force   		 Median; 1.150762e+01 s 		 Trimmed Mean: 1.150928e+01 s 		 Standard Deviation: 4.689635e-03 s
+Kick            		 Median; 1.911968e-04 s 		 Trimmed Mean: 1.929643e-04 s 		 Standard Deviation: 3.641254e-06 s
+Second Drift    		 Median; 1.640967e-04 s 		 Trimmed Mean: 1.642042e-04 s 		 Standard Deviation: 5.251469e-07 s
+make[1]: Entering directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+rm -f main generate_initial_conditions *.o *.bin
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=4 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+make[1]: Leaving directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/rsqrt-impact'
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.287193e-03 s
+File Write      : 3.455057e-03 s
+Total Run       : 1.632824e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 7.720342e+00 s 		 Trimmed Mean: 7.721531e+00 s 		 Standard Deviation: 2.732843e-03 s
+First Drift     		 Median; 1.177811e-04 s 		 Trimmed Mean: 1.220274e-04 s 		 Standard Deviation: 1.113112e-05 s
+Compute Force   		 Median; 7.719888e+00 s 		 Trimmed Mean: 7.721073e+00 s 		 Standard Deviation: 2.707531e-03 s
+Kick            		 Median; 1.639561e-04 s 		 Trimmed Mean: 1.643156e-04 s 		 Standard Deviation: 4.159573e-06 s
+Second Drift    		 Median; 1.192261e-04 s 		 Trimmed Mean: 1.206910e-04 s 		 Standard Deviation: 2.657325e-06 s

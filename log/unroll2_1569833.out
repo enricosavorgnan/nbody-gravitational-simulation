@@ -1,0 +1,102 @@
+rm -f main generate_initial_conditions *.o *.bin
+make all UNROLL=-1
+make[1]: Entering directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/loop-unroll'
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -c main.c -o main.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -c integration.c -o integration.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -c particles.c -o particles.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -c profiling.c -o profiling.o
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -c utils.c -o utils.o
+cc -std=c11 -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o main main.o integration.o particles.o profiling.o utils.o -lm -lpapi
+cc -std=c11 -I/u/dssc/enricosavorgnan/opt/papi/include -DNBODY_USE_DOUBLE -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DDO_UNROLL=-1 -DUSE_PAPI -L/u/dssc/enricosavorgnan/opt/papi/lib -Wl,-rpath,/u/dssc/enricosavorgnan/opt/papi/lib -o generate_initial_conditions generate_initial_conditions.c -lm -lpapi
+make[1]: Leaving directory '/orfeo/cephfs/scratch/dssc/enricosavorgnan/2026-nbody/experiments/loop-unroll'
+mkdir -p ./bins
+mkdir -p ./bins/test-auto-unroll/
+mkdir -p ./profilings
+mkdir -p ./profilings/test-auto-unroll/
+./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-auto-unroll.bin
+for i in 1; do \
+	./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/n.txt ; \
+	./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/t.txt ; \
+	./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/r.txt ; \
+	./main --input ./bins/test-auto-unroll.bin --nsteps 25 --dt 1e-4 --eps 0.05 --energy-every 25 --output ./bins/test-auto-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/rt.txt ; \
+done
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=25 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.124548 	 -2934067449.2881598 	 -1464338962.1636119 	 0
+25 0.0025000000000000001 1462719550.6926582 -2927058181.2022824 -1464338630.5096242 2.2648717012628866e-07
+# final: N=100000 steps=25 arithmetic_dtype=double max_relative_energy_drift=2.2648717012628866e-07 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.496350e-03 s
+File Write      : 8.485670e-03 s
+Total Run       : 1.614377e+01 s
+
+--- Step Statistics (25 steps) ---
+Total Step      		 Median; 7.656544e+00 s 		 Trimmed Mean: 7.656805e+00 s 		 Standard Deviation: 9.239060e-04 s
+First Drift     		 Median; 8.733105e-05 s 		 Trimmed Mean: 8.773484e-05 s 		 Standard Deviation: 1.420990e-06 s
+Compute Force   		 Median; 7.656203e+00 s 		 Trimmed Mean: 7.656470e+00 s 		 Standard Deviation: 9.228051e-04 s
+Kick            		 Median; 1.334720e-04 s 		 Trimmed Mean: 1.330801e-04 s 		 Standard Deviation: 2.118586e-06 s
+Second Drift    		 Median; 8.765096e-05 s 		 Trimmed Mean: 8.773147e-05 s 		 Standard Deviation: 4.411265e-07 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=25 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: t
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.124548 	 -2934067449.2881598 	 -1464338962.1636119 	 0
+25 0.0025000000000000001 1462719550.6926582 -2927058181.2022824 -1464338630.5096242 2.2648717012628866e-07
+# final: N=100000 steps=25 arithmetic_dtype=double max_relative_energy_drift=2.2648717012628866e-07 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.886394e-03 s
+File Write      : 5.813049e-03 s
+Total Run       : 1.613342e+01 s
+
+--- Step Statistics (25 steps) ---
+Total Step      		 Median; 4.382824e+00 s 		 Trimmed Mean: 4.382759e+00 s 		 Standard Deviation: 6.840272e-04 s
+First Drift     		 Median; 8.706097e-05 s 		 Trimmed Mean: 8.724674e-05 s 		 Standard Deviation: 1.004050e-06 s
+Compute Force   		 Median; 4.382468e+00 s 		 Trimmed Mean: 4.382388e+00 s 		 Standard Deviation: 6.842687e-04 s
+Kick            		 Median; 1.295209e-04 s 		 Trimmed Mean: 1.295457e-04 s 		 Standard Deviation: 6.703209e-07 s
+Second Drift    		 Median; 1.277919e-04 s 		 Trimmed Mean: 1.278701e-04 s 		 Standard Deviation: 1.860660e-06 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=25 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: r
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.124548 	 -2934067449.2881598 	 -1464338962.1636119 	 0
+25 0.0025000000000000001 1462719550.6871483 -2927058181.196588 -1464338630.5094397 2.2648729614627788e-07
+# final: N=100000 steps=25 arithmetic_dtype=double max_relative_energy_drift=2.2648729614627788e-07 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.011645e-03 s
+File Write      : 5.089441e-03 s
+Total Run       : 1.612951e+01 s
+
+--- Step Statistics (25 steps) ---
+Total Step      		 Median; 6.741081e+00 s 		 Trimmed Mean: 6.741177e+00 s 		 Standard Deviation: 1.279722e-03 s
+First Drift     		 Median; 8.731196e-05 s 		 Trimmed Mean: 8.772586e-05 s 		 Standard Deviation: 1.245564e-06 s
+Compute Force   		 Median; 6.740741e+00 s 		 Trimmed Mean: 6.740842e+00 s 		 Standard Deviation: 1.280820e-03 s
+Kick            		 Median; 1.339917e-04 s 		 Trimmed Mean: 1.340439e-04 s 		 Standard Deviation: 2.460721e-06 s
+Second Drift    		 Median; 8.768076e-05 s 		 Trimmed Mean: 8.756042e-05 s 		 Standard Deviation: 4.756445e-07 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=25 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: rt
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.124548 	 -2934067449.2881598 	 -1464338962.1636119 	 0
+25 0.0025000000000000001 1462719550.6871483 -2927058181.196588 -1464338630.5094397 2.2648729614627788e-07
+# final: N=100000 steps=25 arithmetic_dtype=double max_relative_energy_drift=2.2648729614627788e-07 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 2.915704e-03 s
+File Write      : 7.733381e-03 s
+Total Run       : 1.613090e+01 s
+
+--- Step Statistics (25 steps) ---
+Total Step      		 Median; 4.140662e+00 s 		 Trimmed Mean: 4.140809e+00 s 		 Standard Deviation: 7.860681e-04 s
+First Drift     		 Median; 8.739112e-05 s 		 Trimmed Mean: 8.783720e-05 s 		 Standard Deviation: 1.456626e-06 s
+Compute Force   		 Median; 4.140281e+00 s 		 Trimmed Mean: 4.140435e+00 s 		 Standard Deviation: 7.828488e-04 s
+Kick            		 Median; 1.299423e-04 s 		 Trimmed Mean: 1.305022e-04 s 		 Standard Deviation: 1.487278e-06 s
+Second Drift    		 Median; 1.273919e-04 s 		 Trimmed Mean: 1.268694e-04 s 		 Standard Deviation: 2.436827e-06 s

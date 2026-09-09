@@ -1,0 +1,89 @@
+mkdir -p ./bins/
+mkdir -p ./profilings/
+./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-aos.bin
+for i in 1; do \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/n-aos.out --layout "aos" --kernel "n" --profiler 1  --profiler-path ./profilings/n-aos.txt --papi 1; \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/n-soa.out --layout "soa" --kernel "n" --profiler 1  --profiler-path ./profilings/n-soa.txt --papi 1; \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/r-aos.out --layout "aos" --kernel "t" --profiler 1  --profiler-path ./profilings/t-aos.txt --papi 1; \
+	./main --input ./bins/test-aos.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/r-soa.out --layout "soa" --kernel "t" --profiler 1  --profiler-path ./profilings/t-soa.txt --papi 1; \
+done
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.947658e-03 s
+File Write      : 4.287062e-03 s
+Total Run       : 1.689234e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 3.610723e+01 s 		 Trimmed Mean: 3.610642e+01 s 		 Standard Deviation: 3.756515e-03 s
+First Drift     		 Median; 8.762162e-05 s 		 Trimmed Mean: 8.767506e-05 s 		 Standard Deviation: 2.048661e-07 s
+Compute Force   		 Median; 3.610692e+01 s 		 Trimmed Mean: 3.610610e+01 s 		 Standard Deviation: 3.757273e-03 s
+Kick            		 Median; 8.994667e-05 s 		 Trimmed Mean: 9.009778e-05 s 		 Standard Deviation: 1.288752e-06 s
+Second Drift    		 Median; 8.795084e-05 s 		 Trimmed Mean: 8.795119e-05 s 		 Standard Deviation: 3.384565e-07 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: n
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.452321e-03 s
+File Write      : 5.524540e-03 s
+Total Run       : 1.687150e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 1.724757e+01 s 		 Trimmed Mean: 1.724717e+01 s 		 Standard Deviation: 2.438313e-03 s
+First Drift     		 Median; 1.860429e-04 s 		 Trimmed Mean: 1.841100e-04 s 		 Standard Deviation: 1.230957e-05 s
+Compute Force   		 Median; 1.724693e+01 s 		 Trimmed Mean: 1.724652e+01 s 		 Standard Deviation: 2.412963e-03 s
+Kick            		 Median; 1.977682e-04 s 		 Trimmed Mean: 1.973506e-04 s 		 Standard Deviation: 5.656518e-06 s
+Second Drift    		 Median; 2.106982e-04 s 		 Trimmed Mean: 2.104875e-04 s 		 Standard Deviation: 1.529219e-05 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: t
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 4.488164e-03 s
+File Write      : 4.974161e-03 s
+Total Run       : 1.689468e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 1.930599e+01 s 		 Trimmed Mean: 1.931086e+01 s 		 Standard Deviation: 9.368092e-03 s
+First Drift     		 Median; 1.493427e-04 s 		 Trimmed Mean: 1.478234e-04 s 		 Standard Deviation: 1.947081e-05 s
+Compute Force   		 Median; 1.930546e+01 s 		 Trimmed Mean: 1.931030e+01 s 		 Standard Deviation: 9.375926e-03 s
+Kick            		 Median; 2.024379e-04 s 		 Trimmed Mean: 2.116152e-04 s 		 Standard Deviation: 2.309822e-05 s
+Second Drift    		 Median; 1.507420e-04 s 		 Trimmed Mean: 1.500435e-04 s 		 Standard Deviation: 1.572866e-05 s
+# Direct N-body DKD
+# arithmetic_dtype=double binary_storage=float32 format=nbody-f32-v1
+# N=100000 nsteps=10 dt=0.0001 eps=0.050000000000000003 G=1 mass=1
+Acceleration Kernel: t
+# Step 	 Time 			 Kinetic 			 Potential 			 Total 			 Relative Energy Drift
+0 	 0 	 1469728487.1245484 	 -2934067449.2869787 	 -1464338962.1624303 	 0
+10 0.001 1467380006.6462903 -2931718905.0463748 -1464338898.4000845 4.3543433206682826e-08
+# final: N=100000 steps=10 arithmetic_dtype=double max_relative_energy_drift=4.3543433206682826e-08 tolerance=0.001 status=OK
+
+--- Performance Profiling Report ---
+File Read       : 3.335948e-03 s
+File Write      : 5.432408e-03 s
+Total Run       : 1.686793e+01 s
+
+--- Step Statistics (10 steps) ---
+Total Step      		 Median; 1.039577e+01 s 		 Trimmed Mean: 1.039644e+01 s 		 Standard Deviation: 1.805993e-03 s
+First Drift     		 Median; 1.977282e-04 s 		 Trimmed Mean: 1.932702e-04 s 		 Standard Deviation: 1.462581e-05 s
+Compute Force   		 Median; 1.039502e+01 s 		 Trimmed Mean: 1.039571e+01 s 		 Standard Deviation: 1.814247e-03 s
+Kick            		 Median; 2.374784e-04 s 		 Trimmed Mean: 2.435797e-04 s 		 Standard Deviation: 1.307187e-05 s
+Second Drift    		 Median; 2.337843e-04 s 		 Trimmed Mean: 2.376912e-04 s 		 Standard Deviation: 1.503470e-05 s
