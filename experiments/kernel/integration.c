@@ -395,168 +395,290 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
 }
 
 
-void compute_accelerations_blocks_third_law(const size_t  n,                // number of particles
-                                            const dtype   g,                // gravitational constant
-                                            const dtype   mass,             // mass of every source particle
-                                            const dtype   eps,              // Plummer softening length
-                                            const dtype * restrict x,       // x positions, read-only
-                                            const dtype * restrict y,       // y positions, read-only
-                                            const dtype * restrict z,       // z positions, read-only
-                                            dtype * restrict ax,            // x acceleration, overwritten
-                                            dtype * restrict ay,            // y acceleration, overwritten
-                                            dtype * restrict az             // z acceleration, overwritten
-                                            )
-{
-  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
-  const dtype  eps2 = eps * eps;
-
-  const size_t bytes = n * sizeof(dtype);
-  memset(ax, 0, bytes);
-  memset(ay, 0, bytes);
-  memset(az, 0, bytes);
-
-  for (size_t b_i = 0; b_i < blocks; b_i++)
-  {
-    size_t i_start   = b_i * BLOCK_SIZE;
-    size_t i_end     = i_start + BLOCK_SIZE;
-    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
-
-    for (size_t b_j = b_i; b_j < blocks; b_j++)           // Go with an upper traingular matrix
+void compute_accelerations_blocks_third_law(const size_t  n,
+                                           const dtype   g,
+                                           const dtype   mass,
+                                           const dtype   eps,
+                                           const dtype * restrict x,
+                                           const dtype * restrict y,
+                                           const dtype * restrict z,
+                                           dtype       * restrict ax,
+                                           dtype       * restrict ay,
+                                           dtype       * restrict az)
     {
-      size_t j_start     = b_j * BLOCK_SIZE;
-      size_t j_end       = j_start + BLOCK_SIZE;
-      j_end           = j_end <= n ? j_end : n;
+      const dtype eps2 = eps * eps;
 
-      for (size_t i = i_start; i < i_end; i++)
+      // 1. Third Law requires us to zero the global arrays first,
+      // because we will be using += to accumulate forces globally.
+      for (size_t i = 0u; i < n; ++i) {
+        ax[i] = 0.0;
+        ay[i] = 0.0;
+        az[i] = 0.0;
+      }
+
+      // 2. Iterate over block i
+      for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
       {
-        const dtype  xi  = x[i];
-        const dtype  yi  = y[i];
-        const dtype  zi  = z[i];
-        dtype        axi = 0.0;
-        dtype        ayi = 0.0;
-        dtype        azi = 0.0;
+        const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
 
-        size_t j_init = (b_i == b_j) ? (i + 1) : j_start;
+        // Local accumulator for the i-block. Easily fits in L1 cache (128 elements = ~1KB).
+        dtype block_ax_i[BLOCK_SIZE] = {0.0};
+        dtype block_ay_i[BLOCK_SIZE] = {0.0};
+        dtype block_az_i[BLOCK_SIZE] = {0.0};
 
-        for (size_t j = j_init; j < j_end; j++)
+        // 3. Diagonal Block (b_i == b_j): compute upper triangle to avoid self-interaction
+        for (size_t i = b_i; i < i_end; ++i)
         {
-          // Compute distances and forces
-          const dtype  dx   = x[j] - xi;
-          const dtype  dy   = y[j] - yi;
-          const dtype  dz   = z[j] - zi;
-          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype  invr = 1.0 / dtype_sqrt (r2);
-          const dtype  s    = g * mass * invr * invr * invr;
+          const size_t ii = i - b_i;
+          const dtype xi = x[i];
+          const dtype yi = y[i];
+          const dtype zi = z[i];
 
-          // Accumulate to registers for Is
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
+          for (size_t j = i + 1; j < i_end; ++j)
+          {
+            const size_t jj = j - b_i;
+            const dtype dx = x[j] - xi;
+            const dtype dy = y[j] - yi;
+            const dtype dz = z[j] - zi;
+            const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
 
-          // Accumulate to memory for Js
-          ax[j] -= dx * s;
-          ay[j] -= dy * s;
-          az[j] -= dz * s;
+            const dtype invr = (dtype) 1.0 / dtype_sqrt(r2); // Uses your AVX-512 replacement
+            const dtype s = g * mass * invr * invr * invr;
+
+            const dtype fx = dx * s;
+            const dtype fy = dy * s;
+            const dtype fz = dz * s;
+
+            block_ax_i[ii] += fx;
+            block_ay_i[ii] += fy;
+            block_az_i[ii] += fz;
+
+            block_ax_i[jj] -= fx;
+            block_ay_i[jj] -= fy;
+            block_az_i[jj] -= fz;
+          }
         }
 
-        // Flush registers to memory
-        ax[i] += axi;
-        ay[i] += ayi;
-        az[i] += azi;
-      }
-    }
-  }
-}
-
-
-void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,                   // number of particles
-                                                  const dtype   g,                   // gravitational constant
-                                                  const dtype   mass,                // mass of every source particle
-                                                  const dtype   eps,                 // Plummer softening length
-                                                  const dtype * restrict x,          // x positions, read-only
-                                                  const dtype * restrict y,          // y positions, read-only
-                                                  const dtype * restrict z,          // z positions, read-only
-                                                  dtype * restrict ax,               // x acceleration, overwritten
-                                                  dtype * restrict ay,               // y acceleration, overwritten
-                                                  dtype * restrict az                // z acceleration, overwritten
-                                                  )
-{
-  const size_t blocks = n / BLOCK_SIZE + (n % BLOCK_SIZE != 0);
-  const dtype  eps2 = eps * eps;
-
-  const size_t bytes = n * sizeof(dtype);
-  memset(ax, 0, bytes);
-  memset(ay, 0, bytes);
-  memset(az, 0, bytes);
-
-  for (size_t b_i = 0; b_i < blocks; b_i++)
-  {
-    size_t i_start   = b_i * BLOCK_SIZE;
-    size_t i_end     = i_start + BLOCK_SIZE;
-    i_end         = i_end <= n ? i_end : n;               // If we go outside, take n as end
-
-    for (size_t b_j = b_i; b_j < blocks; b_j++)
-    {
-      size_t j_start     = b_j * BLOCK_SIZE;
-      size_t j_end       = j_start + BLOCK_SIZE;
-      j_end           = j_end <= n ? j_end : n;
-
-      for (size_t i = i_start; i < i_end; i++)
-      {
-        const dtype  xi  = x[i];
-        const dtype  yi  = y[i];
-        const dtype  zi  = z[i];
-        dtype        axi = 0.0;
-        dtype        ayi = 0.0;
-        dtype        azi = 0.0;
-
-        size_t j_init = (b_i == b_j) ? (i + 1) : j_start;
-
-        for (size_t j = j_init; j < j_end; j++)
+        // 4. Off-Diagonal Blocks (b_j > b_i): compute full N x M block interactions
+        for (size_t b_j = b_i + BLOCK_SIZE; b_j < n; b_j += BLOCK_SIZE)
         {
-          // Compute distances and forces
-          const dtype  dx   = x[j] - xi;
-          const dtype  dy   = y[j] - yi;
-          const dtype  dz   = z[j] - zi;
-          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype  invr = dtype_rsqrt(r2);
-          const dtype  s    = g * mass * invr * invr * invr;
+          const size_t j_end = (b_j + BLOCK_SIZE < n) ? (b_j + BLOCK_SIZE) : n;
 
-          // Accumulate to registers for Is
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
+          // Local accumulator for the j-block. Also stays locked in L1 cache.
+          dtype block_ax_j[BLOCK_SIZE] = {0.0};
+          dtype block_ay_j[BLOCK_SIZE] = {0.0};
+          dtype block_az_j[BLOCK_SIZE] = {0.0};
 
-          // Accumulate to memory for Js
-          ax[j] -= dx * s;
-          ay[j] -= dy * s;
-          az[j] -= dz * s;
+          for (size_t i = b_i; i < i_end; ++i)
+          {
+            const size_t ii = i - b_i;
+            const dtype xi = x[i];
+            const dtype yi = y[i];
+            const dtype zi = z[i];
+
+            // Isolate the i-accumulation to allow GCC to auto-vectorize the j loop
+            dtype axi = 0.0;
+            dtype ayi = 0.0;
+            dtype azi = 0.0;
+
+            // With -ffast-math, GCC perfectly vectorizes this loop because it is a
+            // purely streaming vector operation reading 'x' and writing to 'block_ax_j'
+            #pragma GCC ivdep
+            for (size_t j = b_j; j < j_end; ++j)
+            {
+              const size_t jj = j - b_j;
+              const dtype dx = x[j] - xi;
+              const dtype dy = y[j] - yi;
+              const dtype dz = z[j] - zi;
+              const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+
+              const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
+              const dtype s = g * mass * invr * invr * invr;
+
+              const dtype fx = dx * s;
+              const dtype fy = dy * s;
+              const dtype fz = dz * s;
+
+              axi += fx;
+              ayi += fy;
+              azi += fz;
+
+              // Contiguous write to L1 cache, NO global memory thrashing
+              block_ax_j[jj] -= fx;
+              block_ay_j[jj] -= fy;
+              block_az_j[jj] -= fz;
+            }
+
+            // Commit the reduced i-forces to the local i-buffer
+            block_ax_i[ii] += axi;
+            block_ay_i[ii] += ayi;
+            block_az_i[ii] += azi;
+          }
+
+          // 5. Commit the finished j-block to global memory
+          // (Happens only once per block pair, saving billions of L1 misses)
+          for (size_t j = b_j; j < j_end; ++j)
+          {
+            const size_t jj = j - b_j;
+            ax[j] += block_ax_j[jj];
+            ay[j] += block_ay_j[jj];
+            az[j] += block_az_j[jj];
+          }
         }
 
-        // Flush registers to memory
-        ax[i] += axi;
-        ay[i] += ayi;
-        az[i] += azi;
+        // 6. Commit the finished i-block to global memory
+        for (size_t i = b_i; i < i_end; ++i)
+        {
+          const size_t ii = i - b_i;
+          ax[i] += block_ax_i[ii];
+          ay[i] += block_ay_i[ii];
+          az[i] += block_az_i[ii];
+        }
       }
     }
-  }
-}
 
 
-// void compute_accelerations_omp(const size_t  n,          // number of particles
-//                                   const dtype   g,          // gravitational constant
-//                                   const dtype   mass,       // mass of every source particle
-//                                   const dtype   eps,        // Plummer softening length
-//                                   const dtype * restrict x,          // x positions, read-only
-//                                   const dtype * restrict y,          // y positions, read-only
-//                                   const dtype * restrict z,          // z positions, read-only
-//                                   dtype * restrict ax,               // x acceleration, overwritten
-//                                   dtype * restrict ay,               // y acceleration, overwritten
-//                                   dtype * restrict az                // z acceleration, overwritten
-//            )
-// {
-//
-// }
+void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,
+                                           const dtype   g,
+                                           const dtype   mass,
+                                           const dtype   eps,
+                                           const dtype * restrict x,
+                                           const dtype * restrict y,
+                                           const dtype * restrict z,
+                                           dtype       * restrict ax,
+                                           dtype       * restrict ay,
+                                           dtype       * restrict az)
+    {
+      const dtype eps2 = eps * eps;
+
+      // 1. Third Law requires us to zero the global arrays first,
+      // because we will be using += to accumulate forces globally.
+      for (size_t i = 0u; i < n; ++i) {
+        ax[i] = 0.0;
+        ay[i] = 0.0;
+        az[i] = 0.0;
+      }
+
+      // 2. Iterate over block i
+      for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
+      {
+        const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
+
+        // Local accumulator for the i-block. Easily fits in L1 cache (128 elements = ~1KB).
+        dtype block_ax_i[BLOCK_SIZE] = {0.0};
+        dtype block_ay_i[BLOCK_SIZE] = {0.0};
+        dtype block_az_i[BLOCK_SIZE] = {0.0};
+
+        // 3. Diagonal Block (b_i == b_j): compute upper triangle to avoid self-interaction
+        for (size_t i = b_i; i < i_end; ++i)
+        {
+          const size_t ii = i - b_i;
+          const dtype xi = x[i];
+          const dtype yi = y[i];
+          const dtype zi = z[i];
+
+          for (size_t j = i + 1; j < i_end; ++j)
+          {
+            const size_t jj = j - b_i;
+            const dtype dx = x[j] - xi;
+            const dtype dy = y[j] - yi;
+            const dtype dz = z[j] - zi;
+            const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+
+            const dtype invr = dtype_rsqrt(r2); // Uses your AVX-512 replacement
+            const dtype s = g * mass * invr * invr * invr;
+
+            const dtype fx = dx * s;
+            const dtype fy = dy * s;
+            const dtype fz = dz * s;
+
+            block_ax_i[ii] += fx;
+            block_ay_i[ii] += fy;
+            block_az_i[ii] += fz;
+
+            block_ax_i[jj] -= fx;
+            block_ay_i[jj] -= fy;
+            block_az_i[jj] -= fz;
+          }
+        }
+
+        // 4. Off-Diagonal Blocks (b_j > b_i): compute full N x M block interactions
+        for (size_t b_j = b_i + BLOCK_SIZE; b_j < n; b_j += BLOCK_SIZE)
+        {
+          const size_t j_end = (b_j + BLOCK_SIZE < n) ? (b_j + BLOCK_SIZE) : n;
+
+          // Local accumulator for the j-block. Also stays locked in L1 cache.
+          dtype block_ax_j[BLOCK_SIZE] = {0.0};
+          dtype block_ay_j[BLOCK_SIZE] = {0.0};
+          dtype block_az_j[BLOCK_SIZE] = {0.0};
+
+          for (size_t i = b_i; i < i_end; ++i)
+          {
+            const size_t ii = i - b_i;
+            const dtype xi = x[i];
+            const dtype yi = y[i];
+            const dtype zi = z[i];
+
+            // Isolate the i-accumulation to allow GCC to auto-vectorize the j loop
+            dtype axi = 0.0;
+            dtype ayi = 0.0;
+            dtype azi = 0.0;
+
+            // With -ffast-math, GCC perfectly vectorizes this loop because it is a
+            // purely streaming vector operation reading 'x' and writing to 'block_ax_j'
+            #pragma GCC ivdep
+            for (size_t j = b_j; j < j_end; ++j)
+            {
+              const size_t jj = j - b_j;
+              const dtype dx = x[j] - xi;
+              const dtype dy = y[j] - yi;
+              const dtype dz = z[j] - zi;
+              const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+
+              const dtype invr = dtype_rsqrt(r2);
+              const dtype s = g * mass * invr * invr * invr;
+
+              const dtype fx = dx * s;
+              const dtype fy = dy * s;
+              const dtype fz = dz * s;
+
+              axi += fx;
+              ayi += fy;
+              azi += fz;
+
+              // Contiguous write to L1 cache, NO global memory thrashing
+              block_ax_j[jj] -= fx;
+              block_ay_j[jj] -= fy;
+              block_az_j[jj] -= fz;
+            }
+
+            // Commit the reduced i-forces to the local i-buffer
+            block_ax_i[ii] += axi;
+            block_ay_i[ii] += ayi;
+            block_az_i[ii] += azi;
+          }
+
+          // 5. Commit the finished j-block to global memory
+          // (Happens only once per block pair, saving billions of L1 misses)
+          for (size_t j = b_j; j < j_end; ++j)
+          {
+            const size_t jj = j - b_j;
+            ax[j] += block_ax_j[jj];
+            ay[j] += block_ay_j[jj];
+            az[j] += block_az_j[jj];
+          }
+        }
+
+        // 6. Commit the finished i-block to global memory
+        for (size_t i = b_i; i < i_end; ++i)
+        {
+          const size_t ii = i - b_i;
+          ax[i] += block_ax_i[ii];
+          ay[i] += block_ay_i[ii];
+          az[i] += block_az_i[ii];
+        }
+      }
+    }
 
 
 /* DKD */

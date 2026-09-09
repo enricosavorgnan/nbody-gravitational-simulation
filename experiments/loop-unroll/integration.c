@@ -54,19 +54,16 @@ void compute_accelerations_naive (const size_t  n,          // number of particl
       UNROLL_PRAGMA
       for (j = 0u; j < n; ++j)
         {
-          if (j != i)
-            {
-              const dtype  dx   = x[j] - xi;
-              const dtype  dy   = y[j] - yi;
-              const dtype  dz   = z[j] - zi;
-              const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-              const dtype  invr = 1.0 / dtype_sqrt (r2);
-              const dtype  s    = g * mass * invr * invr * invr;
+          const dtype  dx   = x[j] - xi;
+          const dtype  dy   = y[j] - yi;
+          const dtype  dz   = z[j] - zi;
+          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype  invr = 1.0 / dtype_sqrt (r2);
+          const dtype  s    = g * mass * invr * invr * invr;
 
-              axi += dx * s;
-              ayi += dy * s;
-              azi += dz * s;
-            }
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
         }
 
       ax[i] = axi;
@@ -168,19 +165,16 @@ void compute_accelerations_rsqrt(const size_t  n,                    // number o
     UNROLL_PRAGMA
     for (j = 0u; j < n; ++j)
     {
-      if (j != i)
-      {
-        const dtype  dx   = x[j] - xi;
-        const dtype  dy   = y[j] - yi;
-        const dtype  dz   = z[j] - zi;
-        const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-        const dtype  invr = (dtype) dtype_rsqrt(r2);
-        const dtype  s    = g * mass * invr * invr * invr;
+      const dtype  dx   = x[j] - xi;
+      const dtype  dy   = y[j] - yi;
+      const dtype  dz   = z[j] - zi;
+      const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+      const dtype  invr = (dtype) dtype_rsqrt(r2);
+      const dtype  s    = g * mass * invr * invr * invr;
 
-        axi += dx * s;
-        ayi += dy * s;
-        azi += dz * s;
-      }
+      axi += dx * s;
+      ayi += dy * s;
+      azi += dz * s;
     }
 
     ax[i] = axi;
@@ -234,19 +228,16 @@ void compute_accelerations_blocks(const size_t  n,                   // number o
 
         for (size_t j = j_start; j < j_end; j++)
         {
-          if (j!=i)
-          {
-            const dtype  dx   = x[j] - xi;
-            const dtype  dy   = y[j] - yi;
-            const dtype  dz   = z[j] - zi;
-            const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype  invr = 1.0 / dtype_sqrt (r2);
-            const dtype  s    = g * mass * invr * invr * invr;
+          const dtype  dx   = x[j] - xi;
+          const dtype  dy   = y[j] - yi;
+          const dtype  dz   = z[j] - zi;
+          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype  invr = 1.0 / dtype_sqrt (r2);
+          const dtype  s    = g * mass * invr * invr * invr;
 
-            axi += dx * s;
-            ayi += dy * s;
-            azi += dz * s;
-          }
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
         }
 
         ax[i] += axi;
@@ -363,19 +354,16 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
 
         for (size_t j = j_start; j < j_end; j++)
         {
-          if (j!=i)
-          {
-            const dtype  dx   = x[j] - xi;
-            const dtype  dy   = y[j] - yi;
-            const dtype  dz   = z[j] - zi;
-            const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype  invr = dtype_rsqrt(r2);
-            const dtype  s    = g * mass * invr * invr * invr;
+          const dtype  dx   = x[j] - xi;
+          const dtype  dy   = y[j] - yi;
+          const dtype  dz   = z[j] - zi;
+          const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype  invr = dtype_rsqrt(r2);
+          const dtype  s    = g * mass * invr * invr * invr;
 
-            axi += dx * s;
-            ayi += dy * s;
-            azi += dz * s;
-          }
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
         }
 
         ax[i] += axi;
@@ -535,31 +523,8 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,              
 }
 
 
-// void compute_accelerations_omp(const size_t  n,          // number of particles
-//                                   const dtype   g,          // gravitational constant
-//                                   const dtype   mass,       // mass of every source particle
-//                                   const dtype   eps,        // Plummer softening length
-//                                   const dtype * restrict x,          // x positions, read-only
-//                                   const dtype * restrict y,          // y positions, read-only
-//                                   const dtype * restrict z,          // z positions, read-only
-//                                   dtype * restrict ax,               // x acceleration, overwritten
-//                                   dtype * restrict ay,               // y acceleration, overwritten
-//                                   dtype * restrict az                // z acceleration, overwritten
-//            )
-// {
-//
-// }
-
-
 /* DKD */
 
-/*
- * Drift all particles by a time interval using the current velocities.
- * The DKD leapfrog workflow calls it twice per step: a half-drift before the
- * force evaluation and a half-drift after the kick.
- *
- * Again: are data qualifiers missed for optimization?
- */
 void drift (particles_t *p,       // particle positions are modified in place
                    dtype        dt       // drift interval, often 0.5 * full step
 		   )
@@ -581,9 +546,6 @@ void drift (particles_t *p,       // particle positions are modified in place
     }
 }
 
-/*
- * Kick all velocities using the current accelerations. This is the K in DKD
- */
 void kick (particles_t *p,       // particle velocities are modified in place
                   dtype        dt       // full kick interval
 		  )
@@ -605,16 +567,7 @@ void kick (particles_t *p,       // particle velocities are modified in place
     }
 }
 
-/*
- * Compute one DKD leapfrog step:
- *
- *   1. drift positions by dt/2;
- *   2. compute accelerations at the half-step positions;
- *   3. kick velocities by dt;
- *   4. drift positions by dt/2 with the updated velocities.
- *
- * This keeps positions and velocities synchronized at integer time levels
- */
+
 void leapfrog_dkd_step (particles_t   *p,             // complete particle state, modified in place
                         const dtype    g,             // gravitational constant
                         const dtype  eps,             // softening length
@@ -660,11 +613,7 @@ void leapfrog_dkd_step (particles_t   *p,             // complete particle state
 
 }
 
-/*
- * Kinetic energy of the equal-mass system.
- * A long-double accumulator is used so that summation roundoff in the check is less likely to hide
- * errors caused by the integration or the force kernel.
- */
+
 dtype kinetic_energy (const particles_t *p    // particle velocities are read-only
 			     )
 {
@@ -685,12 +634,7 @@ dtype kinetic_energy (const particles_t *p    // particle velocities are read-on
   return (dtype) (0.5L * (long double) mass * sum);
 }
 
-/*
- * Simple O(N^2) potential-energy diagnostic for the same softened potential used
- * by the force kernel.
- * Not performance critical if called only every K steps, and keeping it independent
- * of compute_accelerations_naive makes it a useful correctness check during optimization.
- */
+
 dtype potential_energy_naive (particles_t *p,        // particle positions are read-only
                                      dtype        g,        // gravitational constant
                                      dtype        eps       // softening length
@@ -724,10 +668,7 @@ dtype potential_energy_naive (particles_t *p,        // particle positions are r
   return (dtype) sum;
 }
 
-/*
- * Total mechanical energy, returned together with kinetic and potential parts for reporting.
- * The relative drift of this quantity is the main verification metric.
- */
+
 dtype total_energy (particles_t *p,           // complete particle state, read-only
                            dtype        g,           // gravitational constant
                            dtype        eps,         // softening length
