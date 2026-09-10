@@ -373,7 +373,7 @@ void compute_accelerations_omp_rt_red(const size_t  n,
 {
   const dtype eps2 = eps * eps;
 
-#pragma omp parallel for schedule(static)
+  #pragma omp parallel for schedule(static)
   for (size_t i = 0; i < n; ++i) {
     ax[i] = 0.0;
     ay[i] = 0.0;
@@ -381,13 +381,13 @@ void compute_accelerations_omp_rt_red(const size_t  n,
   }
 
   // Dynamic scheduling with Automatic Array Reduction
-#pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
+  #pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
   for (size_t i = 0; i < n; ++i)
   {
     const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
     dtype axi = 0.0, ayi = 0.0, azi = 0.0;
 
-#pragma GCC ivdep
+    #pragma GCC ivdep
     for (size_t j = i + 1; j < n; ++j)
     {
       const dtype dx = x[j] - xi; const dtype dy = y[j] - yi; const dtype dz = z[j] - zi;
@@ -427,7 +427,7 @@ void compute_accelerations_omp_brt_red(const size_t  n,
     }
 
       // Dynamic scheduling with Automatic Array Reduction
-    #pragma omp parallel for schedule(dynamic, 1) reduction(+:ax[0:n], ay[0:n], az[0:n])
+      #pragma omp parallel for schedule(dynamic, 1) reduction(+:ax[0:n], ay[0:n], az[0:n])
       for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
       {
         const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
@@ -471,7 +471,7 @@ void compute_accelerations_omp_brt_red(const size_t  n,
             const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
             dtype axi = 0.0, ayi = 0.0, azi = 0.0;
 
-    #pragma GCC ivdep
+            #pragma GCC ivdep
             for (size_t j = b_j; j < j_end; ++j)
             {
               const size_t jj = j - b_j;
