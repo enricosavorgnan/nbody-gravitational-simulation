@@ -419,7 +419,7 @@ void compute_accelerations_omp_brt_red(const size_t  n,
   {
     const dtype eps2 = eps * eps;
 
-// #pragma omp parallel for schedule(static)
+    #pragma omp parallel for schedule(static)
     for (size_t i = 0; i < n; ++i) {
       ax[i] = 0.0;
       ay[i] = 0.0;
