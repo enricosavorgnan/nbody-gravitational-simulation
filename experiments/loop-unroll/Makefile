@@ -42,8 +42,7 @@ all-n-unroll: UNROLL=8
 all-auto-unroll: UNROLL=-1
 all-no-unroll: UNROLL=0
 
-all-n-unroll all-auto-unroll all-no-unroll: clean
-	$(MAKE) all UNROLL=$(UNROLL)
+all-n-unroll all-auto-unroll all-no-unroll: all
 
 
 main: $(NBODY_OBJS)

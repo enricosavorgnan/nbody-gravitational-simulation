@@ -1,0 +1,11 @@
+files:
+  - "./experiments/kernel/profilings/ba.txt"
+  - "./experiments/kernel/profilings/n.txt"
+
+names_method:
+  - "Baseline"
+  - "Naive"
+
+baseline_idx: 0
+runs: 5
+save-path: "./plots/serial/base/"
