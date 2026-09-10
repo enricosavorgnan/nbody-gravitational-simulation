@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-SBATCH_FILE="./runners/sbatch-mau.sh"
+SBATCH_FILE="./runners/sbatch-fma.sh"
 TOTAL_RUNS=5
 
 # Submit the first job

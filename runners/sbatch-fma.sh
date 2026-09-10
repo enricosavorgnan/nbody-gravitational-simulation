@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=MAU
-#SBATCH --output=./log/mau_%j.out
-#SBATCH --error=./log/mau_%j.err
+#SBATCH --output=./log/fma_%j.out
+#SBATCH --error=./log/fma_%j.err
 #SBATCH --partition=GENOA
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -11,6 +11,6 @@
 #SBATCH --time=02:00:00
 
 cd "$SLURM_SUBMIT_DIR"
-cd "./experiments/mau"
+cd "./experiments/fma"
 
-make test-mau USE_PAPI=1
+make test-fma USE_PAPI=1
