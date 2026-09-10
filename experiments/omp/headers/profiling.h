@@ -4,7 +4,10 @@
  * The times are stored into a struct timespec.
  */
 
+
+#ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 199309L
+#endif
 
 #ifndef PROFILING_H
 #define PROFILING_H
@@ -87,4 +90,4 @@ void profiler_papi_start(profiler_t *profiler);
 void profiler_papi_stop(profiler_t *profiler, const size_t step);
 void profiler_papi_free(profiler_t *profiler);
 
-#endif // PROFILING_H
+#endif // PROFILING_H

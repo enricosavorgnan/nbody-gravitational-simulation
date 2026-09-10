@@ -1,0 +1,17 @@
+files:
+  - "./experiments/omp/profilings/obr.txt"
+  - "./experiments/omp/profilings/ort.txt"
+  - "./experiments/omp/profilings/obrt.txt"
+  - "./experiments/omp/profilings/ortr.txt"
+  - "./experiments/omp/profilings/obrtr.txt"
+
+names_method:
+  - "OMP B+R"
+  - "OMP R+T"
+  - "OMP B+R+T"
+  - "OMP R+T+Reduction"
+  - "OMP B+R+T+Reduction"
+
+baseline_idx: 0
+runs: 8
+save-path: "./plots/omp/omp/"

@@ -2,7 +2,7 @@ CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -ffast-math -flto -fomp -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -ffast-math -flto -fopenmp -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1
 
 LDLIBS    ?= -lm
 PRECISION ?= double
@@ -22,7 +22,6 @@ PRECISION_CPPFLAGS := -DNBODY_USE_DOUBLE
 else
 $(error PRECISION must be either double or float)
 endif
-
 ifeq ($(USE_PAPI), 1)
 CFLAGS += -DUSE_PAPI
 LDLIBS += -lpapi
@@ -46,22 +45,16 @@ generate_ic: generate_initial_conditions
 %.o: %.c $(HEADERS)
 	$(CC) $(STD) $(CPPFLAGS) $(PRECISION_CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-
-run-smoke: all
-	mkdir -p ./bins
-	./generate_initial_conditions --model 0 --n 128 --seed 42 --output ./bins/plummer_128.bin
-	./main --input ./bins/plummer_128.bin --nsteps 5 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/plummer_128_final.bin --quiet
-	./generate_initial_conditions --model 1 --n 128 --seed 43 --output ./bins/ball_128.bin
-	./main --input ./bins/ball_128.bin --nsteps 5 --dt 1e-4 --eps 0.05 --energy-every 1 --output ./bins/ball_128_final.bin --quiet
-
 test-omp : all
 	mkdir -p ./bins
-	mkdir -p ./bins/test-omp/
 	mkdir -p ./profilings
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-omp.bin
-	for i in 1 2 3 4; do \
-		./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 3 --output ./bins/test-omp/rt.out --kernel "rt" --profiler 1  --profiler-path ./profilings/test-omp/ort.txt ; \
-		./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 3 --output ./bins/test-omp/brt.out --kernel "brt" --profiler 1  --profiler-path ./profilings/test-omp/obrt.txt ; \
+	for i in 1 2 3 4 5; do \
+		./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obr.out --kernel "obr" --profiler 1  --profiler-path ./profilings/obr.txt ; \
+		./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/ort.out --kernel "ort" --profiler 1  --profiler-path ./profilings/ort.txt ; \
+		./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obrt.out --kernel "obrt" --profiler 1  --profiler-path ./profilings/obrt.txt ; \
+		./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/ortr.out --kernel "ortr" --profiler 1  --profiler-path ./profilings/ortr.txt ; \
+	  	./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obrtr.out --kernel "obrtr" --profiler 1  --profiler-path ./profilings/obrtr.txt ; \
 	done
 
 clean:
