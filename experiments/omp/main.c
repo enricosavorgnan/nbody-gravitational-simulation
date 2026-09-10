@@ -74,48 +74,32 @@ static void print_usage (const char *program    // argv[0]
 
 static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
 {
-  if (strcmp(kernel_choice, "n") == 0)
-    *kernel = compute_accelerations_naive;
-  else if (strcmp(kernel_choice, "t") == 0)
-    *kernel = compute_accelerations_third_law;
-  else if (strcmp(kernel_choice, "r") == 0)
-    *kernel = compute_accelerations_rsqrt;
-  else if (strcmp(kernel_choice, "b") == 0)
-    *kernel = compute_accelerations_blocks;
-  else if (strcmp(kernel_choice, "rt") == 0)
-    *kernel = compute_accelerations_rsqrt_third_law;
-  else if (strcmp(kernel_choice, "bt") == 0)
-    *kernel = compute_accelerations_blocks_third_law;
-  else if (strcmp(kernel_choice, "br") == 0)
-    *kernel = compute_accelerations_blocks_rsqrt;
-  else if (strcmp(kernel_choice, "brt") == 0)
-    *kernel = compute_accelerations_blocks_rsqrt_third_law;
-  // else if (strcmp(kernel_choice, "omp") == 0)
-  //   *kernel = compute_accelerations_omp;
+  if (strcmp(kernel_choice, "obr") == 0)
+    *kernel = compute_accelerations_omp_br;
+  else if (strcmp(kernel_choice, "ort") == 0)
+    *kernel = compute_accelerations_omp_rt;
+  else if (strcmp(kernel_choice, "obrt") == 0)
+    *kernel = compute_accelerations_omp_brt;
+  else if (strcmp(kernel_choice, "ortr") == 0)
+    *kernel = compute_accelerations_omp_rt_red;
+  else if (strcmp(kernel_choice, "obrtr") == 0)
+    *kernel = compute_accelerations_omp_brt_red;
   else
     die ("unknown kernel choice: %s", kernel_choice);
 }
 
 static const char *retrieve_kernel_name(const kernel_t kernel)
 {
-  if (kernel == compute_accelerations_naive)
-    return "n";
-  else if (kernel == compute_accelerations_third_law)
-    return "t";
-  else if (kernel == compute_accelerations_rsqrt)
-    return "r";
-  else if (kernel == compute_accelerations_blocks)
-    return "b";
-  else if (kernel == compute_accelerations_rsqrt_third_law)
-    return "rt";
-  else if (kernel == compute_accelerations_blocks_third_law)
-    return "bt";
-  else if (kernel == compute_accelerations_blocks_rsqrt)
-    return "br";
-  else if (kernel == compute_accelerations_blocks_rsqrt_third_law)
-    return "brt";
-  // else if (kernel == compute_accelerations_omp)
-  //   return "o";
+  if (kernel == compute_accelerations_omp_br)
+    return "obr";
+  else if (kernel == compute_accelerations_omp_rt)
+    return "ort";
+  else if (kernel == compute_accelerations_omp_brt)
+    return "obrt";
+  else if (kernel == compute_accelerations_omp_rt_red)
+    return "ortr";
+  else if (kernel == compute_accelerations_omp_brt_red)
+    return "obrtr";
   else
     die ("unknown kernel function pointer");
   return "unknown";
@@ -146,7 +130,7 @@ int main (int argc, char **argv)
   profiler_t   profiler;
 
   // Kernel Choice
-  kernel_t kernel = compute_accelerations_naive;
+  kernel_t kernel = compute_accelerations_omp_br;
 
   // Parse CLI
   for (int argi = 1; argi < argc; ++argi)
