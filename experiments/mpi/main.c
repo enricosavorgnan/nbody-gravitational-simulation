@@ -73,22 +73,22 @@ static void print_usage (const char *program    // argv[0]
 }
 
 
-static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
-{
-  if (strcmp(kernel_choice, "obrc") == 0)
-    *kernel = compute_accelerations_omp_br_cross;
-  else
-    die ("unknown kernel choice: %s", kernel_choice);
-}
-
-static const char *retrieve_kernel_name(const kernel_t kernel)
-{
-  if (kernel == compute_accelerations_omp_br_cross)
-    return "obrc";
-  else
-    die ("unknown kernel function pointer");
-  return "unknown";
-}
+// static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
+// {
+//   if (strcmp(kernel_choice, "obrc") == 0)
+//     *kernel = compute_accelerations_omp_br_cross;
+//   else
+//     die ("unknown kernel choice: %s", kernel_choice);
+// }
+//
+// static const char *retrieve_kernel_name(const kernel_t kernel)
+// {
+//   if (kernel == compute_accelerations_omp_br_cross)
+//     return "obrc";
+//   else
+//     die ("unknown kernel function pointer");
+//   return "unknown";
+// }
 
 int main (int argc, char **argv)
 {
