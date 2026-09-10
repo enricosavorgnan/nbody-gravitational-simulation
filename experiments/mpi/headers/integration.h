@@ -14,30 +14,21 @@
 
 
 typedef void (*kernel_t)(
-    const size_t  n,
+    const size_t  local_n,
+    const size_t  visit_n,
     const dtype   g,
     const dtype   mass,
     const dtype   eps,
-    const dtype   * restrict x,
-    const dtype   * restrict y,
-    const dtype   * restrict z,
-    dtype   * restrict ax,
-    dtype   * restrict ay,
-    dtype   * restrict az
-);
+    const dtype * restrict local_x,
+    const dtype * restrict local_y,
+    const dtype * restrict local_z,
+    const dtype * restrict visit_x,
+    const dtype * restrict visit_y,
+    const dtype * restrict visit_z,
+    dtype * restrict ax,
+    dtype * restrict ay,
+    dtype * restrict az);
 
-
-void compute_accelerations_omp_br(const size_t  n,
-                                  const dtype   g,
-                                  const dtype   mass,
-                                  const dtype   eps,
-                                  const dtype * restrict x,
-                                  const dtype * restrict y,
-                                  const dtype * restrict z,
-                                  dtype * restrict ax,
-                                  dtype * restrict ay,
-                                  dtype * restrict az
-                                  );
 
 void compute_accelerations_omp_br_cross(const size_t  local_n,
                                         const size_t  visit_n,
