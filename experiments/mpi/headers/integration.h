@@ -60,8 +60,7 @@ void leapfrog_dkd_step (particles_t *p,                                         
                         const dtype        dt,                                  // full time-step
                         profiler_t         *profiler,                           // optional profiler for per-step timing
                         const size_t        profiler_flag,                      // whether to profile this step
-                        const size_t        step,                               // current step index for profiler
-                        const kernel_t      compute_accelerations               // kernel function to compute accelerations
+                        const size_t        step                               // current step index for profiler
                         );
 
 dtype kinetic_energy (const particles_t *p                                      // particle velocities are read-only
