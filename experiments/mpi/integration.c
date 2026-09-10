@@ -287,9 +287,9 @@ void leapfrog_dkd_step (particles_t   *p,
       MPI_Isend(buf_z[curr], n_local, MPI_DTYPE, next, 2, MPI_COMM_WORLD, &req[5]);
 
       // Compute accelerations with current buffer
-      if (s==1) compute_accelerations(n_local, g, p->mass, eps, p->x, p->y, p->z, p->ax, p->ay, p->az);
+      if (s==1) compute_accelerations_omp_br(n_local, g, p->mass, eps, p->x, p->y, p->z, p->ax, p->ay, p->az);
       // Compute accelerations with cross buffer
-      else compute_accelerations_br_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
+      else compute_accelerations_omp_br_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
 
       // Wait for network
       MPI_Waitall(6, req, MPI_STATUSES_IGNORE);
