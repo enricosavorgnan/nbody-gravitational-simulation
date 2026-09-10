@@ -37,20 +37,20 @@ void compute_accelerations_naive (const size_t  n,                           // 
                                   dtype   * restrict az                                // z acceleration, overwritten
                   );
 
-void compute_accelerations_mau2();
-void compute_accelerations_mau4();
-void compute_accelerations_mau8();
-void compute_accelerations_mau16();
+void compute_accelerations_fma2();
+void compute_accelerations_fma4();
+void compute_accelerations_fma8();
+void compute_accelerations_fma16();
 
-void compute_accelerations_rsqrt_mau2();
-void compute_accelerations_rsqrt_mau4();
-void compute_accelerations_rsqrt_mau8();
-void compute_accelerations_rsqrt_mau16();
+void compute_accelerations_rsqrt_fma2();
+void compute_accelerations_rsqrt_fma4();
+void compute_accelerations_rsqrt_fma8();
+void compute_accelerations_rsqrt_fma16();
 
-void compute_accelerations_blocks_rsqrt_mau2();
-void compute_accelerations_blocks_rsqrt_mau4();
-void compute_accelerations_blocks_rsqrt_mau8();
-void compute_accelerations_blocks_rsqrt_mau16();
+void compute_accelerations_blocks_rsqrt_fma2();
+void compute_accelerations_blocks_rsqrt_fma4();
+void compute_accelerations_blocks_rsqrt_fma8();
+void compute_accelerations_blocks_rsqrt_fma16();
 
 
 void drift (particles_t *p,                                                    // particle positions are modified in place

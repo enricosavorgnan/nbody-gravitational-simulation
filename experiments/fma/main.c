@@ -18,29 +18,29 @@ static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
   if (strcmp(kernel_choice, "n") == 0)
     *kernel = compute_accelerations_naive;
   else if (strcmp(kernel_choice, "m2") == 0)
-    *kernel = compute_accelerations_mau2;
+    *kernel = compute_accelerations_fma2;
   else if (strcmp(kernel_choice, "m4") == 0)
-    *kernel = compute_accelerations_mau4;
+    *kernel = compute_accelerations_fma4;
   else if (strcmp(kernel_choice, "m8") == 0)
-    *kernel = compute_accelerations_mau8;
+    *kernel = compute_accelerations_fma8;
   else if (strcmp(kernel_choice, "m16") == 0)
-    *kernel = compute_accelerations_mau16;
+    *kernel = compute_accelerations_fma16;
   else if (strcmp(kernel_choice, "rm2") == 0)
-    *kernel = compute_accelerations_rsqrt_mau2;
+    *kernel = compute_accelerations_rsqrt_fma2;
   else if (strcmp(kernel_choice, "rm4") == 0)
-    *kernel = compute_accelerations_rsqrt_mau4;
+    *kernel = compute_accelerations_rsqrt_fma4;
   else if (strcmp(kernel_choice, "rm8") == 0)
-    *kernel = compute_accelerations_rsqrt_mau8;
+    *kernel = compute_accelerations_rsqrt_fma8;
   else if (strcmp(kernel_choice, "rm16") == 0)
-    *kernel = compute_accelerations_rsqrt_mau16;
+    *kernel = compute_accelerations_rsqrt_fma16;
   else if (strcmp(kernel_choice, "brm2") == 0)
-    *kernel = compute_accelerations_blocks_rsqrt_mau2;
+    *kernel = compute_accelerations_blocks_rsqrt_fma2;
   else if (strcmp(kernel_choice, "brm4") == 0)
-    *kernel = compute_accelerations_blocks_rsqrt_mau4;
+    *kernel = compute_accelerations_blocks_rsqrt_fma4;
   else if (strcmp(kernel_choice, "brm8") == 0)
-    *kernel = compute_accelerations_blocks_rsqrt_mau8;
+    *kernel = compute_accelerations_blocks_rsqrt_fma8;
   else if (strcmp(kernel_choice, "brm16") == 0)
-    *kernel = compute_accelerations_blocks_rsqrt_mau16;
+    *kernel = compute_accelerations_blocks_rsqrt_fma16;
   else
     die ("unknown kernel choice: %s", kernel_choice);
 }
@@ -49,29 +49,29 @@ static const char *retrieve_kernel_name(const kernel_t kernel)
 {
   if (kernel == compute_accelerations_naive)
     return "n";
-  else if (kernel == compute_accelerations_mau2)
+  else if (kernel == compute_accelerations_fma2)
     return "m2";
-  else if (kernel == compute_accelerations_mau4)
+  else if (kernel == compute_accelerations_fma4)
     return "m4";
-  else if (kernel == compute_accelerations_mau8)
+  else if (kernel == compute_accelerations_fma8)
     return "m8";
-  else if (kernel == compute_accelerations_mau16)
+  else if (kernel == compute_accelerations_fma16)
     return "m16";
-  else if (kernel == compute_accelerations_rsqrt_mau2)
+  else if (kernel == compute_accelerations_rsqrt_fma2)
     return "rm2";
-  else if (kernel == compute_accelerations_rsqrt_mau4)
+  else if (kernel == compute_accelerations_rsqrt_fma4)
     return "rm4";
-  else if (kernel == compute_accelerations_rsqrt_mau8)
+  else if (kernel == compute_accelerations_rsqrt_fma8)
     return "rm8";
-  else if (kernel == compute_accelerations_rsqrt_mau16)
+  else if (kernel == compute_accelerations_rsqrt_fma16)
     return "rm16";
-  else if (kernel == compute_accelerations_blocks_rsqrt_mau2)
+  else if (kernel == compute_accelerations_blocks_rsqrt_fma2)
     return "brm2";
-  else if (kernel == compute_accelerations_blocks_rsqrt_mau4)
+  else if (kernel == compute_accelerations_blocks_rsqrt_fma4)
     return "brm4";
-  else if (kernel == compute_accelerations_blocks_rsqrt_mau8)
+  else if (kernel == compute_accelerations_blocks_rsqrt_fma8)
     return "brm8";
-  else if (kernel == compute_accelerations_blocks_rsqrt_mau16)
+  else if (kernel == compute_accelerations_blocks_rsqrt_fma16)
     return "brm16";
   else
     die ("unknown kernel function pointer");

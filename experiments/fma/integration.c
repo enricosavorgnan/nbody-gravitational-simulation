@@ -78,12 +78,12 @@ void compute_accelerations_naive (const size_t  n,
  * MAU and the Rsqrt-MAU family is the inverse-square-root callback.
  * ========================================================================= */
 
-static inline dtype mau_invsqrt_exact (const dtype r2)
+static inline dtype fma_invsqrt_exact (const dtype r2)
 {
   return (dtype) 1.0 / dtype_sqrt (r2);
 }
 
-static inline dtype mau_invsqrt_fast (const dtype r2)
+static inline dtype fma_invsqrt_fast (const dtype r2)
 {
   return dtype_rsqrt (r2);
 }
@@ -130,7 +130,7 @@ static inline dtype mau_invsqrt_fast (const dtype r2)
                                M (12, INV) M (13, INV) M (14, INV) M (15, INV)
 
 /* The shared kernel body.  K is the i-tile width, REPEAT the matching
- * repeater, INV either mau_invsqrt_exact or mau_invsqrt_fast.
+ * repeater, INV either fma_invsqrt_exact or fma_invsqrt_fast.
  *
  * The j == i self-interaction needs no branch: dx = dy = dz = 0 makes s finite
  * through the Plummer softening and contributes exactly zero, as in the naive
@@ -186,7 +186,7 @@ static inline dtype mau_invsqrt_fast (const dtype r2)
   }
 
 
-void compute_accelerations_mau2 (const size_t  n,
+void compute_accelerations_fma2 (const size_t  n,
                                  const dtype   g,
                                  const dtype   mass,
                                  const dtype   eps,
@@ -197,11 +197,11 @@ void compute_accelerations_mau2 (const size_t  n,
                                  dtype       * restrict ay,
                                  dtype       * restrict az)
 {
-  MAU_BODY (2, MAU_REPEAT_2, mau_invsqrt_exact)
+  MAU_BODY (2, MAU_REPEAT_2, fma_invsqrt_exact)
 }
 
 
-void compute_accelerations_mau4 (const size_t  n,
+void compute_accelerations_fma4 (const size_t  n,
                                  const dtype   g,
                                  const dtype   mass,
                                  const dtype   eps,
@@ -212,11 +212,11 @@ void compute_accelerations_mau4 (const size_t  n,
                                  dtype       * restrict ay,
                                  dtype       * restrict az)
 {
-  MAU_BODY (4, MAU_REPEAT_4, mau_invsqrt_exact)
+  MAU_BODY (4, MAU_REPEAT_4, fma_invsqrt_exact)
 }
 
 
-void compute_accelerations_mau8 (const size_t  n,
+void compute_accelerations_fma8 (const size_t  n,
                                  const dtype   g,
                                  const dtype   mass,
                                  const dtype   eps,
@@ -227,11 +227,11 @@ void compute_accelerations_mau8 (const size_t  n,
                                  dtype       * restrict ay,
                                  dtype       * restrict az)
 {
-  MAU_BODY (8, MAU_REPEAT_8, mau_invsqrt_exact)
+  MAU_BODY (8, MAU_REPEAT_8, fma_invsqrt_exact)
 }
 
 
-void compute_accelerations_mau16 (const size_t  n,
+void compute_accelerations_fma16 (const size_t  n,
                                   const dtype   g,
                                   const dtype   mass,
                                   const dtype   eps,
@@ -242,7 +242,7 @@ void compute_accelerations_mau16 (const size_t  n,
                                   dtype       * restrict ay,
                                   dtype       * restrict az)
 {
-  MAU_BODY (16, MAU_REPEAT_16, mau_invsqrt_exact)
+  MAU_BODY (16, MAU_REPEAT_16, fma_invsqrt_exact)
 }
 
 
@@ -254,7 +254,7 @@ void compute_accelerations_mau16 (const size_t  n,
  * vdivpd throughput, so removing the divide is what exposes the issue width
  * that the i-tiling then feeds.
  * ========================================================================= */
-void compute_accelerations_rsqrt_mau2 (const size_t  n,
+void compute_accelerations_rsqrt_fma2 (const size_t  n,
                                        const dtype   g,
                                        const dtype   mass,
                                        const dtype   eps,
@@ -265,11 +265,11 @@ void compute_accelerations_rsqrt_mau2 (const size_t  n,
                                        dtype       * restrict ay,
                                        dtype       * restrict az)
 {
-  MAU_BODY (2, MAU_REPEAT_2, mau_invsqrt_fast)
+  MAU_BODY (2, MAU_REPEAT_2, fma_invsqrt_fast)
 }
 
 
-void compute_accelerations_rsqrt_mau4 (const size_t  n,
+void compute_accelerations_rsqrt_fma4 (const size_t  n,
                                        const dtype   g,
                                        const dtype   mass,
                                        const dtype   eps,
@@ -280,11 +280,11 @@ void compute_accelerations_rsqrt_mau4 (const size_t  n,
                                        dtype       * restrict ay,
                                        dtype       * restrict az)
 {
-  MAU_BODY (4, MAU_REPEAT_4, mau_invsqrt_fast)
+  MAU_BODY (4, MAU_REPEAT_4, fma_invsqrt_fast)
 }
 
 
-void compute_accelerations_rsqrt_mau8 (const size_t  n,
+void compute_accelerations_rsqrt_fma8 (const size_t  n,
                                        const dtype   g,
                                        const dtype   mass,
                                        const dtype   eps,
@@ -295,11 +295,11 @@ void compute_accelerations_rsqrt_mau8 (const size_t  n,
                                        dtype       * restrict ay,
                                        dtype       * restrict az)
 {
-  MAU_BODY (8, MAU_REPEAT_8, mau_invsqrt_fast)
+  MAU_BODY (8, MAU_REPEAT_8, fma_invsqrt_fast)
 }
 
 
-void compute_accelerations_rsqrt_mau16 (const size_t  n,
+void compute_accelerations_rsqrt_fma16 (const size_t  n,
                                         const dtype   g,
                                         const dtype   mass,
                                         const dtype   eps,
@@ -310,7 +310,7 @@ void compute_accelerations_rsqrt_mau16 (const size_t  n,
                                         dtype       * restrict ay,
                                         dtype       * restrict az)
 {
-  MAU_BODY (16, MAU_REPEAT_16, mau_invsqrt_fast)
+  MAU_BODY (16, MAU_REPEAT_16, fma_invsqrt_fast)
 }
 
 
@@ -328,7 +328,7 @@ void compute_accelerations_rsqrt_mau16 (const size_t  n,
 /* =========================================================================
  * 4. Blocked + RSQRT + MAU (Fixed Loop Ordering, Single Memory Store)
  * ========================================================================= */
-void compute_accelerations_blocks_rsqrt_mau2(const size_t  n,
+void compute_accelerations_blocks_rsqrt_fma2(const size_t  n,
                                                  const dtype   g,
                                                  const dtype   mass,
                                                  const dtype   eps,
@@ -437,7 +437,7 @@ void compute_accelerations_blocks_rsqrt_mau2(const size_t  n,
       }
     }
 
-void compute_accelerations_blocks_rsqrt_mau4(const size_t  n,
+void compute_accelerations_blocks_rsqrt_fma4(const size_t  n,
                                                  const dtype   g,
                                                  const dtype   mass,
                                                  const dtype   eps,
@@ -547,7 +547,7 @@ void compute_accelerations_blocks_rsqrt_mau4(const size_t  n,
     }
 
 
-void compute_accelerations_blocks_rsqrt_mau8(const size_t  n,
+void compute_accelerations_blocks_rsqrt_fma8(const size_t  n,
                                                  const dtype   g,
                                                  const dtype   mass,
                                                  const dtype   eps,
@@ -657,7 +657,7 @@ void compute_accelerations_blocks_rsqrt_mau8(const size_t  n,
     }
 
 
-void compute_accelerations_blocks_rsqrt_mau16(const size_t  n,
+void compute_accelerations_blocks_rsqrt_fma16(const size_t  n,
                                                  const dtype   g,
                                                  const dtype   mass,
                                                  const dtype   eps,
