@@ -243,7 +243,7 @@ int main (int argc, char **argv)
   for (size_t step = 1u; step <= nsteps; ++step)
     {
       if (profiler_flag) { t0 = get_time();}
-      leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1, kernel);
+      leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1);
       if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
       // Get diagnostics, once in a while

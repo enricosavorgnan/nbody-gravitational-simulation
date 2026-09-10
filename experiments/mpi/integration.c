@@ -8,6 +8,89 @@
 
 /* ACCELERATION */
 
+void compute_accelerations_omp_br(const size_t  n,
+                                  const dtype   g,
+                                  const dtype   mass,
+                                  const dtype   eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype * restrict ax,
+                                  dtype * restrict ay,
+                                  dtype * restrict az
+                                  )
+{
+  const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
+  const dtype  eps2   = eps * eps;
+
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0; i < n; ++i) {
+    ax[i] = 0.0;
+    ay[i] = 0.0;
+    az[i] = 0.0;
+  }
+
+#pragma omp parallel for schedule(static)
+  for (size_t b_i = 0; b_i < blocks; b_i++)
+  {
+    const size_t i_start = b_i * BLOCK_SIZE;
+    const size_t i_end   = (i_start + BLOCK_SIZE <= n) ? (i_start + BLOCK_SIZE) : n;
+    const size_t i_count = i_end - i_start;
+
+    dtype block_ax[BLOCK_SIZE];
+    dtype block_ay[BLOCK_SIZE];
+    dtype block_az[BLOCK_SIZE];
+
+    for (size_t i = 0; i < i_count; i++)
+    {
+      block_ax[i] = 0.0;
+      block_ay[i] = 0.0;
+      block_az[i] = 0.0;
+    }
+
+    for (size_t b_j = 0; b_j < blocks; b_j++)
+    {
+      const size_t j_start = b_j * BLOCK_SIZE;
+      const size_t j_end   = (j_start + BLOCK_SIZE <= n) ? (j_start + BLOCK_SIZE) : n;
+
+      for (size_t i = i_start; i < i_end; i++)
+      {
+        const size_t i_rel = i - i_start;
+        const dtype xi  = x[i];
+        const dtype yi  = y[i];
+        const dtype zi  = z[i];
+        dtype       axi = 0.0;
+        dtype       ayi = 0.0;
+        dtype       azi = 0.0;
+
+        for (size_t j = j_start; j < j_end; j++)
+        {
+          const dtype dx   = x[j] - xi;
+          const dtype dy   = y[j] - yi;
+          const dtype dz   = z[j] - zi;
+          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
+          const dtype invr = dtype_rsqrt(r2);
+          const dtype s    = g * mass * invr * invr * invr;
+
+          axi += dx * s;
+          ayi += dy * s;
+          azi += dz * s;
+        }
+
+        block_ax[i_rel] += axi;
+        block_ay[i_rel] += ayi;
+        block_az[i_rel] += azi;
+      }
+    }
+
+    for (size_t i = 0; i < i_count; i++)
+    {
+      ax[i_start + i] = block_ax[i];
+      ay[i_start + i] = block_ay[i];
+      az[i_start + i] = block_az[i];
+    }
+  }
+}
 
 void compute_accelerations_omp_br_cross(const size_t  local_n,
                                         const size_t  visit_n,
@@ -129,8 +212,7 @@ void leapfrog_dkd_step (particles_t   *p,
                         const dtype   dt,
                         profiler_t   *profiler,
                         const size_t profiler_flag,
-                        const size_t   step,
-                        const kernel_t  compute_accelerations
+                        const size_t   step
 			       )
 {
   double t0 = 0.0;
@@ -164,7 +246,7 @@ void leapfrog_dkd_step (particles_t   *p,
   }
 
   // Local computation (if running on 1 node)
-  if (size==1) compute_accelerations(n_local, g, p->mass, eps, p->x, p->y, p->z, p->ax, p->ay, p->az);
+  if (size==1) compute_accelerations_omp_br(n_local, g, p->mass, eps, p->x, p->y, p->z, p->ax, p->ay, p->az);
   // More than 1 node
   else
   {
@@ -207,7 +289,7 @@ void leapfrog_dkd_step (particles_t   *p,
       // Compute accelerations with current buffer
       if (s==1) compute_accelerations(n_local, g, p->mass, eps, p->x, p->y, p->z, p->ax, p->ay, p->az);
       // Compute accelerations with cross buffer
-      else compute_accelerations_omp_br_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
+      else compute_accelerations_br_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
 
       // Wait for network
       MPI_Waitall(6, req, MPI_STATUSES_IGNORE);
@@ -215,7 +297,7 @@ void leapfrog_dkd_step (particles_t   *p,
       curr = 1-curr;
     }
     // Final cross-interaction
-    compute_accelerations_omp_br_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
+    compute_accelerations_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
   }
   if (profiler_flag)
   {
@@ -260,7 +342,12 @@ dtype kinetic_energy (const particles_t *p    // particle velocities are read-on
   return (dtype) (0.5L * (long double) mass * sum);
 }
 
-
+/*
+ * Simple O(N^2) potential-energy diagnostic for the same softened potential used
+ * by the force kernel.
+ * Not performance critical if called only every K steps, and keeping it independent
+ * of compute_accelerations_naive makes it a useful correctness check during optimization.
+ */
 dtype potential_energy_naive (particles_t *p,        // particle positions are read-only
                                      dtype        g,        // gravitational constant
                                      dtype        eps       // softening length
