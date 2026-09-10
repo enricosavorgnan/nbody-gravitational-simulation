@@ -297,7 +297,7 @@ void leapfrog_dkd_step (particles_t   *p,
       curr = 1-curr;
     }
     // Final cross-interaction
-    compute_accelerations_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
+    compute_accelerations_omp_br_cross(n_local, n_local, g, p->mass, eps, p->x, p->y, p->z, buf_x[curr], buf_y[curr], buf_z[curr], p->ax, p->ay, p->az);
   }
   if (profiler_flag)
   {
