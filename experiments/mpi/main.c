@@ -30,6 +30,7 @@
  */
 
 #include <errno.h>
+#include <mpi.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -74,32 +75,16 @@ static void print_usage (const char *program    // argv[0]
 
 static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
 {
-  if (strcmp(kernel_choice, "obr") == 0)
-    *kernel = compute_accelerations_omp_br;
-  else if (strcmp(kernel_choice, "ort") == 0)
-    *kernel = compute_accelerations_omp_rt;
-  else if (strcmp(kernel_choice, "obrt") == 0)
-    *kernel = compute_accelerations_omp_brt;
-  else if (strcmp(kernel_choice, "ortr") == 0)
-    *kernel = compute_accelerations_omp_rt_red;
-  else if (strcmp(kernel_choice, "obrtr") == 0)
-    *kernel = compute_accelerations_omp_brt_red;
+  if (strcmp(kernel_choice, "obrc") == 0)
+    *kernel = compute_accelerations_omp_br_cross;
   else
     die ("unknown kernel choice: %s", kernel_choice);
 }
 
 static const char *retrieve_kernel_name(const kernel_t kernel)
 {
-  if (kernel == compute_accelerations_omp_br)
-    return "obr";
-  else if (kernel == compute_accelerations_omp_rt)
-    return "ort";
-  else if (kernel == compute_accelerations_omp_brt)
-    return "obrt";
-  else if (kernel == compute_accelerations_omp_rt_red)
-    return "ortr";
-  else if (kernel == compute_accelerations_omp_brt_red)
-    return "obrtr";
+  if (kernel == compute_accelerations_omp_br_cross)
+    return "obrc";
   else
     die ("unknown kernel function pointer");
   return "unknown";
@@ -203,18 +188,40 @@ int main (int argc, char **argv)
   // Allocate particles' container to an empty state
   particles_init_empty (&particles);
 
+  // MPI definitions
+  int rank=0;
+  int size=1;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+
   // Read particles from input file
   if (profiler_flag) { t0 = get_time();}
   particles_read_binary (input_path, mass, &particles);
   if (profiler_flag) { profiler.reading_time = get_time() - t0;}
 
+  size_t n_local = particles.n / size;
+  size_t offset = rank * n_local;
+
+  // Slide assigned particles down to 0
+  memmove(particles.x, particles.x + offset, n_local * sizeof(dtype));
+  memmove(particles.y, particles.y + offset, n_local * sizeof(dtype));
+  memmove(particles.z, particles.z + offset, n_local * sizeof(dtype));
+  memmove(particles.vx, particles.vx + offset, n_local * sizeof(dtype));
+  memmove(particles.vy, particles.vy + offset, n_local * sizeof(dtype));
+  memmove(particles.vz, particles.vz + offset, n_local * sizeof(dtype));
+
+  particles.n = n_local;
+
   // Get energy baseline
   if (profiler_flag) { t0 = get_time();}
-  energy0 = total_energy (&particles, g, eps, &kinetic0, &potential0);
+  // Local energy
+  dtype local_energy = total_energy (&particles, g, eps, &kinetic0, &potential0);
+  // Global reduction
+  dtype global_energy = 0;
+  MPI_Reduce(&local_energy, &global_energy, 1, MPI_DTYPE, MPI_SUM, 0, MPI_COMM_WORLD);
   if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
-
   // Print header
-  if (!quiet)
+  if (!quiet && rank == 0)
     {
       printf ("# Direct N-body DKD\n");
       printf ("# arithmetic_dtype=%s binary_storage=float32 format=%s\n",
@@ -227,7 +234,7 @@ int main (int argc, char **argv)
       printf ("# Step \t Time \t\t\t Kinetic \t\t\t Potential \t\t\t Total \t\t\t Relative Energy Drift\n");
       printf ("%zu \t %.17g \t %.17g \t %.17g \t %.17g \t %.17g\n",
               (size_t) 0u, 0.0, (double) kinetic0, (double) potential0,
-              (double) energy0, 0.0);
+              (double) global_energy, 0.0);
     }
 
 
@@ -258,55 +265,53 @@ int main (int argc, char **argv)
     }
 
   // Write final file
-  if (output_path != NULL)
+  if (output_path != NULL && rank == 0)
   {
     if (profiler_flag) { t0 = get_time();}
     particles_write_binary (output_path, &particles);
     if (profiler_flag) { profiler.writing_time = get_time() - t0;}
-  }
 
-  // Say good-bye
-  printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n",
+    printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n",
           particles.n, nsteps, DTYPE_NAME, max_rel_drift, (double) energy_tol,
           (max_rel_drift <= (double) energy_tol) ? "OK" : "WARNING");
 
-  if (max_rel_drift > (double) energy_tol)
-    fprintf (stderr,
-             "warning: relative energy drift %.6e exceeds tolerance %.6e; "
-             "try smaller --dt, larger --eps, or better initial conditions\n",
-             max_rel_drift, (double) energy_tol);
+    if (max_rel_drift > (double) energy_tol)
+      fprintf (stderr,
+               "warning: relative energy drift %.6e exceeds tolerance %.6e; "
+               "try smaller --dt, larger --eps, or better initial conditions\n",
+               max_rel_drift, (double) energy_tol);
 
+    // Print profiler statistics if requested
+    if (profiler_flag) print_statistics (&profiler);
+    if (profiler_flag && profiler_path != NULL)
+    {
+      // Save -- flags as config
+      config_t config = (struct config_s) {
+        .nsteps = nsteps,
+        .energy_every = energy_every,
+        .dt = dt,
+        .eps = eps,
+        .g = g,
+        .mass = mass,
+        .energy_tol = energy_tol,
+        .kernel_name = retrieve_kernel_name(kernel),
+        .kinetic0 = kinetic0,
+        .potential0 = potential0,
+        .max_relative_error = max_rel_drift
+      };
+      save_statistics(profiler_path, &config, &profiler);
+    }
 
-  // Print profiler statistics if requested
-  if (profiler_flag) print_statistics (&profiler);
-  if (profiler_flag && profiler_path != NULL)
-  {
-    // Save -- flags as config
-    config_t config = (struct config_s) {
-      .nsteps = nsteps,
-      .energy_every = energy_every,
-      .dt = dt,
-      .eps = eps,
-      .g = g,
-      .mass = mass,
-      .energy_tol = energy_tol,
-      .kernel_name = retrieve_kernel_name(kernel),
-      .kinetic0 = kinetic0,
-      .potential0 = potential0,
-      .max_relative_error = max_rel_drift
-    };
-    save_statistics(profiler_path, &config, &profiler);
-  }
-
-  
-  if (profiler_flag)
-  {
-    if (papi) profiler_papi_free(&profiler);
-    profiler_free(&profiler);
+    if (profiler_flag)
+    {
+      if (papi) profiler_papi_free(&profiler);
+      profiler_free(&profiler);
+    }
   }
 
   // Don't leave garbage behind you
   particles_free (&particles);
 
+  MPI_Finalize();
   return EXIT_SUCCESS;
 }

@@ -1,4 +1,4 @@
-CC        ?= cc
+CC        ?= mpicc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
@@ -50,11 +50,7 @@ test-mpi : all
 	mkdir -p ./profilings
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-mpi.bin
 	for i in 1 2 3 4 5; do \
-		./main --input ./bins/test-mpi.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obr.out --kernel "obr" --profiler 1  --profiler-path ./profilings/obr.txt ; \
-		./main --input ./bins/test-mpi.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/ort.out --kernel "ort" --profiler 1  --profiler-path ./profilings/ort.txt ; \
-		./main --input ./bins/test-mpi.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obrt.out --kernel "obrt" --profiler 1  --profiler-path ./profilings/obrt.txt ; \
-		./main --input ./bins/test-mpi.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/ortr.out --kernel "ortr" --profiler 1  --profiler-path ./profilings/ortr.txt ; \
-	  	./main --input ./bins/test-mpi.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obrtr.out --kernel "obrtr" --profiler 1  --profiler-path ./profilings/obrtr.txt ; \
+	  	./main --input ./bins/test-mpi.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obrtr.out --kernel "obrc" --profiler 1  --profiler-path ./profilings/obrc.txt ; \
 	done
 
 clean:

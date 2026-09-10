@@ -35,6 +35,7 @@ typedef float  dtype;
 #define DTYPE_MAX_VALUE FLT_MAX
 #define DTYPE_MIN_NORMAL FLT_MIN
 #define DTYPE_PRINTF_FORMAT "%.9g"
+#define MPI_DTYPE MPI_FLOAT
 
 static inline dtype dtype_sqrt (dtype x)
 {
@@ -100,6 +101,7 @@ typedef double dtype;
 #define DTYPE_MAX_VALUE DBL_MAX
 #define DTYPE_MIN_NORMAL DBL_MIN
 #define DTYPE_PRINTF_FORMAT "%.17g"
+#define MPI_DTYPE MPI_DOUBLE
 
 static inline dtype dtype_sqrt (dtype x)
 {
