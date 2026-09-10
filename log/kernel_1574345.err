@@ -1,5 +1,0 @@
-In file included from main.c:40:
-./headers/common.h:4:18: error: missing terminating > character
-    4 | #include <float.h
-      |                  ^
-make: *** [Makefile:52: main.o] Error 1

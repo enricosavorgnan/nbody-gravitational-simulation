@@ -1,4 +1,0 @@
-integration.c:60:33: error: expected declaration specifiers or ‘...’ before ‘(’ token
-   60 | void compute_accelerations_mau2((const size_t  n,
-      |                                 ^
-make: *** [Makefile:48: integration.o] Error 1
