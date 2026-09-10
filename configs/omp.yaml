@@ -9,9 +9,9 @@ names_method:
   - "OMP B+R"
   - "OMP R+T"
   - "OMP B+R+T"
-  - "OMP R+T+Reduction"
-  - "OMP B+R+T+Reduction"
+  - "OMP R+T+Red"
+  - "OMP B+R+T+Red"
 
 baseline_idx: 0
-runs: 8
+runs: 5
 save-path: "./plots/omp/omp/"

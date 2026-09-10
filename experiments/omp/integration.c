@@ -20,9 +20,10 @@ void compute_accelerations_omp_br(const size_t  n,
                                   dtype * restrict az
                                   )
 {
-  const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
-  const dtype  eps2   = eps * eps;
+    const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
+    const dtype  eps2   = eps * eps;
 
+    // Initialize accelerations to 0
 #pragma omp parallel for schedule(static)
   for (size_t i = 0; i < n; ++i) {
     ax[i] = 0.0;
@@ -30,6 +31,8 @@ void compute_accelerations_omp_br(const size_t  n,
     az[i] = 0.0;
   }
 
+    // Loop over i-th blocks
+    // Scheduler is static here because the total work is the same for all blocks
 #pragma omp parallel for schedule(static)
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
@@ -41,6 +44,7 @@ void compute_accelerations_omp_br(const size_t  n,
     dtype block_ay[BLOCK_SIZE];
     dtype block_az[BLOCK_SIZE];
 
+    // Initialize the block accelerations to 0
     for (size_t i = 0; i < i_count; i++)
     {
       block_ax[i] = 0.0;
@@ -48,11 +52,13 @@ void compute_accelerations_omp_br(const size_t  n,
       block_az[i] = 0.0;
     }
 
+    // Loop over j-th blocks
     for (size_t b_j = 0; b_j < blocks; b_j++)
     {
       const size_t j_start = b_j * BLOCK_SIZE;
       const size_t j_end   = (j_start + BLOCK_SIZE <= n) ? (j_start + BLOCK_SIZE) : n;
 
+      // Inner Loops
       for (size_t i = i_start; i < i_end; i++)
       {
         const size_t i_rel = i - i_start;
@@ -83,6 +89,7 @@ void compute_accelerations_omp_br(const size_t  n,
       }
     }
 
+    // Final update
     for (size_t i = 0; i < i_count; i++)
     {
       ax[i_start + i] = block_ax[i];
@@ -109,7 +116,7 @@ void compute_accelerations_omp_rt(const size_t  n,          // number of particl
       const dtype eps2 = eps * eps;
       int num_threads = omp_get_max_threads();
 
-#pragma omp parallel for schedule(static)
+      #pragma omp parallel for schedule(static)
       for (size_t i = 0; i < n; ++i) {
         ax[i] = 0.0;
         ay[i] = 0.0;
@@ -117,13 +124,15 @@ void compute_accelerations_omp_rt(const size_t  n,          // number of particl
       }
 
       // Allocate thread-local buffers
+      // Buffer are allocated so to avoid false sharing and to be NUMA-friendly:
+      // each thread works on its own private buffer, at the end all threads sum their contributions.
       static dtype* thread_buffers = NULL;
       #pragma omp single
       if (thread_buffers == NULL) {
           thread_buffers = calloc(num_threads * 3 * n, sizeof(dtype));
       }
 
-    #pragma omp parallel
+      #pragma omp parallel
       {
         int tid = omp_get_thread_num();
         dtype* my_ax = thread_buffers + (tid * 3 * n);
@@ -134,8 +143,10 @@ void compute_accelerations_omp_rt(const size_t  n,          // number of particl
         // (Locks this RAM to the current CPU's CCD)
         memset(my_ax, 0, 3 * n * sizeof(dtype));
 
-        // Dynamic scheduling for the triangular workload
-    #pragma omp for schedule(dynamic, 128)
+        // The scheduler is here dynamic because there is a strong unbalance between the first and the
+        // last iterations due to the triangularity of the workloads.
+        // The chunk size is set to block_size, so that each thread works on a contiguous block of data.
+        #pragma omp for schedule(dynamic, BLOCK_SIZE)
         for (size_t i = 0; i < n; ++i)
         {
           const dtype xi = x[i];
@@ -146,7 +157,8 @@ void compute_accelerations_omp_rt(const size_t  n,          // number of particl
           dtype ayi = 0.0;
           dtype azi = 0.0;
 
-    #pragma GCC ivdep
+          // The compiler is free to vectorize this loop, as there are no data dependencies
+          #pragma GCC ivdep
           for (size_t j = i + 1; j < n; ++j)
           {
             const dtype dx = x[j] - xi;
@@ -179,22 +191,25 @@ void compute_accelerations_omp_rt(const size_t  n,          // number of particl
         }
 
         // Global Reduction Phase
-        // Once all threads finish math, they safely sum their private arrays back to global.
-    #pragma omp for schedule(static)
+        // Once all threads finished, they sum their private arrays to global.
+        // This work can be parallelized with a static schedule.
+        #pragma omp for schedule(static)
         for (size_t i = 0; i < n; ++i)
         {
           dtype sum_x = 0.0, sum_y = 0.0, sum_z = 0.0;
+
           for (int t = 0; t < num_threads; ++t) {
             size_t offset = (t * 3 * n) + i;
             sum_x += thread_buffers[offset];
             sum_y += thread_buffers[offset + n];
             sum_z += thread_buffers[offset + 2 * n];
           }
+
           ax[i] += sum_x;
           ay[i] += sum_y;
           az[i] += sum_z;
         }
-      } // End of parallel region
+      }
     }
 
 
@@ -212,7 +227,7 @@ void compute_accelerations_omp_brt(const size_t  n,
       const dtype eps2 = eps * eps;
       int num_threads = omp_get_max_threads();
 
-#pragma omp parallel for schedule(static)
+      #pragma omp parallel for schedule(static)
       for (size_t i = 0; i < n; ++i) {
         ax[i] = 0.0;
         ay[i] = 0.0;
@@ -225,7 +240,7 @@ void compute_accelerations_omp_brt(const size_t  n,
           thread_buffers = calloc(num_threads * 3 * n, sizeof(dtype));
       }
 
-    #pragma omp parallel
+      #pragma omp parallel
       {
         int tid = omp_get_thread_num();
         dtype* my_ax = thread_buffers + (tid * 3 * n);
@@ -237,7 +252,7 @@ void compute_accelerations_omp_brt(const size_t  n,
         memset(my_ax, 0, 3 * n * sizeof(dtype));
 
         // Dynamic scheduling for the triangular workload
-    #pragma omp for schedule(dynamic, 1)
+        #pragma omp for schedule(dynamic, BLOCK_SIZE)
         for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
         {
           const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
@@ -283,7 +298,8 @@ void compute_accelerations_omp_brt(const size_t  n,
               const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
               dtype axi = 0.0, ayi = 0.0, azi = 0.0;
 
-    #pragma GCC ivdep
+              // The compiler is free to vectorize this loop, as there are no data dependencies
+              #pragma GCC ivdep
               for (size_t j = b_j; j < j_end; ++j)
               {
                 const size_t jj = j - b_j;
@@ -323,7 +339,7 @@ void compute_accelerations_omp_brt(const size_t  n,
         // Global reduction
         // Wait for all threads to finish computing forces,
         // then sum everything back to global 'ax'
-    #pragma omp for schedule(static)
+        #pragma omp for schedule(static)
         for (size_t i = 0; i < n; ++i)
         {
           dtype sum_x = 0.0, sum_y = 0.0, sum_z = 0.0;
@@ -341,7 +357,9 @@ void compute_accelerations_omp_brt(const size_t  n,
     }
 
 
-// Reduction Versions
+// Reduction Version of the ORT kernel
+// The idea here is to exploit the OMP reduction clause to avoid explicit synchronization
+// However, we lose some control over
 void compute_accelerations_omp_rt_red(const size_t  n,
                                      const dtype   g,
                                      const dtype   mass,
@@ -362,8 +380,8 @@ void compute_accelerations_omp_rt_red(const size_t  n,
     az[i] = 0.0;
   }
 
-  // Dynamic scheduling (chunk 128) with Automatic Array Reduction
-#pragma omp parallel for schedule(dynamic, 128) reduction(+:ax[0:n], ay[0:n], az[0:n])
+  // Dynamic scheduling with Automatic Array Reduction
+#pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
   for (size_t i = 0; i < n; ++i)
   {
     const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
@@ -401,15 +419,15 @@ void compute_accelerations_omp_brt_red(const size_t  n,
   {
     const dtype eps2 = eps * eps;
 
-#pragma omp parallel for schedule(static)
+// #pragma omp parallel for schedule(static)
     for (size_t i = 0; i < n; ++i) {
       ax[i] = 0.0;
       ay[i] = 0.0;
       az[i] = 0.0;
     }
 
-      // Dynamic scheduling (chunk 1 block) with Automatic Array Reduction
-    #pragma omp parallel for schedule(dynamic, 1) reduction(+:ax[0:n], ay[0:n], az[0:n])
+      // Dynamic scheduling with Automatic Array Reduction
+    #pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
       for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
       {
         const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
