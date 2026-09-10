@@ -26,6 +26,56 @@
 //
 // ... reason about the necessary qualifiers to unleash compiler's optimization
 //
+void compute_accelerations_baseline (const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * x,          // x positions, read-only
+                                  const dtype * y,          // y positions, read-only
+                                  const dtype * z,          // z positions, read-only
+                                  dtype * ax,               // x acceleration, overwritten
+                                  dtype * ay,               // y acceleration, overwritten
+                                  dtype * az                // z acceleration, overwritten
+           )
+{
+  const dtype  eps2 = eps * eps;
+  size_t       i;
+  size_t       j;
+
+  for (i = 0u; i < n; ++i)
+  {
+    const dtype  xi  = x[i];
+    const dtype  yi  = y[i];
+    const dtype  zi  = z[i];
+    dtype        axi = 0.0;
+    dtype        ayi = 0.0;
+    dtype        azi = 0.0;
+
+    for (j = 0u; j < n; ++j)
+    {
+      if (j!=i)
+      {
+        const dtype  dx   = x[j] - xi;
+        const dtype  dy   = y[j] - yi;
+        const dtype  dz   = z[j] - zi;
+        const dtype  r2   = dx * dx + dy * dy + dz * dz + eps2;
+        const dtype  invr = 1.0 / dtype_sqrt (r2);
+        const dtype  s    = g * mass * invr * invr * invr;
+
+        axi += dx * s;
+        ayi += dy * s;
+        azi += dz * s;
+      }
+    }
+
+    ax[i] = axi;
+    ay[i] = ayi;
+    az[i] = azi;
+  }
+}
+
+
+
 void compute_accelerations_naive (const size_t  n,          // number of particles
                                   const dtype   g,          // gravitational constant
                                   const dtype   mass,       // mass of every source particle
