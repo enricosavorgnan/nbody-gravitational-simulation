@@ -55,7 +55,10 @@ static inline dtype dtype_rsqrt (dtype x)
 
   u.i = 0x5f3759dfu - (u.i >> 1);
   dtype y = u.f;
-  y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
+  for (int l = 0; l < N_RSQRT_LOOP; l++)
+  {
+    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
+  }
   return y;
 }
 
@@ -133,7 +136,10 @@ static inline dtype dtype_rsqrt (dtype x)
 
   u.i = UINT64_C (0x5fe6eb50c7b537a9) - (u.i >> 1);
   dtype y = u.f;
-  y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
+  for (int l = 0; l < N_RSQRT_LOOP; l++)
+  {
+    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
+  }
   return y;
 }
 
