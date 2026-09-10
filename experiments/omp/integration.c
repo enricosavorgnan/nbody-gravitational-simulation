@@ -252,7 +252,7 @@ void compute_accelerations_omp_brt(const size_t  n,
         memset(my_ax, 0, 3 * n * sizeof(dtype));
 
         // Dynamic scheduling for the triangular workload
-        #pragma omp for schedule(dynamic, BLOCK_SIZE)
+        #pragma omp for schedule(dynamic, 1)
         for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
         {
           const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
@@ -427,7 +427,7 @@ void compute_accelerations_omp_brt_red(const size_t  n,
     }
 
       // Dynamic scheduling with Automatic Array Reduction
-    #pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
+    #pragma omp parallel for schedule(dynamic, 1) reduction(+:ax[0:n], ay[0:n], az[0:n])
       for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
       {
         const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
