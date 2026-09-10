@@ -8,39 +8,29 @@
 
 /* ACCELERATION */
 
-//
-//  Naive direct O(N^2) softened gravitational acceleration.
-//
-// This is the most interesting kernel.
-// A very transparent form: one i particle, one j loop, no Newton-third-law
-// reuse, one accumulator per component, and a scalar sqrt from 'libm'.  That is
-// correct, but it leaves the optimization space visible:
-//
-// [x] - which data qualifiers must be introduced for the input/output pointers?
-// [x] - exploit or deliberately avoid Newton's third law;
-// [ ] - split the accumulators to shorten dependency chains;
-// [x] - use rsqrt plus Newton refinement, then quantify energy error;
-// [x] - block or transpose data to improve cache/TLB behavior;
-// [ ] - add OpenMP without atomics in the inner loop;
-// [ ] - later replace the all-pairs' loop with an MPI ring shift.
-//
-// ... reason about the necessary qualifiers to unleash compiler's optimization
-//
-void compute_accelerations_blocks_rsqrt(const size_t  n,                   // number of particles)
-                                        const dtype   g,                   // gravitational constant
-                                        const dtype   mass,                // mass of every source particle
-                                        const dtype   eps,                 // Plummer softening length
-                                        const dtype * restrict x,          // x positions, read-only
-                                        const dtype * restrict y,          // y positions, read-only
-                                        const dtype * restrict z,          // z positions, read-only
-                                        dtype * restrict ax,               // x acceleration, overwritten
-                                        dtype * restrict ay,               // y acceleration, overwritten
-                                        dtype * restrict az                // z acceleration, overwritten
-                                        )
+void compute_accelerations_omp_br(const size_t  n,
+                                  const dtype   g,
+                                  const dtype   mass,
+                                  const dtype   eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype * restrict ax,
+                                  dtype * restrict ay,
+                                  dtype * restrict az
+                                  )
 {
   const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
   const dtype  eps2   = eps * eps;
 
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0; i < n; ++i) {
+    ax[i] = 0.0;
+    ay[i] = 0.0;
+    az[i] = 0.0;
+  }
+
+#pragma omp parallel for schedule(static)
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
     const size_t i_start = b_i * BLOCK_SIZE;
@@ -103,76 +93,356 @@ void compute_accelerations_blocks_rsqrt(const size_t  n,                   // nu
 }
 
 
-void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,
-                                           const dtype   g,
-                                           const dtype   mass,
-                                           const dtype   eps,
-                                           const dtype * restrict x,
-                                           const dtype * restrict y,
-                                           const dtype * restrict z,
-                                           dtype       * restrict ax,
-                                           dtype       * restrict ay,
-                                           dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
 
-      // 1. Third Law requires us to zero the global arrays first,
-      // because we will be using += to accumulate forces globally.
-      for (size_t i = 0u; i < n; ++i) {
+void compute_accelerations_omp_rt(const size_t  n,          // number of particles
+                                  const dtype   g,          // gravitational constant
+                                  const dtype   mass,       // mass of every source particle
+                                  const dtype   eps,        // Plummer softening length
+                                  const dtype * restrict x,          // x positions, read-only
+                                  const dtype * restrict y,          // y positions, read-only
+                                  const dtype * restrict z,          // z positions, read-only
+                                  dtype * restrict ax,               // x acceleration, overwritten
+                                  dtype * restrict ay,               // y acceleration, overwritten
+                                  dtype * restrict az                // z acceleration, overwritten
+           )
+{
+      const dtype eps2 = eps * eps;
+      int num_threads = omp_get_max_threads();
+
+#pragma omp parallel for schedule(static)
+      for (size_t i = 0; i < n; ++i) {
         ax[i] = 0.0;
         ay[i] = 0.0;
         az[i] = 0.0;
       }
 
-      // 2. Iterate over block i
-      for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
+      // Allocate thread-local buffers
+      static dtype* thread_buffers = NULL;
+      #pragma omp single
+      if (thread_buffers == NULL) {
+          thread_buffers = calloc(num_threads * 3 * n, sizeof(dtype));
+      }
+
+    #pragma omp parallel
       {
-        const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
+        int tid = omp_get_thread_num();
+        dtype* my_ax = thread_buffers + (tid * 3 * n);
+        dtype* my_ay = my_ax + n;
+        dtype* my_az = my_ay + n;
 
-        // Local accumulator for the i-block. Easily fits in L1 cache (128 elements = ~1KB).
-        dtype block_ax_i[BLOCK_SIZE] = {0.0};
-        dtype block_ay_i[BLOCK_SIZE] = {0.0};
-        dtype block_az_i[BLOCK_SIZE] = {0.0};
+        // First-touch NUMA policy
+        // (Locks this RAM to the current CPU's CCD)
+        memset(my_ax, 0, 3 * n * sizeof(dtype));
 
-        // 3. Diagonal Block (b_i == b_j): compute upper triangle to avoid self-interaction
-        for (size_t i = b_i; i < i_end; ++i)
+        // Dynamic scheduling for the triangular workload
+    #pragma omp for schedule(dynamic, 128)
+        for (size_t i = 0; i < n; ++i)
         {
-          const size_t ii = i - b_i;
           const dtype xi = x[i];
           const dtype yi = y[i];
           const dtype zi = z[i];
 
-          for (size_t j = i + 1; j < i_end; ++j)
+          dtype axi = 0.0;
+          dtype ayi = 0.0;
+          dtype azi = 0.0;
+
+    #pragma GCC ivdep
+          for (size_t j = i + 1; j < n; ++j)
           {
-            const size_t jj = j - b_i;
             const dtype dx = x[j] - xi;
             const dtype dy = y[j] - yi;
             const dtype dz = z[j] - zi;
             const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
 
-            const dtype invr = dtype_rsqrt(r2); // Uses your AVX-512 replacement
+            const dtype invr = dtype_rsqrt(r2);
             const dtype s = g * mass * invr * invr * invr;
 
             const dtype fx = dx * s;
             const dtype fy = dy * s;
             const dtype fz = dz * s;
 
-            block_ax_i[ii] += fx;
-            block_ay_i[ii] += fy;
-            block_az_i[ii] += fz;
+            // Accumulate for 'i'
+            axi += fx;
+            ayi += fy;
+            azi += fz;
 
-            block_ax_i[jj] -= fx;
-            block_ay_i[jj] -= fy;
-            block_az_i[jj] -= fz;
+            // Commit reaction force for 'j' into thread's private array
+            my_ax[j] -= fx;
+            my_ay[j] -= fy;
+            my_az[j] -= fz;
+          }
+
+          // Commit the 'i' accumulator into thread's private array
+          my_ax[i] += axi;
+          my_ay[i] += ayi;
+          my_az[i] += azi;
+        }
+
+        // Global Reduction Phase
+        // Once all threads finish math, they safely sum their private arrays back to global.
+    #pragma omp for schedule(static)
+        for (size_t i = 0; i < n; ++i)
+        {
+          dtype sum_x = 0.0, sum_y = 0.0, sum_z = 0.0;
+          for (int t = 0; t < num_threads; ++t) {
+            size_t offset = (t * 3 * n) + i;
+            sum_x += thread_buffers[offset];
+            sum_y += thread_buffers[offset + n];
+            sum_z += thread_buffers[offset + 2 * n];
+          }
+          ax[i] += sum_x;
+          ay[i] += sum_y;
+          az[i] += sum_z;
+        }
+      } // End of parallel region
+    }
+
+
+void compute_accelerations_omp_brt(const size_t  n,
+                                               const dtype   g,
+                                               const dtype   mass,
+                                               const dtype   eps,
+                                               const dtype * restrict x,
+                                               const dtype * restrict y,
+                                               const dtype * restrict z,
+                                               dtype       * restrict ax,
+                                               dtype       * restrict ay,
+                                               dtype       * restrict az)
+    {
+      const dtype eps2 = eps * eps;
+      int num_threads = omp_get_max_threads();
+
+#pragma omp parallel for schedule(static)
+      for (size_t i = 0; i < n; ++i) {
+        ax[i] = 0.0;
+        ay[i] = 0.0;
+        az[i] = 0.0;
+      }
+
+      // Allocate thread buffers, all at once
+      static dtype* thread_buffers = NULL;
+      if (thread_buffers == NULL) {
+          thread_buffers = calloc(num_threads * 3 * n, sizeof(dtype));
+      }
+
+    #pragma omp parallel
+      {
+        int tid = omp_get_thread_num();
+        dtype* my_ax = thread_buffers + (tid * 3 * n);
+        dtype* my_ay = my_ax + n;
+        dtype* my_az = my_ay + n;
+
+        // Set values to 0
+        // This because of the First-touch NUMA policy
+        memset(my_ax, 0, 3 * n * sizeof(dtype));
+
+        // Dynamic scheduling for the triangular workload
+    #pragma omp for schedule(dynamic, 1)
+        for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
+        {
+          const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
+
+          dtype block_ax_i[BLOCK_SIZE] = {0.0};
+          dtype block_ay_i[BLOCK_SIZE] = {0.0};
+          dtype block_az_i[BLOCK_SIZE] = {0.0};
+
+          // Diagonal Blocks
+          for (size_t i = b_i; i < i_end; ++i)
+          {
+            const size_t ii = i - b_i;
+            const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
+
+            for (size_t j = i + 1; j < i_end; ++j)
+            {
+              const size_t jj = j - b_i;
+              const dtype dx = x[j] - xi; const dtype dy = y[j] - yi; const dtype dz = z[j] - zi;
+              const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+
+              const dtype invr = dtype_rsqrt(r2);
+              const dtype s = g * mass * invr * invr * invr;
+
+              const dtype fx = dx * s; const dtype fy = dy * s; const dtype fz = dz * s;
+
+              block_ax_i[ii] += fx; block_ay_i[ii] += fy; block_az_i[ii] += fz;
+              block_ax_i[jj] -= fx; block_ay_i[jj] -= fy; block_az_i[jj] -= fz;
+            }
+          }
+
+          // Off-Diagonal Blocks
+          for (size_t b_j = b_i + BLOCK_SIZE; b_j < n; b_j += BLOCK_SIZE)
+          {
+            const size_t j_end = (b_j + BLOCK_SIZE < n) ? (b_j + BLOCK_SIZE) : n;
+
+            dtype block_ax_j[BLOCK_SIZE] = {0.0};
+            dtype block_ay_j[BLOCK_SIZE] = {0.0};
+            dtype block_az_j[BLOCK_SIZE] = {0.0};
+
+            for (size_t i = b_i; i < i_end; ++i)
+            {
+              const size_t ii = i - b_i;
+              const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
+              dtype axi = 0.0, ayi = 0.0, azi = 0.0;
+
+    #pragma GCC ivdep
+              for (size_t j = b_j; j < j_end; ++j)
+              {
+                const size_t jj = j - b_j;
+                const dtype dx = x[j] - xi; const dtype dy = y[j] - yi; const dtype dz = z[j] - zi;
+                const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+
+                const dtype invr = dtype_rsqrt(r2);
+                const dtype s = g * mass * invr * invr * invr;
+                const dtype fx = dx * s; const dtype fy = dy * s; const dtype fz = dz * s;
+
+                axi += fx; ayi += fy; azi += fz;
+                block_ax_j[jj] -= fx; block_ay_j[jj] -= fy; block_az_j[jj] -= fz;
+              }
+              block_ax_i[ii] += axi; block_ay_i[ii] += ayi; block_az_i[ii] += azi;
+            }
+
+            // Commit the j-block to thread's local buffer
+            for (size_t j = b_j; j < j_end; ++j)
+            {
+              const size_t jj = j - b_j;
+              my_ax[j] += block_ax_j[jj];
+              my_ay[j] += block_ay_j[jj];
+              my_az[j] += block_az_j[jj];
+            }
+          }
+
+          // Commit the i-block to thread's local buffer
+          for (size_t i = b_i; i < i_end; ++i)
+          {
+            const size_t ii = i - b_i;
+            my_ax[i] += block_ax_i[ii];
+            my_ay[i] += block_ay_i[ii];
+            my_az[i] += block_az_i[ii];
           }
         }
 
-        // 4. Off-Diagonal Blocks (b_j > b_i): compute full N x M block interactions
+        // Global reduction
+        // Wait for all threads to finish computing forces,
+        // then sum everything back to global 'ax'
+    #pragma omp for schedule(static)
+        for (size_t i = 0; i < n; ++i)
+        {
+          dtype sum_x = 0.0, sum_y = 0.0, sum_z = 0.0;
+          for (int t = 0; t < num_threads; ++t) {
+            size_t offset = (t * 3 * n) + i;
+            sum_x += thread_buffers[offset];
+            sum_y += thread_buffers[offset + n];
+            sum_z += thread_buffers[offset + 2 * n];
+          }
+          ax[i] += sum_x;
+          ay[i] += sum_y;
+          az[i] += sum_z;
+        }
+      }
+    }
+
+
+// Reduction Versions
+void compute_accelerations_omp_rt_red(const size_t  n,
+                                     const dtype   g,
+                                     const dtype   mass,
+                                     const dtype   eps,
+                                     const dtype * restrict x,
+                                     const dtype * restrict y,
+                                     const dtype * restrict z,
+                                     dtype       * restrict ax,
+                                     dtype       * restrict ay,
+                                     dtype       * restrict az)
+{
+  const dtype eps2 = eps * eps;
+
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0; i < n; ++i) {
+    ax[i] = 0.0;
+    ay[i] = 0.0;
+    az[i] = 0.0;
+  }
+
+  // Dynamic scheduling (chunk 128) with Automatic Array Reduction
+#pragma omp parallel for schedule(dynamic, 128) reduction(+:ax[0:n], ay[0:n], az[0:n])
+  for (size_t i = 0; i < n; ++i)
+  {
+    const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
+    dtype axi = 0.0, ayi = 0.0, azi = 0.0;
+
+#pragma GCC ivdep
+    for (size_t j = i + 1; j < n; ++j)
+    {
+      const dtype dx = x[j] - xi; const dtype dy = y[j] - yi; const dtype dz = z[j] - zi;
+      const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+      const dtype invr = dtype_rsqrt(r2);
+      const dtype s = g * mass * invr * invr * invr;
+      const dtype fx = dx * s; const dtype fy = dy * s; const dtype fz = dz * s;
+
+      axi += fx; ayi += fy; azi += fz;
+
+      // OpenMP safely writes this to a secret private array for this thread
+      ax[j] -= fx; ay[j] -= fy; az[j] -= fz;
+    }
+    ax[i] += axi; ay[i] += ayi; az[i] += azi;
+  }
+}
+
+
+void compute_accelerations_omp_brt_red(const size_t  n,
+                                      const dtype   g,
+                                      const dtype   mass,
+                                      const dtype   eps,
+                                      const dtype * restrict x,
+                                      const dtype * restrict y,
+                                      const dtype * restrict z,
+                                      dtype       * restrict ax,
+                                      dtype       * restrict ay,
+                                      dtype       * restrict az)
+  {
+    const dtype eps2 = eps * eps;
+
+#pragma omp parallel for schedule(static)
+    for (size_t i = 0; i < n; ++i) {
+      ax[i] = 0.0;
+      ay[i] = 0.0;
+      az[i] = 0.0;
+    }
+
+      // Dynamic scheduling (chunk 1 block) with Automatic Array Reduction
+    #pragma omp parallel for schedule(dynamic, 1) reduction(+:ax[0:n], ay[0:n], az[0:n])
+      for (size_t b_i = 0; b_i < n; b_i += BLOCK_SIZE)
+      {
+        const size_t i_end = (b_i + BLOCK_SIZE < n) ? (b_i + BLOCK_SIZE) : n;
+
+        dtype block_ax_i[BLOCK_SIZE] = {0.0};
+        dtype block_ay_i[BLOCK_SIZE] = {0.0};
+        dtype block_az_i[BLOCK_SIZE] = {0.0};
+
+        // 1. Diagonal Block
+        for (size_t i = b_i; i < i_end; ++i)
+        {
+          const size_t ii = i - b_i;
+          const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
+
+          for (size_t j = i + 1; j < i_end; ++j)
+          {
+            const size_t jj = j - b_i;
+            const dtype dx = x[j] - xi; const dtype dy = y[j] - yi; const dtype dz = z[j] - zi;
+            const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
+            const dtype invr = dtype_rsqrt(r2);
+            const dtype s = g * mass * invr * invr * invr;
+            const dtype fx = dx * s; const dtype fy = dy * s; const dtype fz = dz * s;
+
+            block_ax_i[ii] += fx; block_ay_i[ii] += fy; block_az_i[ii] += fz;
+            block_ax_i[jj] -= fx; block_ay_i[jj] -= fy; block_az_i[jj] -= fz;
+          }
+        }
+
+        // 2. Off-Diagonal Blocks
         for (size_t b_j = b_i + BLOCK_SIZE; b_j < n; b_j += BLOCK_SIZE)
         {
           const size_t j_end = (b_j + BLOCK_SIZE < n) ? (b_j + BLOCK_SIZE) : n;
 
-          // Local accumulator for the j-block. Also stays locked in L1 cache.
           dtype block_ax_j[BLOCK_SIZE] = {0.0};
           dtype block_ay_j[BLOCK_SIZE] = {0.0};
           dtype block_az_j[BLOCK_SIZE] = {0.0};
@@ -180,51 +450,26 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,
           for (size_t i = b_i; i < i_end; ++i)
           {
             const size_t ii = i - b_i;
-            const dtype xi = x[i];
-            const dtype yi = y[i];
-            const dtype zi = z[i];
+            const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
+            dtype axi = 0.0, ayi = 0.0, azi = 0.0;
 
-            // Isolate the i-accumulation to allow GCC to auto-vectorize the j loop
-            dtype axi = 0.0;
-            dtype ayi = 0.0;
-            dtype azi = 0.0;
-
-            // With -ffast-math, GCC perfectly vectorizes this loop because it is a
-            // purely streaming vector operation reading 'x' and writing to 'block_ax_j'
-            #pragma GCC ivdep
+    #pragma GCC ivdep
             for (size_t j = b_j; j < j_end; ++j)
             {
               const size_t jj = j - b_j;
-              const dtype dx = x[j] - xi;
-              const dtype dy = y[j] - yi;
-              const dtype dz = z[j] - zi;
+              const dtype dx = x[j] - xi; const dtype dy = y[j] - yi; const dtype dz = z[j] - zi;
               const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;
-
               const dtype invr = dtype_rsqrt(r2);
               const dtype s = g * mass * invr * invr * invr;
+              const dtype fx = dx * s; const dtype fy = dy * s; const dtype fz = dz * s;
 
-              const dtype fx = dx * s;
-              const dtype fy = dy * s;
-              const dtype fz = dz * s;
-
-              axi += fx;
-              ayi += fy;
-              azi += fz;
-
-              // Contiguous write to L1 cache, NO global memory thrashing
-              block_ax_j[jj] -= fx;
-              block_ay_j[jj] -= fy;
-              block_az_j[jj] -= fz;
+              axi += fx; ayi += fy; azi += fz;
+              block_ax_j[jj] -= fx; block_ay_j[jj] -= fy; block_az_j[jj] -= fz;
             }
-
-            // Commit the reduced i-forces to the local i-buffer
-            block_ax_i[ii] += axi;
-            block_ay_i[ii] += ayi;
-            block_az_i[ii] += azi;
+            block_ax_i[ii] += axi; block_ay_i[ii] += ayi; block_az_i[ii] += azi;
           }
 
-          // 5. Commit the finished j-block to global memory
-          // (Happens only once per block pair, saving billions of L1 misses)
+          // OpenMP safely handles the global write to 'ax[j]' behind the scenes!
           for (size_t j = b_j; j < j_end; ++j)
           {
             const size_t jj = j - b_j;
@@ -234,7 +479,7 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,
           }
         }
 
-        // 6. Commit the finished i-block to global memory
+        // OpenMP safely handles the global write to 'ax[i]' behind the scenes!
         for (size_t i = b_i; i < i_end; ++i)
         {
           const size_t ii = i - b_i;
@@ -244,7 +489,6 @@ void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,
         }
       }
     }
-
 
 
 /* DKD */
