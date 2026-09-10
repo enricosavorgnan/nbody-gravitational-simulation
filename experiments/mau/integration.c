@@ -55,609 +55,274 @@ void compute_accelerations_naive (const size_t  n,
 
 
 /* =========================================================================
- * 2. MAU (Multiple Accumulator Units) using Discrete Registers
+ * 2. MAU (Multiple Accumulator Units) over the target (i) dimension
+ *
+ * The accumulator chains are unrolled over i, not over j: K target particles
+ * share a single sweep of the j-stream, so
+ *
+ *   - x[j] / y[j] / z[j] are loaded once per K interactions instead of once
+ *     per interaction, and every cache line of the j-stream is consumed by K
+ *     targets before it is dropped;
+ *   - the K chains are mutually independent, which is the point of MAU;
+ *   - the inner j-loop keeps the flat single-body shape that the vectorizer
+ *     widens in compute_accelerations_naive -- no #pragma unroll, no inner
+ *     u-loop, no split j-remainder.
+ *
+ * Accumulators are named scalars produced by token pasting, never arrays: an
+ * array only reaches a register if SRA and full unrolling both fire, and at
+ * K >= 8 they cannot fit anyway (3 * K live accumulators plus 6 * K temporaries
+ * against 32 zmm registers), so 8 and 16 are expected to spill to the stack.
+ *
+ * All four K variants are generated from one body on purpose, so the only
+ * difference between MAU 2/4/8/16 is K, and the only difference between the
+ * MAU and the Rsqrt-MAU family is the inverse-square-root callback.
  * ========================================================================= */
-void compute_accelerations_mau2(const size_t  n,
-                                    const dtype   g,
-                                    const dtype   mass,
-                                    const dtype   eps,
-                                    const dtype * restrict x,
-                                    const dtype * restrict y,
-                                    const dtype * restrict z,
-                                    dtype       * restrict ax,
-                                    dtype       * restrict ay,
-                                    dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
 
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
+static inline dtype mau_invsqrt_exact (const dtype r2)
+{
+  return (dtype) 1.0 / dtype_sqrt (r2);
+}
 
-        dtype axc[2] = {0.0};
-        dtype ayc[2] = {0.0};
-        dtype azc[2] = {0.0};
+static inline dtype mau_invsqrt_fast (const dtype r2)
+{
+  return dtype_rsqrt (r2);
+}
 
-        size_t j = 0u;
-        for (; j + 1u < n; j += 2u)
-        {
-          #pragma GCC unroll 2
-          for (size_t u = 0u; u < 2u; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
+/* Per-target macros.  Every one of them takes the same (k, INV) argument list
+ * -- INV is deliberately unused by some -- so that a single repeater macro can
+ * drive all of them. */
+#define MAU_LOAD(k, INV)                                                       \
+  const dtype xi##k = x[i + k##u];                                             \
+  const dtype yi##k = y[i + k##u];                                             \
+  const dtype zi##k = z[i + k##u];
 
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
+#define MAU_ZERO(k, INV)                                                       \
+  dtype ax##k = 0.0;                                                           \
+  dtype ay##k = 0.0;                                                           \
+  dtype az##k = 0.0;
 
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
+#define MAU_INTERACT(k, INV)                                                   \
+  const dtype dx##k = xj - xi##k;                                              \
+  const dtype dy##k = yj - yi##k;                                              \
+  const dtype dz##k = zj - zi##k;                                              \
+  const dtype r2##k = dx##k * dx##k + dy##k * dy##k + dz##k * dz##k + eps2;    \
+  const dtype iv##k = INV (r2##k);                                             \
+  const dtype s##k  = gm * iv##k * iv##k * iv##k;                              \
+  ax##k += dx##k * s##k;                                                       \
+  ay##k += dy##k * s##k;                                                       \
+  az##k += dz##k * s##k;
 
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
+#define MAU_STORE(k, INV)                                                      \
+  ax[i + k##u] = ax##k;                                                        \
+  ay[i + k##u] = ay##k;                                                        \
+  az[i + k##u] = az##k;
 
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
+#define MAU_REPEAT_2(M, INV)   M (0, INV) M (1, INV)
 
-        #pragma GCC unroll 2
-        for (size_t u = 0u; u < 2u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
+#define MAU_REPEAT_4(M, INV)   MAU_REPEAT_2 (M, INV)                           \
+                               M (2, INV) M (3, INV)
 
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+#define MAU_REPEAT_8(M, INV)   MAU_REPEAT_4 (M, INV)                           \
+                               M (4, INV) M (5, INV) M (6, INV) M (7, INV)
 
+#define MAU_REPEAT_16(M, INV)  MAU_REPEAT_8 (M, INV)                           \
+                               M (8, INV)  M (9, INV)  M (10, INV) M (11, INV) \
+                               M (12, INV) M (13, INV) M (14, INV) M (15, INV)
 
-void compute_accelerations_mau4(const size_t  n,
-                                    const dtype   g,
-                                    const dtype   mass,
-                                    const dtype   eps,
-                                    const dtype * restrict x,
-                                    const dtype * restrict y,
-                                    const dtype * restrict z,
-                                    dtype       * restrict ax,
-                                    dtype       * restrict ay,
-                                    dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
-
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
-
-        dtype axc[4] = {0.0};
-        dtype ayc[4] = {0.0};
-        dtype azc[4] = {0.0};
-
-        size_t j = 0u;
-        for (; j + 3u < n; j += 4u)
-        {
-          #pragma GCC unroll 4
-          for (size_t u = 0u; u < 4u; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
-
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 4
-        for (size_t u = 0u; u < 4u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+/* The shared kernel body.  K is the i-tile width, REPEAT the matching
+ * repeater, INV either mau_invsqrt_exact or mau_invsqrt_fast.
+ *
+ * The j == i self-interaction needs no branch: dx = dy = dz = 0 makes s finite
+ * through the Plummer softening and contributes exactly zero, as in the naive
+ * kernel. */
+#define MAU_BODY(K, REPEAT, INV)                                               \
+  const dtype eps2 = eps * eps;                                                \
+  const dtype gm   = g * mass;                                                 \
+  size_t      i    = 0u;                                                       \
+                                                                               \
+  for (; i + (K##u - 1u) < n; i += K##u)                                       \
+  {                                                                            \
+    REPEAT (MAU_LOAD, INV)                                                     \
+    REPEAT (MAU_ZERO, INV)                                                     \
+                                                                               \
+    for (size_t j = 0u; j < n; ++j)                                            \
+    {                                                                          \
+      const dtype xj = x[j];                                                   \
+      const dtype yj = y[j];                                                   \
+      const dtype zj = z[j];                                                   \
+                                                                               \
+      REPEAT (MAU_INTERACT, INV)                                               \
+    }                                                                          \
+                                                                               \
+    REPEAT (MAU_STORE, INV)                                                    \
+  }                                                                            \
+                                                                               \
+  for (; i < n; ++i)                                                           \
+  {                                                                            \
+    const dtype xi  = x[i];                                                    \
+    const dtype yi  = y[i];                                                    \
+    const dtype zi  = z[i];                                                    \
+    dtype       axi = 0.0;                                                     \
+    dtype       ayi = 0.0;                                                     \
+    dtype       azi = 0.0;                                                     \
+                                                                               \
+    for (size_t j = 0u; j < n; ++j)                                            \
+    {                                                                          \
+      const dtype dx = x[j] - xi;                                              \
+      const dtype dy = y[j] - yi;                                              \
+      const dtype dz = z[j] - zi;                                              \
+      const dtype r2 = dx * dx + dy * dy + dz * dz + eps2;                     \
+      const dtype iv = INV (r2);                                               \
+      const dtype s  = gm * iv * iv * iv;                                      \
+                                                                               \
+      axi += dx * s;                                                           \
+      ayi += dy * s;                                                           \
+      azi += dz * s;                                                           \
+    }                                                                          \
+                                                                               \
+    ax[i] = axi;                                                               \
+    ay[i] = ayi;                                                               \
+    az[i] = azi;                                                               \
+  }
 
 
-void compute_accelerations_mau8(const size_t  n,
-                                const dtype   g,
-                                const dtype   mass,
-                                const dtype   eps,
-                                const dtype * restrict x,
-                                const dtype * restrict y,
-                                const dtype * restrict z,
-                                dtype       * restrict ax,
-                                dtype       * restrict ay,
-                                dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
-
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
-
-        dtype axc[8] = {0.0};
-        dtype ayc[8] = {0.0};
-        dtype azc[8] = {0.0};
-
-        size_t j = 0u;
-        for (; j + 7u < n; j += 8u)
-        {
-          #pragma GCC unroll 8
-          for (size_t u = 0u; u < 8u; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
-
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 8
-        for (size_t u = 0u; u < 8u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+void compute_accelerations_mau2 (const size_t  n,
+                                 const dtype   g,
+                                 const dtype   mass,
+                                 const dtype   eps,
+                                 const dtype * restrict x,
+                                 const dtype * restrict y,
+                                 const dtype * restrict z,
+                                 dtype       * restrict ax,
+                                 dtype       * restrict ay,
+                                 dtype       * restrict az)
+{
+  MAU_BODY (2, MAU_REPEAT_2, mau_invsqrt_exact)
+}
 
 
-void compute_accelerations_mau16(const size_t  n,
-                                    const dtype   g,
-                                    const dtype   mass,
-                                    const dtype   eps,
-                                    const dtype * restrict x,
-                                    const dtype * restrict y,
-                                    const dtype * restrict z,
-                                    dtype       * restrict ax,
-                                    dtype       * restrict ay,
-                                    dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
+void compute_accelerations_mau4 (const size_t  n,
+                                 const dtype   g,
+                                 const dtype   mass,
+                                 const dtype   eps,
+                                 const dtype * restrict x,
+                                 const dtype * restrict y,
+                                 const dtype * restrict z,
+                                 dtype       * restrict ax,
+                                 dtype       * restrict ay,
+                                 dtype       * restrict az)
+{
+  MAU_BODY (4, MAU_REPEAT_4, mau_invsqrt_exact)
+}
 
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
 
-        dtype axc[16] = {0.0};
-        dtype ayc[16] = {0.0};
-        dtype azc[16] = {0.0};
+void compute_accelerations_mau8 (const size_t  n,
+                                 const dtype   g,
+                                 const dtype   mass,
+                                 const dtype   eps,
+                                 const dtype * restrict x,
+                                 const dtype * restrict y,
+                                 const dtype * restrict z,
+                                 dtype       * restrict ax,
+                                 dtype       * restrict ay,
+                                 dtype       * restrict az)
+{
+  MAU_BODY (8, MAU_REPEAT_8, mau_invsqrt_exact)
+}
 
-        size_t j = 0u;
-        for (; j + 15u < n; j += 16u)
-        {
-          #pragma GCC unroll 16
-          for (size_t u = 0u; u < 16; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
 
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = (dtype) 1.0 / dtype_sqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 16
-        for (size_t u = 0u; u < 16u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+void compute_accelerations_mau16 (const size_t  n,
+                                  const dtype   g,
+                                  const dtype   mass,
+                                  const dtype   eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype       * restrict ax,
+                                  dtype       * restrict ay,
+                                  dtype       * restrict az)
+{
+  MAU_BODY (16, MAU_REPEAT_16, mau_invsqrt_exact)
+}
 
 
 /* =========================================================================
- * 3. Fast RSQRT + MAU using Discrete Registers
+ * 3. Fast RSQRT + MAU over the target (i) dimension
+ *
+ * Identical to section 2 apart from the inverse-square-root callback.  This is
+ * the combination worth measuring: the naive kernel is bound by vsqrtpd /
+ * vdivpd throughput, so removing the divide is what exposes the issue width
+ * that the i-tiling then feeds.
  * ========================================================================= */
-void compute_accelerations_rsqrt_mau2(const size_t  n,
-                                    const dtype   g,
-                                    const dtype   mass,
-                                    const dtype   eps,
-                                    const dtype * restrict x,
-                                    const dtype * restrict y,
-                                    const dtype * restrict z,
-                                    dtype       * restrict ax,
-                                    dtype       * restrict ay,
-                                    dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
-
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
-
-        dtype axc[2] = {0.0};
-        dtype ayc[2] = {0.0};
-        dtype azc[2] = {0.0};
-
-        size_t j = 0u;
-        for (; j + 1u < n; j += 2u)
-        {
-          #pragma GCC unroll 2
-          for (size_t u = 0u; u < 2u; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = dtype_rsqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
-
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = dtype_rsqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 2
-        for (size_t u = 0u; u < 2u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+void compute_accelerations_rsqrt_mau2 (const size_t  n,
+                                       const dtype   g,
+                                       const dtype   mass,
+                                       const dtype   eps,
+                                       const dtype * restrict x,
+                                       const dtype * restrict y,
+                                       const dtype * restrict z,
+                                       dtype       * restrict ax,
+                                       dtype       * restrict ay,
+                                       dtype       * restrict az)
+{
+  MAU_BODY (2, MAU_REPEAT_2, mau_invsqrt_fast)
+}
 
 
-void compute_accelerations_rsqrt_mau4(const size_t  n,
-                                    const dtype   g,
-                                    const dtype   mass,
-                                    const dtype   eps,
-                                    const dtype * restrict x,
-                                    const dtype * restrict y,
-                                    const dtype * restrict z,
-                                    dtype       * restrict ax,
-                                    dtype       * restrict ay,
-                                    dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
-
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
-
-        dtype axc[4] = {0.0};
-        dtype ayc[4] = {0.0};
-        dtype azc[4] = {0.0};
-
-        size_t j = 0u;
-        for (; j + 3u < n; j += 4u)
-        {
-          #pragma GCC unroll 4
-          for (size_t u = 0u; u < 4u; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = dtype_rsqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
-
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = dtype_rsqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 4
-        for (size_t u = 0u; u < 4u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+void compute_accelerations_rsqrt_mau4 (const size_t  n,
+                                       const dtype   g,
+                                       const dtype   mass,
+                                       const dtype   eps,
+                                       const dtype * restrict x,
+                                       const dtype * restrict y,
+                                       const dtype * restrict z,
+                                       dtype       * restrict ax,
+                                       dtype       * restrict ay,
+                                       dtype       * restrict az)
+{
+  MAU_BODY (4, MAU_REPEAT_4, mau_invsqrt_fast)
+}
 
 
-void compute_accelerations_rsqrt_mau8(const size_t  n,
-                                const dtype   g,
-                                const dtype   mass,
-                                const dtype   eps,
-                                const dtype * restrict x,
-                                const dtype * restrict y,
-                                const dtype * restrict z,
-                                dtype       * restrict ax,
-                                dtype       * restrict ay,
-                                dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
-
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
-
-        dtype axc[8] = {0.0};
-        dtype ayc[8] = {0.0};
-        dtype azc[8] = {0.0};
-
-        size_t j = 0u;
-        for (; j + 7u < n; j += 8u)
-        {
-          #pragma GCC unroll 8
-          for (size_t u = 0u; u < 8u; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = dtype_rsqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
-
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = dtype_rsqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 8
-        for (size_t u = 0u; u < 8u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+void compute_accelerations_rsqrt_mau8 (const size_t  n,
+                                       const dtype   g,
+                                       const dtype   mass,
+                                       const dtype   eps,
+                                       const dtype * restrict x,
+                                       const dtype * restrict y,
+                                       const dtype * restrict z,
+                                       dtype       * restrict ax,
+                                       dtype       * restrict ay,
+                                       dtype       * restrict az)
+{
+  MAU_BODY (8, MAU_REPEAT_8, mau_invsqrt_fast)
+}
 
 
-void compute_accelerations_rsqrt_mau16(const size_t  n,
-                                    const dtype   g,
-                                    const dtype   mass,
-                                    const dtype   eps,
-                                    const dtype * restrict x,
-                                    const dtype * restrict y,
-                                    const dtype * restrict z,
-                                    dtype       * restrict ax,
-                                    dtype       * restrict ay,
-                                    dtype       * restrict az)
-    {
-      const dtype eps2 = eps * eps;
+void compute_accelerations_rsqrt_mau16 (const size_t  n,
+                                        const dtype   g,
+                                        const dtype   mass,
+                                        const dtype   eps,
+                                        const dtype * restrict x,
+                                        const dtype * restrict y,
+                                        const dtype * restrict z,
+                                        dtype       * restrict ax,
+                                        dtype       * restrict ay,
+                                        dtype       * restrict az)
+{
+  MAU_BODY (16, MAU_REPEAT_16, mau_invsqrt_fast)
+}
 
-      for (size_t i = 0u; i < n; ++i)
-      {
-        const dtype xi = x[i];
-        const dtype yi = y[i];
-        const dtype zi = z[i];
 
-        dtype axc[16] = {0.0};
-        dtype ayc[16] = {0.0};
-        dtype azc[16] = {0.0};
-
-        size_t j = 0u;
-        for (; j + 15u < n; j += 16u)
-        {
-          #pragma GCC unroll 16
-          for (size_t u = 0u; u < 16; ++u)
-          {
-            const dtype dx   = x[j + u] - xi;
-            const dtype dy   = y[j + u] - yi;
-            const dtype dz   = z[j + u] - zi;
-            const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-            const dtype invr = dtype_rsqrt(r2);
-            const dtype s    = g * mass * invr * invr * invr;
-
-            axc[u] += dx * s;
-            ayc[u] += dy * s;
-            azc[u] += dz * s;
-          }
-        }
-
-        dtype axi = 0.0;
-        dtype ayi = 0.0;
-        dtype azi = 0.0;
-
-        for (; j < n; ++j)
-        {
-          const dtype dx   = x[j] - xi;
-          const dtype dy   = y[j] - yi;
-          const dtype dz   = z[j] - zi;
-          const dtype r2   = dx * dx + dy * dy + dz * dz + eps2;
-          const dtype invr = dtype_rsqrt(r2);
-          const dtype s    = g * mass * invr * invr * invr;
-
-          axi += dx * s;
-          ayi += dy * s;
-          azi += dz * s;
-        }
-
-        #pragma GCC unroll 16
-        for (size_t u = 0u; u < 16u; ++u)
-        {
-          axi += axc[u];
-          ayi += ayc[u];
-          azi += azc[u];
-        }
-
-        ax[i] = axi;
-        ay[i] = ayi;
-        az[i] = azi;
-      }
-    }
+#undef MAU_LOAD
+#undef MAU_ZERO
+#undef MAU_INTERACT
+#undef MAU_STORE
+#undef MAU_REPEAT_2
+#undef MAU_REPEAT_4
+#undef MAU_REPEAT_8
+#undef MAU_REPEAT_16
+#undef MAU_BODY
 
 
 /* =========================================================================

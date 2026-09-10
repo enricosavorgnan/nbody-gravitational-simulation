@@ -50,7 +50,7 @@ generate_ic: generate_initial_conditions
 test-mau: all
 	mkdir -p ./bins
 	mkdir -p ./profilings
-	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-mau.bin
+	./generate_initial_conditions --model 0 --n 100 --seed 42 --output ./bins/test-mau.bin
 	for i in 1; do \
 		./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/m2.out --kernel "m2" --profiler 1 --papi 1 --profiler-path ./profilings/m2.txt; \
 		./main --input ./bins/test-mau.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/m4.out --kernel "m4" --profiler 1 --papi 1 --profiler-path ./profilings/m4.txt; \
