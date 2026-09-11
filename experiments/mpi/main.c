@@ -216,7 +216,7 @@ int main (int argc, char **argv)
   // Get energy baseline
   if (profiler_flag) { t0 = get_time();}
   // Global energy computation
-  global_energy = compute_true_global_energy(&particles, g, eps, rank, size, &kinetic0, &potential0);
+  global_energy = checked_global_energy(&particles, g, eps, rank, size, &kinetic0, &potential0);
   if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
   // Print header
   if (!quiet && rank == 0)
@@ -251,7 +251,7 @@ int main (int argc, char **argv)
         dtype         potential;
 
         // Calculate true energy
-        dtype current_global = compute_true_global_energy(&particles, g, eps, rank, size, &kinetic, &potential);
+        dtype current_global = checked_global_energy(&particles, g, eps, rank, size, &kinetic, &potential);
 
         const double  denom  = fmax (fabs ((double) global_energy), (double) DTYPE_MIN_NORMAL);
         const double  rel    = fabs ((double) (current_global - global_energy)) / denom;
