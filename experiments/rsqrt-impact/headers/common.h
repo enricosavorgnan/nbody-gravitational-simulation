@@ -209,3 +209,4 @@ static inline bool dtype_isfinite (dtype x)
 }
 
 #endif
+#endif
