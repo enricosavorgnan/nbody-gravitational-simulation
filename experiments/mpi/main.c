@@ -1,34 +1,3 @@
-/*
- * nbody_direct_serial.c
- *
- * Serial C11 reference implementation for the direct gravitational N-body
- * exercise.  The O(N^2) force kernel is simple;
- * optimizing the kernel is part of the assignment.
- * The kernel is the natural place to discuss SoA data layout, cache locality,
- *  Newton's third law, accumulator dependency chains, rsqrt, OpenMP
- *  reductions, and MPI ring-shift communication.
- *
- * Units are dimensionless.  By default, G = 1, particle mass = 1, and the
- * softened potential is
- *
- *   phi_ij = - G m^2 / sqrt(|r_i-r_j|^2 + eps^2).
- *
- * Binary input/output file format, native endian:
- *
- *   8 bytes       magic "NBODYF1\0"
- *   uint64_t      number of particles
- *   N records     x y z vx vy vz as six IEEE single-precision floats
- *
- * The simulation arithmetic uses dtype, selected at compile time:
- *
- *   -DNBODY_USE_DOUBLE    default double-precision arithmetic
- *   -DNBODY_USE_FLOAT     single-precision arithmetic
- *
- * Files are intentionally still stored in single precision, independently of
- * dtype.
- *
- */
-
 #include <errno.h>
 #include <mpi.h>
 #include <stdarg.h>
@@ -72,7 +41,6 @@ static void print_usage (const char *program    // argv[0]
            program, NBODY_BINARY_VERSION_TEXT);
 }
 
-
 static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
 {
   if (strcmp(kernel_choice, "obrc") == 0)
@@ -103,6 +71,7 @@ int main (int argc, char **argv)
   dtype        energy_tol    = (dtype) 1.0e-3;
   bool         quiet         = false;
   bool         papi          = false;
+  bool         mpi           = false;
   particles_t  particles;
   dtype        kinetic0;
   dtype        potential0;
@@ -244,7 +213,7 @@ int main (int argc, char **argv)
   for (size_t step = 1u; step <= nsteps; ++step)
     {
       if (profiler_flag) { t0 = get_time();}
-      leapfrog_dkd_step (&particles, g, eps, dt, &profiler, profiler_flag, step-1);
+      leapfrog_dkd_step_mpi (&particles, g, eps, dt, &profiler, profiler_flag, step-1);
       if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
       // Get diagnostics, once in a while
