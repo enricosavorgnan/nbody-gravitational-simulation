@@ -14,7 +14,7 @@ for RANKS in 1 2 4 8 16 32 64 128; do
     sbatch --ntasks=$RANKS \
            --job-name="strong_${RANKS}" \
            --export=ALL,N_PARTICLES=$PARTICLES,STEPS=$STEPS \
-           template.sh
+           ./runners/scaling/template.sh
 done
 
 echo "All strong scaling jobs submitted."
