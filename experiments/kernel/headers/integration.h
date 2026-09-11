@@ -25,6 +25,19 @@ typedef void (*kernel_t)(
 );
 
 
+void compute_accelerations_baseline (const size_t  n,                           // number of particles
+                                  const dtype   g,                           // gravitational constant
+                                  const dtype   mass,                        // mass of every source particle
+                                  const dtype   eps,                         // Plummer softening length
+                                  const dtype   * restrict x,                          // x positions, read-only
+                                  const dtype   * restrict y,                          // y positions, read-only
+                                  const dtype   * restrict z,                          // z positions, read-only
+                                  dtype   * restrict ax,                               // x acceleration, overwritten
+                                  dtype   * restrict ay,                               // y acceleration, overwritten
+                                  dtype   * restrict az                                // z acceleration, overwritten
+                  );
+
+
 void compute_accelerations_naive (const size_t  n,                           // number of particles
                                   const dtype   g,                           // gravitational constant
                                   const dtype   mass,                        // mass of every source particle
