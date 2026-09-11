@@ -11,9 +11,9 @@
 # Variables passed via --export during sbatch submission
 N_PARTICLES=${N_PARTICLES:-100000}
 STEPS=${STEPS:-100}
+PROFILER_FILE=${PROFILER_FILE:-"./profilings/profiler_${N_PARTICLES}.txt"}
 INPUT_FILE="./bins/${N_PARTICLES}.bin"
 OUTPUT_FILE="./bins/${N_PARTICLES}.out"
-PROFILER_FILE="./profilings/$SLURM_NTASKS_$SLURM_JOB_NODELIST.txt"
 
 echo "=========================================================="
 echo "Job ID: $SLURM_JOB_ID"

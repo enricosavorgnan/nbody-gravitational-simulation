@@ -16,10 +16,12 @@ for RANKS in 1 2 4 8 16 32 64 128; do
 
     echo "Submitting job for $RANKS MPI ranks (Particles = $CURRENT_N)..."
 
+    PROFILER_FILE="./profilings/w_${RANKS}_${CURRENT_N}.txt"
+
     # Submit the sbatch script with the dynamically calculated N
     sbatch --ntasks=$RANKS \
            --job-name="W_${RANKS}" \
-           --export=ALL,N_PARTICLES=$CURRENT_N,STEPS=$STEPS \
+           --export=ALL,N_PARTICLES=$CURRENT_N,STEPS=$STEPS,PROFILER_FILE=$PROFILER_FILE \
            ./runners/scaling/template.sh
 done
 
