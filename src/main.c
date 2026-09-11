@@ -73,7 +73,7 @@ static void print_usage (const char *program    // argv[0]
 }
 
 // MPI ENGINE
-#if defined USE_MPI
+#if USE_MPI==1
 static void retrieve_kernel (const char *kernel_choice, kernel_t *kernel)
 {
   if (strcmp(kernel_choice, "obrc") == 0)
