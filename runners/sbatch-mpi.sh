@@ -11,7 +11,7 @@
 #SBATCH --time=02:00:00
 
 cd "$SLURM_SUBMIT_DIR"
-cd "./experiments/mpi"
+cd "./experiments/mpi/"
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OMP_PLACES=cores
