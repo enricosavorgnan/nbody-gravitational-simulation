@@ -12,7 +12,7 @@
 #include "particles.h"
 #include "profiling.h"
 
-#if USE_MPI
+#if USE_MPI==1
 typedef void (*kernel_t)(
     const size_t  local_n,
     const size_t  visit_n,
