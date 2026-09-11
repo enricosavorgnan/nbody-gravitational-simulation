@@ -30,7 +30,7 @@ cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/mpi/"
 
 export OMP_STACKSIZE=64M
-export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export OMP_PLACES=cores
 export OMP_PROC_BIND=close
 export OMP_DISPLAY_AFFINITY=TRUE
@@ -40,10 +40,9 @@ mkdir -p ./profilings
 make all USE_PAPI=1
 
 echo "Generating initial conditions..."
-$GENERATOR_BIN $N_PARTICLES $INPUT_FILE
 srun ./generate_initial_conditions --model 0 --n $N_PARTICLES --seed 42 --output $INPUT_FILE
 
 echo "Starting simulation..."
-time mpirun -n $SLURM_NTASKS $NBODY_BIN --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrc" --profiler 1 --profiler-path $PROFILER_FILE
+time mpirun -n $SLURM_NTASKS ./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrc" --profiler 1 --profiler-path $PROFILER_FILE
 
 echo "Done."

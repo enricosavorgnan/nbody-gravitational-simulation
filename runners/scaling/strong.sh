@@ -12,7 +12,7 @@ for RANKS in 1 2 4 8 16 32 64 128; do
 
     # Submit the sbatch script, requesting $RANKS tasks, and passing our variables
     sbatch --ntasks=$RANKS \
-           --job-name="strong_${RANKS}" \
+           --job-name="S_${RANKS}" \
            --export=ALL,N_PARTICLES=$PARTICLES,STEPS=$STEPS \
            ./runners/scaling/template.sh
 done

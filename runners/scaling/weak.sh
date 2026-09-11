@@ -18,7 +18,7 @@ for RANKS in 1 2 4 8 16 32 64 128; do
 
     # Submit the sbatch script with the dynamically calculated N
     sbatch --ntasks=$RANKS \
-           --job-name="weak_${RANKS}" \
+           --job-name="W_${RANKS}" \
            --export=ALL,N_PARTICLES=$CURRENT_N,STEPS=$STEPS \
            ./runners/scaling/template.sh
 done
