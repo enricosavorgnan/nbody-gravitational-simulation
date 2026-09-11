@@ -96,8 +96,12 @@ def export_summary_csv(experiments: List[Experiment], save_path: str) -> str:
         "std_step_time_s",
         "mean_drift_time_s",
         "mean_kick_time_s",
+        "mean_mpi_real_time_s",
+        "mean_mpi_user_time_s",
+        "mean_mpi_sys_time_s",
         "speedup_vs_baseline",
         "speedup_err",
+        "scaling_speedup",
         "max_relative_energy_error",
     ]
 
@@ -131,8 +135,12 @@ def export_summary_csv(experiments: List[Experiment], save_path: str) -> str:
                 "std_step_time_s": exp.std_step_time,
                 "mean_drift_time_s": exp.mean_drift_time,
                 "mean_kick_time_s": exp.mean_kick_time,
+                "mean_mpi_real_time_s": exp.mean_mpi_real_time,
+                "mean_mpi_user_time_s": exp.mean_mpi_user_time,
+                "mean_mpi_sys_time_s": exp.mean_mpi_sys_time,
                 "speedup_vs_baseline": exp.speedup,
                 "speedup_err": exp.speedup_err,
+                "scaling_speedup": exp.scaling_speedup,
                 "max_relative_energy_error": exp.max_relative_error,
             }
             if has_papi:

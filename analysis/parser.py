@@ -27,6 +27,9 @@ class RunData:
     file_read: float = 0.0
     file_write: float = 0.0
     total_run: float = 0.0
+    mpi_real_time: float = 0.0
+    mpi_user_time: float = 0.0
+    mpi_sys_time: float = 0.0
     config: Dict[str, Any] = field(default_factory=dict)
     papi: Dict[str, np.ndarray] = field(default_factory=dict)
 
@@ -62,6 +65,11 @@ class Experiment:
     # Drift & Kick times
     mean_drift_time: float
     mean_kick_time: float
+    
+    # OS / MPI Times
+    mean_mpi_real_time: float
+    mean_mpi_user_time: float
+    mean_mpi_sys_time: float
 
     # PAPI metrics
     papi_matrices: Dict[str, np.ndarray]
@@ -77,6 +85,9 @@ class Experiment:
     # Speedup relative to baseline (set externally)
     speedup: float = 1.0
     speedup_err: float = 0.0
+    
+    # Scaling Speedup (based on MPI real time)
+    scaling_speedup: float = 1.0
 
 
 KNOWN_HEADERS = {
@@ -89,6 +100,7 @@ KNOWN_HEADERS = {
     "Kick",
     "Second Drift",
     "--- Configuration ---",
+    "--- OS / MPI Launch Time ---",
     "PAPI Cycles",
     "PAPI Instructions",
     "PAPI L1 Misses",
@@ -208,6 +220,19 @@ def parse_experiment(
         run_arr = _to_float_array(r.get("Total Run", ["0.0"]))
 
         cfg = _parse_config(r.get("--- Configuration ---", []))
+        
+        # Parse MPI Launch Time
+        launch_lines = r.get("--- OS / MPI Launch Time ---", [])
+        real_time = 0.0
+        user_time = 0.0
+        sys_time = 0.0
+        for line in launch_lines:
+            if line.startswith("Real:"):
+                real_time = float(line.split()[1])
+            elif line.startswith("User:"):
+                user_time = float(line.split()[1])
+            elif line.startswith("Sys:"):
+                sys_time = float(line.split()[1])
 
         # PAPI counters
         papi_data = {
@@ -229,6 +254,9 @@ def parse_experiment(
                 file_read=float(read_arr[0]) if len(read_arr) else 0.0,
                 file_write=float(write_arr[0]) if len(write_arr) else 0.0,
                 total_run=float(run_arr[0]) if len(run_arr) else 0.0,
+                mpi_real_time=real_time,
+                mpi_user_time=user_time,
+                mpi_sys_time=sys_time,
                 config=cfg,
                 papi=papi_data,
             )
@@ -289,6 +317,11 @@ def parse_experiment(
     mean_drift = float(np.mean(drift1_mat + drift2_mat))
     mean_kick = float(np.mean(kick_mat))
 
+    # MPI Time statistics
+    mean_mpi_real = float(np.mean([r.mpi_real_time for r in parsed_runs]))
+    mean_mpi_user = float(np.mean([r.mpi_user_time for r in parsed_runs]))
+    mean_mpi_sys = float(np.mean([r.mpi_sys_time for r in parsed_runs]))
+
     # PAPI statistics
     papi_means: Dict[str, float] = {}
     papi_stds: Dict[str, float] = {}
@@ -331,6 +364,9 @@ def parse_experiment(
         std_step_time=overall_std_step,
         mean_drift_time=mean_drift,
         mean_kick_time=mean_kick,
+        mean_mpi_real_time=mean_mpi_real,
+        mean_mpi_user_time=mean_mpi_user,
+        mean_mpi_sys_time=mean_mpi_sys,
         papi_matrices=papi_matrices,
         papi_means=papi_means,
         papi_stds=papi_stds,
@@ -360,6 +396,7 @@ def load_all_experiments(
     base = experiments[baseline_idx]
     t_base = base.mean_force_time
     s_base = base.std_force_time
+    t_base_mpi = base.mean_mpi_real_time
 
     for exp in experiments:
         t_exp = exp.mean_force_time
@@ -374,5 +411,10 @@ def load_all_experiments(
         else:
             exp.speedup = 0.0
             exp.speedup_err = 0.0
+
+        if exp.mean_mpi_real_time > 0:
+            exp.scaling_speedup = t_base_mpi / exp.mean_mpi_real_time
+        else:
+            exp.scaling_speedup = 0.0
 
     return experiments

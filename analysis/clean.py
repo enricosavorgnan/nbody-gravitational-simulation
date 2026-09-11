@@ -26,6 +26,8 @@ from analysis.vis import (
     plot_papi_comparison,
     plot_speedup_bar,
     plot_step_trajectories,
+    plot_strong_scaling,
+    plot_weak_scaling,
     save_all_plots,
 )
 
@@ -155,6 +157,11 @@ def run_analysis(config: dict) -> None:
         papi_fig = plot_papi_comparison(experiments)
         if papi_fig is not None:
             figs["papi_metrics"] = papi_fig
+
+    if config.get("is_strong", False):
+        figs["strong_scaling"] = plot_strong_scaling(experiments)
+    if config.get("is_weak", False):
+        figs["weak_scaling"] = plot_weak_scaling(experiments)
 
     # 4. Save Plots and Config Copy
     saved_plots = save_all_plots(figs, save_path)

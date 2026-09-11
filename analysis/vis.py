@@ -317,3 +317,87 @@ def plot(data: dict, names_info=None, names_method=None):
         ax.legend()
         figs.append(fig)
     return figs
+
+
+def plot_strong_scaling(
+    experiments: List[Experiment],
+    title: Optional[str] = None,
+) -> plt.Figure:
+    """Plots strong scaling efficiency (Speedup) based on MPI wall-clock time."""
+    # Assume experiments are ordered by ranks: e.g. 1, 2, 4, 8, 16...
+    # The user provides the names, we can extract ranks from names or assume they are given sequentially
+    names = [e.name for e in experiments]
+    speedups = [e.scaling_speedup for e in experiments]
+    
+    # Try to parse ranks from the names (e.g. "1 Rank", "2 Ranks")
+    # If not parsable, just use index 1, 2, 4, etc.
+    try:
+        ranks = [int(''.join(filter(str.isdigit, name))) for name in names]
+        if not all(ranks): ranks = [2**i for i in range(len(names))]
+    except:
+        ranks = [2**i for i in range(len(names))]
+        
+    fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
+    
+    # Plot measured speedup
+    ax.plot(ranks, speedups, marker='o', color="#2563EB", linewidth=2, label="Measured Speedup (MPI Wall-clock)")
+    
+    # Plot ideal speedup (Linear)
+    ideal_speedup = [r / ranks[0] for r in ranks]
+    ax.plot(ranks, ideal_speedup, linestyle='--', color="#4B5563", linewidth=2, label="Ideal Speedup")
+    
+    ax.set_xscale('log', base=2)
+    ax.set_yscale('log', base=2)
+    
+    ax.set_xticks(ranks)
+    ax.set_xticklabels([str(r) for r in ranks])
+    ax.set_yticks(ranks)
+    ax.set_yticklabels([str(r) for r in ranks])
+    
+    ax.set_xlabel("MPI Ranks", fontsize=11, fontweight="bold")
+    ax.set_ylabel("Speedup", fontsize=11, fontweight="bold")
+    ax.set_title(title or "Strong Scaling Speedup", fontsize=12, fontweight="bold", pad=12)
+    ax.grid(True, which="both", linestyle="--", alpha=0.5)
+    ax.legend(loc="upper left")
+    
+    fig.tight_layout()
+    return fig
+
+
+def plot_weak_scaling(
+    experiments: List[Experiment],
+    title: Optional[str] = None,
+) -> plt.Figure:
+    """Plots weak scaling efficiency based on MPI wall-clock time."""
+    names = [e.name for e in experiments]
+    # Weak scaling efficiency = t_1 / t_n
+    # Which is exactly the scaling_speedup we computed (since t_base_mpi / t_exp_mpi)
+    efficiency = [e.scaling_speedup for e in experiments]
+    
+    try:
+        ranks = [int(''.join(filter(str.isdigit, name))) for name in names]
+        if not all(ranks): ranks = [2**i for i in range(len(names))]
+    except:
+        ranks = [2**i for i in range(len(names))]
+        
+    fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
+    
+    ax.plot(ranks, efficiency, marker='o', color="#059669", linewidth=2, label="Measured Efficiency")
+    ax.axhline(1.0, linestyle='--', color="#4B5563", linewidth=2, label="Ideal Efficiency")
+    
+    ax.set_xscale('log', base=2)
+    ax.set_xticks(ranks)
+    ax.set_xticklabels([str(r) for r in ranks])
+    
+    ax.set_xlabel("MPI Ranks", fontsize=11, fontweight="bold")
+    ax.set_ylabel("Efficiency (t_1 / t_n)", fontsize=11, fontweight="bold")
+    ax.set_title(title or "Weak Scaling Efficiency", fontsize=12, fontweight="bold", pad=12)
+    
+    # Set y-axis to focus around 0 to 1.2
+    ax.set_ylim(0, max(1.2, max(efficiency) * 1.1))
+    
+    ax.grid(True, which="major", linestyle="--", alpha=0.5)
+    ax.legend(loc="lower left")
+    
+    fig.tight_layout()
+    return fig
