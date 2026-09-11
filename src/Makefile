@@ -29,6 +29,9 @@ ifeq ($(USE_PAPI), 1)
 CFLAGS += -DUSE_PAPI
 LDLIBS += -lpapi
 endif
+ifeq ($(USE_MPI), 1)
+CFLAGS += -DUSE_MPI
+endif
 
 NBODY_OBJS := main.o integration.o particles.o profiling.o utils.o
 
