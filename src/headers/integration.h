@@ -152,7 +152,7 @@ void compute_accelerations_blocks(const size_t  n,
                                  );
 
 
-void compute_accelerations_rsqrt_third_law(const size_t  n,ì
+void compute_accelerations_rsqrt_third_law(const size_t  n,
                                            const dtype   g,
                                            const dtype   mass,
                                            const dtype   eps,
