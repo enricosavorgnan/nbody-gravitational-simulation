@@ -5,7 +5,6 @@
 #include "./headers/utils.h"
 
 
-
 void die (const char *format, ...)
 {
   va_list  args;

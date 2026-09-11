@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <mpi.h>
+#include <omp.h>
 
 #include "common.h"
 #include "utils.h"
@@ -12,132 +14,36 @@
 
 
 typedef void (*kernel_t)(
-    const size_t  n,                                  // number of particles)
-    const dtype   g,                                  // gravitational constant
-    const dtype   mass,                               // mass of every source particle
-    const dtype   eps,                                // Plummer softening length
-    const dtype   * restrict x,                       // x positions, read-only
-    const dtype   * restrict y,                       // y positions, read-only
-    const dtype   * restrict z,                       // z positions, read-only
-    dtype   * restrict ax,                            // x acceleration, overwritten
-    dtype   * restrict  ay,                           // y acceleration, overwritten
-    dtype   * restrict az                             // z acceleration, overwritten
-);
+    const size_t  local_n,
+    const size_t  visit_n,
+    const dtype   g,
+    const dtype   mass,
+    const dtype   eps,
+    const dtype * restrict local_x,
+    const dtype * restrict local_y,
+    const dtype * restrict local_z,
+    const dtype * restrict visit_x,
+    const dtype * restrict visit_y,
+    const dtype * restrict visit_z,
+    dtype * restrict ax,
+    dtype * restrict ay,
+    dtype * restrict az);
 
 
-void compute_accelerations_naive (const size_t  n,                           // number of particles
-                                  const dtype   g,                           // gravitational constant
-                                  const dtype   mass,                        // mass of every source particle
-                                  const dtype   eps,                         // Plummer softening length
-                                  const dtype   * restrict x,                          // x positions, read-only
-                                  const dtype   * restrict y,                          // y positions, read-only
-                                  const dtype   * restrict z,                          // z positions, read-only
-                                  dtype   * restrict ax,                               // x acceleration, overwritten
-                                  dtype   * restrict ay,                               // y acceleration, overwritten
-                                  dtype   * restrict az                                // z acceleration, overwritten
-                  );
-
-void compute_accelerations_third_law(const size_t  n,                         // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-void compute_accelerations_rsqrt(const size_t  n,                          // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-
-void compute_accelerations_blocks(const size_t  n,                       // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-
-void compute_accelerations_rsqrt_third_law(const size_t  n,                   // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-
-void compute_accelerations_blocks_third_law(const size_t  n,                   // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-
-void compute_accelerations_blocks_rsqrt(const size_t  n,                   // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-
-void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,            // number of particles
-                                  const dtype   g,                            // gravitational constant
-                                  const dtype   mass,                         // mass of every source particle
-                                  const dtype   eps,                          // Plummer softening length
-                                  const dtype   * restrict x,                           // x positions, read-only
-                                  const dtype   * restrict y,                           // y positions, read-only
-                                  const dtype   * restrict z,                           // z positions, read-only
-                                  dtype   * restrict ax,                                // x acceleration, overwritten
-                                  dtype   * restrict ay,                                // y acceleration, overwritten
-                                  dtype   * restrict az                                 // z acceleration, overwritten
-                  );
-
-//
-// void compute_accelerations_omp(const size_t  n,                               // number of particles)
-//                                   const dtype   g,                            // gravitational constant
-//                                   const dtype   mass,                         // mass of every source particle
-//                                   const dtype   eps,                          // Plummer softening length
-//                                   const dtype   * restrict x,                           // x positions, read-only
-//                                   const dtype   * restrict y,                           // y positions, read-only
-//                                   const dtype   * restrict z,                           // z positions, read-only
-//                                   dtype   * restrict ax,                                // x acceleration, overwritten
-//                                   dtype   * restrict ay,                                // y acceleration, overwritten
-//                                   dtype   * restrict az                                 // z acceleration, overwritten
-//                   );
+void compute_accelerations_omp_br_cross(const size_t  local_n,
+                                        const size_t  visit_n,
+                                        const dtype   g,
+                                        const dtype   mass,
+                                        const dtype   eps,
+                                        const dtype * restrict local_x,
+                                        const dtype * restrict local_y,
+                                        const dtype * restrict local_z,
+                                        const dtype * restrict visit_x,
+                                        const dtype * restrict visit_y,
+                                        const dtype * restrict visit_z,
+                                        dtype * restrict ax,
+                                        dtype * restrict ay,
+                                        dtype * restrict az);
 
 
 void drift (particles_t *p,                                                    // particle positions are modified in place
@@ -154,8 +60,7 @@ void leapfrog_dkd_step (particles_t *p,                                         
                         const dtype        dt,                                  // full time-step
                         profiler_t         *profiler,                           // optional profiler for per-step timing
                         const size_t        profiler_flag,                      // whether to profile this step
-                        const size_t        step,                               // current step index for profiler
-                        const kernel_t      compute_accelerations               // kernel function to compute accelerations
+                        const size_t        step                               // current step index for profiler
                         );
 
 dtype kinetic_energy (const particles_t *p                                      // particle velocities are read-only
@@ -172,5 +77,15 @@ dtype total_energy (particles_t *p,                                 // particle 
                      dtype       *kinetic,                          // optional output of kinetic energy
                      dtype       *potential                         // optional output of potential energy
                     );
+
+
+dtype checked_global_energy(particles_t *p,
+                            dtype g,
+                            dtype eps,
+                            int rank,
+                            int size,
+                            dtype *out_kinetic,
+                            dtype *out_potential);
+
 
 #endif  //INTEGRATION_H

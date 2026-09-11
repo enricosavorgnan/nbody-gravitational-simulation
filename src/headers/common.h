@@ -35,6 +35,7 @@ typedef float  dtype;
 #define DTYPE_MAX_VALUE FLT_MAX
 #define DTYPE_MIN_NORMAL FLT_MIN
 #define DTYPE_PRINTF_FORMAT "%.9g"
+#define MPI_DTYPE MPI_FLOAT
 
 static inline dtype dtype_sqrt (dtype x)
 {
@@ -45,7 +46,7 @@ static inline dtype dtype_sqrt (dtype x)
 // Fast Inverse Square Root, taken from Wikipedia:
 // https://en.wikipedia.org/wiki/Fast_inverse_square_root
 // it should be correct up to the 11th bit
-static inline dtype dtype_rsqrt_old (dtype x)
+static inline dtype dtype_rsqrt (dtype x)
 {
   union {
     uint32_t i;
@@ -55,27 +56,6 @@ static inline dtype dtype_rsqrt_old (dtype x)
   u.i = 0x5f3759dfu - (u.i >> 1);
   dtype y = u.f;
 
-  for (int l = 0; l < N_RSQRT_LOOP; l++)
-  {
-    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
-  }
-  return y;
-}
-
-// The following is the implementation
-// of Fast Inverse Square Root using AVX-512F instructions
-static inline dtype dtype_rsqrt (dtype x)
-{
-  // 1. Load scalar float into the lowest element of a 128-bit vector register
-  __m128 vec = _mm_set_ss(x);
-
-  // 2. Hardware AVX-512F approximation (14 bits of precision)
-  vec = _mm_rsqrt14_ss(vec, vec);
-
-  // 3. Extract back to scalar
-  dtype y = _mm_cvtss_f32(vec);
-
-  // 4. Newton-Raphson refinement
   for (int l = 0; l < N_RSQRT_LOOP; l++)
   {
     y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
@@ -121,13 +101,14 @@ typedef double dtype;
 #define DTYPE_MAX_VALUE DBL_MAX
 #define DTYPE_MIN_NORMAL DBL_MIN
 #define DTYPE_PRINTF_FORMAT "%.17g"
+#define MPI_DTYPE MPI_DOUBLE
 
 static inline dtype dtype_sqrt (dtype x)
 {
   return sqrt (x);
 }
 
-static inline dtype dtype_rsqrt_2 (dtype x)
+static inline dtype dtype_rsqrt (dtype x)
 {
   union {
     uint64_t i;
@@ -137,25 +118,6 @@ static inline dtype dtype_rsqrt_2 (dtype x)
   u.i = UINT64_C (0x5fe6eb50c7b537a9) - (u.i >> 1);
   dtype y = u.f;
 
-  for (int l = 0; l < N_RSQRT_LOOP; l++)
-  {
-    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
-  }
-  return y;
-}
-
-static inline dtype dtype_rsqrt (dtype x)
-{
-  // 1. Load scalar double into the lowest element of a 128-bit vector register
-  __m128d vec = _mm_set_sd(x);
-
-  // 2. Hardware AVX-512F approximation for double precision (14 bits of precision)
-  vec = _mm_rsqrt14_sd(vec, vec);
-
-  // 3. Extract back to scalar
-  dtype y = _mm_cvtsd_f64(vec);
-
-  // 4. Newton-Raphson refinement
   for (int l = 0; l < N_RSQRT_LOOP; l++)
   {
     y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
