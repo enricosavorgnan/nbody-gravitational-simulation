@@ -9,6 +9,8 @@
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00
 
+module load openMPI
+
 cd "$SLURM_SUBMIT_DIR"
 mkdir -p log
 cd "./src"
