@@ -1,0 +1,9 @@
+files:
+  - "./experiments/mpi/profilings/obrc.txt"
+
+names_method:
+  - "MPI O+B+R"
+
+baseline_idx: 0
+runs: 5
+save-path: "./plots/parallel/mpi/"
