@@ -106,7 +106,7 @@ int main (int argc, char **argv)
   particles_t  particles;
   dtype        kinetic0;
   dtype        potential0;
-  dtype        energy0;
+  dtype        global_energy;
 
   // Profiling Stuff
   size_t       profiler_flag  = 0u;
@@ -191,6 +191,7 @@ int main (int argc, char **argv)
   // MPI definitions
   int rank=0;
   int size=1;
+  MPI_Init(NULL, NULL);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
@@ -217,7 +218,7 @@ int main (int argc, char **argv)
   // Local energy
   dtype local_energy = total_energy (&particles, g, eps, &kinetic0, &potential0);
   // Global reduction
-  dtype global_energy = 0;
+  global_energy = 0;
   MPI_Reduce(&local_energy, &global_energy, 1, MPI_DTYPE, MPI_SUM, 0, MPI_COMM_WORLD);
   if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
   // Print header
@@ -251,16 +252,20 @@ int main (int argc, char **argv)
         {
           dtype         kinetic;
           dtype         potential;
-          const dtype   energy = total_energy (&particles, g, eps, &kinetic, &potential);
-          const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
-          const double  rel    = fabs ((double) (energy - energy0)) / denom;
+          const dtype   current_local_energy = total_energy (&particles, g, eps, &kinetic, &potential);
+          // Global reduction
+          dtype current_global_energy = 0.0;
+          MPI_Reduce(&current_local_energy, &current_global_energy, 1, MPI_DTYPE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+          const double  denom  = fmax (fabs ((double) global_energy), (double) DTYPE_MIN_NORMAL);
+          const double  rel    = fabs ((double) (current_global_energy - global_energy)) / denom;
 
           if (rel > max_rel_drift)
             max_rel_drift = rel;
           if (!quiet)
             printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
                     step, (double) step * (double) dt, (double) kinetic,
-                    (double) potential, (double) energy, rel);
+                    (double) potential, (double) current_global_energy, rel);
         }
     }
 
