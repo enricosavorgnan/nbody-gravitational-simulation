@@ -28,20 +28,6 @@ typedef void (*kernel_t)(
     dtype * restrict ax,
     dtype * restrict ay,
     dtype * restrict az);
-#else
-typedef void (*kernel_t)(
-    const size_t  n,                                  // number of particles)
-    const dtype   g,                                  // gravitational constant
-    const dtype   mass,                               // mass of every source particle
-    const dtype   eps,                                // Plummer softening length
-    const dtype   * restrict x,                       // x positions, read-only
-    const dtype   * restrict y,                       // y positions, read-only
-    const dtype   * restrict z,                       // z positions, read-only
-    dtype   * restrict ax,                            // x acceleration, overwritten
-    dtype   * restrict  ay,                           // y acceleration, overwritten
-    dtype   * restrict az                             // z acceleration, overwritten
-);
-#endif
 
 
 void compute_accelerations_omp_br_cross(const size_t  local_n,
@@ -76,7 +62,19 @@ dtype checked_global_energy(particles_t *p,
                             int size,
                             dtype *out_kinetic,
                             dtype *out_potential);
-
+#else
+typedef void (*kernel_t)(
+    const size_t  n,                                  // number of particles)
+    const dtype   g,                                  // gravitational constant
+    const dtype   mass,                               // mass of every source particle
+    const dtype   eps,                                // Plummer softening length
+    const dtype   * restrict x,                       // x positions, read-only
+    const dtype   * restrict y,                       // y positions, read-only
+    const dtype   * restrict z,                       // z positions, read-only
+    dtype   * restrict ax,                            // x acceleration, overwritten
+    dtype   * restrict  ay,                           // y acceleration, overwritten
+    dtype   * restrict az                             // z acceleration, overwritten
+);
 
 // SERIAL/OMP ENGINE
 
@@ -265,6 +263,7 @@ void compute_accelerations_omp_brt_red(const size_t  n,
                                        dtype       * restrict ay,
                                        dtype       * restrict az);
 
+#endif
 
 // COMMON
 
