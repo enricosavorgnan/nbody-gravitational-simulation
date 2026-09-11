@@ -253,8 +253,8 @@ int main (int argc, char **argv)
         // Calculate true energy
         dtype current_global = compute_true_global_energy(&particles, g, eps, rank, size, &kinetic, &potential);
 
-        const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
-        const double  rel    = fabs ((double) (current_global - energy0)) / denom;
+        const double  denom  = fmax (fabs ((double) global_energy), (double) DTYPE_MIN_NORMAL);
+        const double  rel    = fabs ((double) (current_global - global_energy)) / denom;
 
         if (rel > max_rel_drift)
           max_rel_drift = rel;
