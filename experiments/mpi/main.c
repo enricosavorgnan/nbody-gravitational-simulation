@@ -214,10 +214,13 @@ int main (int argc, char **argv)
   particles.n = n_local;
 
   // Get energy baseline
-  if (profiler_flag) { t0 = get_time();}
-  // Global energy computation
-  global_energy = checked_global_energy(&particles, g, eps, rank, size, &kinetic0, &potential0);
-  if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
+  if (!quiet)
+  {
+    if (profiler_flag) { t0 = get_time();}
+    // Global energy computation
+    global_energy = checked_global_energy(&particles, g, eps, rank, size, &kinetic0, &potential0);
+    if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
+  }
   // Print header
   if (!quiet && rank == 0)
     {
@@ -245,7 +248,7 @@ int main (int argc, char **argv)
       if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
       // Get diagnostics, once in a while
-      if (((step % energy_every) == 0u) || (step == nsteps))
+      if (!quiet && (((step % energy_every) == 0u) || (step == nsteps)))
       {
         dtype         kinetic;
         dtype         potential;
