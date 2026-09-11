@@ -75,6 +75,7 @@ static inline dtype dtype_rsqrt (dtype x)
   y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
   return y;
 }
+#endif
 
 static inline dtype dtype_pow (dtype x,
                                dtype y)
@@ -120,93 +121,7 @@ static inline dtype dtype_sqrt (dtype x)
   return sqrt (x);
 }
 
-static inline dtype dtype_rsqrt (dtype x)
-{
-  union {
-    uint64_t i;
-    double f;
-  } u = { .f = x };
-
-  u.i = UINT64_C (0x5fe6eb50c7b537a9) - (u.i >> 1);
-  dtype y = u.f;
-  for (int l = 0; l < N_RSQRT_LOOP; l++)
-  {
-    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
-  }
-  return y;
-}
-
-static inline dtype dtype_rsqrt_old (dtype x)
-{
-  // 1. Load scalar double into the lowest element of a 128-bit vector register
-  __m128d vec = _mm_set_sd(x);
-
-  // 2. Hardware AVX-512F approximation for double precision (14 bits of precision)
-  vec = _mm_rsqrt14_sd(vec, vec);
-
-  // 3. Extract back to scalar
-  dtype y = _mm_cvtsd_f64(vec);
-
-  // 4. Newton-Raphson refinement
-  for (int l = 0; l < N_RSQRT_LOOP; l++)
-  {
-    y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
-  }
-  return y;
-}
-
-static inline dtype dtype_pow (dtype x,
-                               dtype y)
-{
-  return pow (x, y);
-}
-
-static inline dtype dtype_sin (dtype x)
-{
-  return sin (x);
-}
-
-static inline dtype dtype_cos (dtype x)
-{
-  return cos (x);
-}
-
-static inline dtype dtype_log (dtype x)
-{
-  return log (x);
-}
-
-static inline dtype dtype_fabs (dtype x)
-{
-  return fabs (x);
-}
-
-static inline dtype dtype_fmax (dtype x,
-                                dtype y)
-{
-  return fmax (x, y);
-}
-
-#endif
-
-static inline bool dtype_isfinite (dtype x)
-{
-  return isfinite ((double) x);
-}
-
-#else
-typedef double dtype;
-#define DTYPE_NAME "double"
-#define DTYPE_MAX_VALUE DBL_MAX
-#define DTYPE_MIN_NORMAL DBL_MIN
-#define DTYPE_PRINTF_FORMAT "%.17g"
-
-static inline dtype dtype_sqrt (dtype x)
-{
-  return sqrt (x);
-}
-
-#if N_RSQRT_LOOP != 1
+# if N_RSQRT_LOOP != 1
 static inline dtype dtype_rsqrt (dtype x)
 {
   union {
@@ -235,6 +150,7 @@ static inline dtype dtype_rsqrt (dtype x)
   y = y * ((dtype) 1.5 - (dtype) 0.5 * x * y * y);
   return y;
 }
+#endif
 
 static inline dtype dtype_rsqrt_old (dtype x)
 {
@@ -287,13 +203,9 @@ static inline dtype dtype_fmax (dtype x,
   return fmax (x, y);
 }
 
-#endif
-
 static inline bool dtype_isfinite (dtype x)
 {
   return isfinite ((double) x);
 }
-
-#endif
 
 #endif
