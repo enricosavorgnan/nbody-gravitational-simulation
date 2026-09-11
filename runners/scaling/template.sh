@@ -13,7 +13,7 @@ N_PARTICLES=${N_PARTICLES:-100000}
 STEPS=${STEPS:-100}
 INPUT_FILE="./bins/${N_PARTICLES}.bin"
 OUTPUT_FILE="./bins/${N_PARTICLES}.out"
-PROFILER_FILE="./profilings/${N_PARTICLES}.txt"
+PROFILER_FILE="./profilings/$SLURM_NTASKS_$SLURM_JOB_NODELIST.txt"
 
 echo "=========================================================="
 echo "Job ID: $SLURM_JOB_ID"
@@ -22,10 +22,8 @@ echo "MPI Ranks: $SLURM_NTASKS"
 echo "Particles: $N_PARTICLES"
 echo "=========================================================="
 
-# 1. Load your modules (adjust these to match Orfeo's specific module names)
 module load openMPI
 
-# 2. Move to directory
 cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/mpi/"
 
@@ -43,6 +41,7 @@ echo "Generating initial conditions..."
 srun ./generate_initial_conditions --model 0 --n $N_PARTICLES --seed 42 --output $INPUT_FILE
 
 echo "Starting simulation..."
-time mpirun -n $SLURM_NTASKS ./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrc" --profiler 1 --profiler-path $PROFILER_FILE
+/usr/bin/time -a -o $PROFILER_FILE -f "\n--- OS / MPI Launch Time ---\nReal: %e seconds\nUser: %U seconds\nSys: %S seconds" \
+mpirun -n $SLURM_NTASKS ./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrc" --profiler 1 --profiler-path $PROFILER_FILE
 
 echo "Done."
