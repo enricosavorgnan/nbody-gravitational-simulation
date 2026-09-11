@@ -215,11 +215,8 @@ int main (int argc, char **argv)
 
   // Get energy baseline
   if (profiler_flag) { t0 = get_time();}
-  // Local energy
-  dtype local_energy = total_energy (&particles, g, eps, &kinetic0, &potential0);
-  // Global reduction
-  global_energy = 0;
-  MPI_Reduce(&local_energy, &global_energy, 1, MPI_DTYPE, MPI_SUM, 0, MPI_COMM_WORLD);
+  // Global energy computation
+  global_energy = compute_true_global_energy(&particles, g, eps, rank, size, &kinetic0, &potential0);
   if (profiler_flag) { profiler.total_energy_time = get_time() - t0;}
   // Print header
   if (!quiet && rank == 0)
@@ -249,24 +246,24 @@ int main (int argc, char **argv)
 
       // Get diagnostics, once in a while
       if (((step % energy_every) == 0u) || (step == nsteps))
-        {
-          dtype         kinetic;
-          dtype         potential;
-          const dtype   current_local_energy = total_energy (&particles, g, eps, &kinetic, &potential);
-          // Global reduction
-          dtype current_global_energy = 0.0;
-          MPI_Reduce(&current_local_energy, &current_global_energy, 1, MPI_DTYPE, MPI_SUM, 0, MPI_COMM_WORLD);
+      {
+        dtype         kinetic;
+        dtype         potential;
 
-          const double  denom  = fmax (fabs ((double) global_energy), (double) DTYPE_MIN_NORMAL);
-          const double  rel    = fabs ((double) (current_global_energy - global_energy)) / denom;
+        // Calculate true energy
+        dtype current_global = compute_true_global_energy(&particles, g, eps, rank, size, &kinetic, &potential);
 
-          if (rel > max_rel_drift)
-            max_rel_drift = rel;
-          if (!quiet)
-            printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
-                    step, (double) step * (double) dt, (double) kinetic,
-                    (double) potential, (double) current_global_energy, rel);
-        }
+        const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
+        const double  rel    = fabs ((double) (current_global - energy0)) / denom;
+
+        if (rel > max_rel_drift)
+          max_rel_drift = rel;
+
+        if (!quiet && rank == 0)
+          printf ("%zu %.17g %.17g %.17g %.17g %.17g\n",
+                  step, (double) step * (double) dt, (double) kinetic,
+                  (double) potential, (double) current_global, rel);
+      }
     }
 
   // Write final file

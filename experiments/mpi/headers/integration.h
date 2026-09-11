@@ -78,4 +78,14 @@ dtype total_energy (particles_t *p,                                 // particle 
                      dtype       *potential                         // optional output of potential energy
                     );
 
+
+dtype checked_global_energy(particles_t *p,
+                            dtype g,
+                            dtype eps,
+                            int rank,
+                            int size,
+                            dtype *out_kinetic,
+                            dtype *out_potential);
+
+
 #endif  //INTEGRATION_H

@@ -397,3 +397,44 @@ dtype total_energy (particles_t *p,           // complete particle state, read-o
 
   return *kinetic + *potential;
 }
+
+
+dtype checked_global_energy(particles_t *p, dtype g, dtype eps, int rank, int size, dtype *out_kinetic, dtype *out_potential) {
+  // 1. Sum up all the local Kinetic Energies
+  dtype local_kinetic = kinetic_energy(p);
+  dtype global_kinetic = 0.0;
+  MPI_Reduce(&local_kinetic, &global_kinetic, 1, MPI_DTYPE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+  dtype global_potential = 0.0;
+  dtype *global_x = NULL, *global_y = NULL, *global_z = NULL;
+
+  // 2. Rank 0 allocates enough memory to hold the ENTIRE system
+  if (rank == 0) {
+    global_x = malloc(p->n * size * sizeof(dtype));
+    global_y = malloc(p->n * size * sizeof(dtype));
+    global_z = malloc(p->n * size * sizeof(dtype));
+  }
+
+  // 3. Gather all positions from the cluster onto Rank 0
+  MPI_Gather(p->x, p->n, MPI_DTYPE, global_x, p->n, MPI_DTYPE, 0, MPI_COMM_WORLD);
+  MPI_Gather(p->y, p->n, MPI_DTYPE, global_y, p->n, MPI_DTYPE, 0, MPI_COMM_WORLD);
+  MPI_Gather(p->z, p->n, MPI_DTYPE, global_z, p->n, MPI_DTYPE, 0, MPI_COMM_WORLD);
+
+  // 4. Rank 0 computes the true Potential Energy of the entire universe
+  if (rank == 0) {
+    particles_t global_p = *p;
+    global_p.n = p->n * size;
+    global_p.x = global_x;
+    global_p.y = global_y;
+    global_p.z = global_z;
+
+    global_potential = potential_energy_naive(&global_p, g, eps);
+
+    free(global_x); free(global_y); free(global_z);
+  }
+
+  if (out_kinetic) *out_kinetic = global_kinetic;
+  if (out_potential) *out_potential = global_potential;
+
+  return global_kinetic + global_potential;
+}
