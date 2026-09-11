@@ -12,7 +12,7 @@
 #include "particles.h"
 #include "profiling.h"
 
-
+#if USE_MPI
 typedef void (*kernel_t)(
     const size_t  local_n,
     const size_t  visit_n,
@@ -28,6 +28,20 @@ typedef void (*kernel_t)(
     dtype * restrict ax,
     dtype * restrict ay,
     dtype * restrict az);
+#else
+typedef void (*kernel_t)(
+    const size_t  n,                                  // number of particles)
+    const dtype   g,                                  // gravitational constant
+    const dtype   mass,                               // mass of every source particle
+    const dtype   eps,                                // Plummer softening length
+    const dtype   * restrict x,                       // x positions, read-only
+    const dtype   * restrict y,                       // y positions, read-only
+    const dtype   * restrict z,                       // z positions, read-only
+    dtype   * restrict ax,                            // x acceleration, overwritten
+    dtype   * restrict  ay,                           // y acceleration, overwritten
+    dtype   * restrict az                             // z acceleration, overwritten
+);
+#endif
 
 
 void compute_accelerations_omp_br_cross(const size_t  local_n,
@@ -46,37 +60,13 @@ void compute_accelerations_omp_br_cross(const size_t  local_n,
                                         dtype * restrict az);
 
 
-void drift (particles_t *p,                                                    // particle positions are modified in place
-                   dtype        dt                                             // full drift interval
-                  );
-
-void kick (particles_t *p,                                                     // particle velocities are modified in place
-                  dtype        dt                                              // full kick interval
-                 );
-
-void leapfrog_dkd_step (particles_t *p,                                         // complete particle state, modified in place
-                        const dtype        g,                                   // gravitational constant
-                        const dtype        eps,                                 // softening length
-                        const dtype        dt,                                  // full time-step
-                        profiler_t         *profiler,                           // optional profiler for per-step timing
-                        const size_t        profiler_flag,                      // whether to profile this step
-                        const size_t        step                               // current step index for profiler
-                        );
-
-dtype kinetic_energy (const particles_t *p                                      // particle velocities are read-only
-                            );
-
-dtype potential_energy_naive (particles_t *p,                                   // particle positions are read-only
-                                     dtype        g,                            // gravitational constant
-                                     dtype        eps                           // softening length
-                                    );
-
-dtype total_energy (particles_t *p,                                 // particle positions and velocities are read-only
-                     dtype        g,                                // gravitational constant
-                     dtype        eps,                              // softening length
-                     dtype       *kinetic,                          // optional output of kinetic energy
-                     dtype       *potential                         // optional output of potential energy
-                    );
+void leapfrog_dkd_step_mpi(particles_t   *p,
+                            const dtype    g,
+                            const dtype  eps,
+                            const dtype   dt,
+                            profiler_t   *profiler,
+                            const size_t profiler_flag,
+                            const size_t   step);
 
 
 dtype checked_global_energy(particles_t *p,
@@ -86,6 +76,220 @@ dtype checked_global_energy(particles_t *p,
                             int size,
                             dtype *out_kinetic,
                             dtype *out_potential);
+
+
+// SERIAL/OMP ENGINE
+
+void leapfrog_dkd_step (particles_t   *p,
+                        const dtype    g,
+                        const dtype  eps,
+                        const dtype   dt,
+                        profiler_t   *profiler,
+                        const size_t profiler_flag,
+                        const size_t   step,
+                        const kernel_t  compute_accelerations);
+
+
+void compute_accelerations_baseline(const size_t  n,
+                                    const dtype   g,
+                                    const dtype   mass,
+                                    const dtype   eps,
+                                    const dtype * x,
+                                    const dtype * y,
+                                    const dtype * z,
+                                    dtype * ax,
+                                    dtype * ay,
+                                    dtype * az);
+
+
+void compute_accelerations_naive(const size_t  n,
+                                 const dtype   g,
+                                 const dtype   mass,
+                                 const dtype   eps,
+                                 const dtype * restrict x,
+                                 const dtype * restrict y,
+                                 const dtype * restrict z,
+                                 dtype * restrict ax,
+                                 dtype * restrict ay,
+                                 dtype * restrict az);
+
+
+void compute_accelerations_third_law(const size_t  n,
+                                      const dtype   g,
+                                      const dtype   mass,
+                                      const dtype   eps,
+                                      const dtype * restrict x,
+                                      const dtype * restrict y,
+                                      const dtype * restrict z,
+                                      dtype * restrict ax,
+                                      dtype * restrict ay,
+                                      dtype * restrict az);
+
+
+void compute_accelerations_rsqrt(const size_t  n,
+                                  const dtype   g,
+                                  const dtype   mass,
+                                  const dtype   eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype * restrict ax,
+                                  dtype * restrict ay,
+                                  dtype * restrict az
+           );
+
+
+void compute_accelerations_blocks(const size_t  n,
+                                  const dtype  g,
+                                  const dtype  mass,
+                                  const dtype  eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype * restrict ax,
+                                  dtype * restrict ay,
+                                  dtype * restrict az
+                                 );
+
+
+void compute_accelerations_rsqrt_third_law(const size_t  n,ì
+                                           const dtype   g,
+                                           const dtype   mass,
+                                           const dtype   eps,
+                                           const dtype * restrict x,
+                                           const dtype * restrict y,
+                                           const dtype * restrict z,
+                                           dtype * restrict ax,
+                                           dtype * restrict ay,
+                                           dtype * restrict az);
+
+
+void compute_accelerations_blocks_rsqrt(const size_t  n,
+                                        const dtype   g,
+                                        const dtype   mass,
+                                        const dtype   eps,
+                                        const dtype * restrict x,
+                                        const dtype * restrict y,
+                                        const dtype * restrict z,
+                                        dtype * restrict ax,
+                                        dtype * restrict ay,
+                                        dtype * restrict az
+                                        );
+
+
+void compute_accelerations_blocks_third_law(const size_t  n,
+                                            const dtype   g,
+                                            const dtype   mass,
+                                            const dtype   eps,
+                                            const dtype * restrict x,
+                                            const dtype * restrict y,
+                                            const dtype * restrict z,
+                                            dtype       * restrict ax,
+                                            dtype       * restrict ay,
+                                            dtype       * restrict az);
+
+
+void compute_accelerations_blocks_rsqrt_third_law(const size_t  n,
+                                                  const dtype   g,
+                                                  const dtype   mass,
+                                                  const dtype   eps,
+                                                  const dtype * restrict x,
+                                                  const dtype * restrict y,
+                                                  const dtype * restrict z,
+                                                  dtype       * restrict ax,
+                                                  dtype       * restrict ay,
+                                                  dtype       * restrict az);
+
+
+void compute_accelerations_omp_br(const size_t  n,
+                                  const dtype   g,
+                                  const dtype   mass,
+                                  const dtype   eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype * restrict ax,
+                                  dtype * restrict ay,
+                                  dtype * restrict az
+                                  );
+
+
+
+void compute_accelerations_omp_rt(const size_t  n,
+                                  const dtype   g,
+                                  const dtype   mass,
+                                  const dtype   eps,
+                                  const dtype * restrict x,
+                                  const dtype * restrict y,
+                                  const dtype * restrict z,
+                                  dtype * restrict ax,
+                                  dtype * restrict ay,
+                                  dtype * restrict az);
+
+
+void compute_accelerations_omp_brt(const size_t  n,
+                                   const dtype   g,
+                                   const dtype   mass,
+                                   const dtype   eps,
+                                   const dtype * restrict x,
+                                   const dtype * restrict y,
+                                   const dtype * restrict z,
+                                   dtype       * restrict ax,
+                                   dtype       * restrict ay,
+                                   dtype       * restrict az);
+
+
+// Reduction Version of the ORT kernel
+// The idea here is to exploit the OMP reduction clause to avoid explicit synchronization
+// However, we lose some control over
+void compute_accelerations_omp_rt_red(const size_t  n,
+                                      const dtype   g,
+                                      const dtype   mass,
+                                      const dtype   eps,
+                                      const dtype * restrict x,
+                                      const dtype * restrict y,
+                                      const dtype * restrict z,
+                                      dtype       * restrict ax,
+                                      dtype       * restrict ay,
+                                      dtype       * restrict az);
+
+
+void compute_accelerations_omp_brt_red(const size_t  n,
+                                       const dtype   g,
+                                       const dtype   mass,
+                                       const dtype   eps,
+                                       const dtype * restrict x,
+                                       const dtype * restrict y,
+                                       const dtype * restrict z,
+                                       dtype       * restrict ax,
+                                       dtype       * restrict ay,
+                                       dtype       * restrict az);
+
+
+// COMMON
+
+// Drift
+void drift(particles_t *p,
+           dtype dt);
+
+// Kick
+void kick(particles_t *p,
+          dtype dt);
+
+// Kinetic Energy
+dtype kinetic_energy(const particles_t *p);
+
+// Potential Energy
+dtype potential_energy_naive(particles_t *p,
+                             dtype g,
+                             dtype eps);
+
+// Total Energy
+dtype total_energy(particles_t *p,
+                   dtype g,
+                   dtype eps,
+                   dtype *kinetic,
+                   dtype *potential);
 
 
 #endif  //INTEGRATION_H

@@ -1539,9 +1539,9 @@ dtype kinetic_energy (const particles_t *p
 }
 
 // Potential Energy
-dtype potential_energy_naive (particles_t *p,ì
+dtype potential_energy_naive (particles_t *p,
                                      dtype        g,         
-                                     dtype        eps ì
+                                     dtype        eps
 				     )
 {
   size_t        n    = p->n;
@@ -1573,11 +1573,11 @@ dtype potential_energy_naive (particles_t *p,ì
 }
 
 // Total Energy
-dtype total_energy (particles_t *p,     ì
+dtype total_energy (particles_t *p,
                            dtype        g,            
-                           dtype        eps,  ì
-                           dtype       *kinetic,ì
-                           dtype       *potentialì
+                           dtype        eps,
+                           dtype       *kinetic,
+                           dtype       *potential
 			   )
 {
   *kinetic   = kinetic_energy (p);
