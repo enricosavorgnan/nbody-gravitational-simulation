@@ -37,3 +37,43 @@ srun ./main --input ./bins/test-mpi.bin \
              --kernel "obrc" \
              --profiler 1  \
              --profiler-path ./profilings/obrc.txt
+
+srun ./main --input ./bins/test-mpi.bin \
+            --nsteps 100 \
+            --dt 1e-4 \
+            --eps 0.05 \
+            --energy-every 100 \
+            --output ./bins/obrtr.out \
+             --kernel "obrc" \
+             --profiler 1  \
+             --profiler-path ./profilings/obrc.txt
+
+srun ./main --input ./bins/test-mpi.bin \
+            --nsteps 100 \
+            --dt 1e-4 \
+            --eps 0.05 \
+            --energy-every 100 \
+            --output ./bins/obrtr.out \
+             --kernel "obrc" \
+             --profiler 1  \
+             --profiler-path ./profilings/obrc.txt
+
+srun ./main --input ./bins/test-mpi.bin \
+            --nsteps 100 \
+            --dt 1e-4 \
+            --eps 0.05 \
+            --energy-every 100 \
+            --output ./bins/obrtr.out \
+             --kernel "obrc" \
+             --profiler 1  \
+             --profiler-path ./profilings/obrc.txt
+
+srun ./main --input ./bins/test-mpi.bin \
+            --nsteps 100 \
+            --dt 1e-4 \
+            --eps 0.05 \
+            --energy-every 100 \
+            --output ./bins/obrtr.out \
+             --kernel "obrc" \
+             --profiler 1  \
+             --profiler-path ./profilings/obrc.txt
