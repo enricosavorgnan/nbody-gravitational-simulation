@@ -7,6 +7,7 @@
 #endif
 
 // MPI ENGINE
+#if USE_MPI==1
 void compute_accelerations_omp_br_cross(const size_t  local_n,
                                         const size_t  visit_n,
                                         const dtype   g,
@@ -62,8 +63,6 @@ void compute_accelerations_omp_br_cross(const size_t  local_n,
     }
   }
 }
-
-
 
 // This implementation is MPI-parallelized
 void leapfrog_dkd_step_mpi(particles_t   *p,
@@ -175,6 +174,54 @@ void leapfrog_dkd_step_mpi(particles_t   *p,
 
 }
 
+#else
+void leapfrog_dkd_step (particles_t   *p,
+                        const dtype    g,
+                        const dtype  eps,
+                        const dtype   dt,
+                        profiler_t   *profiler,
+                        const size_t profiler_flag,
+                        const size_t   step,
+                        const kernel_t  compute_accelerations
+
+             )
+{
+  double t0 = 0.0;
+
+  // Drift
+  if (profiler_flag) t0 = get_time();
+  drift (p, (dtype) 0.5 * dt);
+  if (profiler_flag) profiler->first_drift_time[step] = get_time() - t0;
+
+  // Accelerations
+  if (profiler_flag)
+  {
+    profiler_papi_start(profiler);
+    t0 = get_time();
+  }
+  compute_accelerations (p->n, g, p->mass, eps,
+                               p->x, p->y, p->z,
+                               p->ax, p->ay, p->az);
+  if (profiler_flag)
+  {
+    profiler->force_time[step] = get_time() - t0;
+    profiler_papi_stop(profiler, step);
+  }
+
+  // Kick
+  if (profiler_flag) t0 = get_time();
+  kick (p, dt);
+  if (profiler_flag) profiler->kick_time[step] = get_time() - t0;
+
+  // Drift
+  if (profiler_flag) t0 = get_time();
+  drift (p, (dtype) 0.5 * dt);
+  if (profiler_flag) profiler->second_drift_time[step] = get_time() - t0;
+
+}
+#endif
+
+
 
 dtype checked_global_energy(particles_t *p, dtype g, dtype eps, int rank, int size, dtype *out_kinetic, dtype *out_potential) {
   // 1. Sum up all the local Kinetic Energies
@@ -220,50 +267,6 @@ dtype checked_global_energy(particles_t *p, dtype g, dtype eps, int rank, int si
 
 // SERIAL/OMP ENGINE
 
-void leapfrog_dkd_step (particles_t   *p,
-                        const dtype    g,
-                        const dtype  eps,
-                        const dtype   dt,
-                        profiler_t   *profiler,
-                        const size_t profiler_flag,
-                        const size_t   step,
-                        const kernel_t  compute_accelerations
-
-             )
-{
-  double t0 = 0.0;
-
-  // Drift
-  if (profiler_flag) t0 = get_time();
-  drift (p, (dtype) 0.5 * dt);
-  if (profiler_flag) profiler->first_drift_time[step] = get_time() - t0;
-
-  // Accelerations
-  if (profiler_flag)
-  {
-    profiler_papi_start(profiler);
-    t0 = get_time();
-  }
-  compute_accelerations (p->n, g, p->mass, eps,
-                               p->x, p->y, p->z,
-                               p->ax, p->ay, p->az);
-  if (profiler_flag)
-  {
-    profiler->force_time[step] = get_time() - t0;
-    profiler_papi_stop(profiler, step);
-  }
-
-  // Kick
-  if (profiler_flag) t0 = get_time();
-  kick (p, dt);
-  if (profiler_flag) profiler->kick_time[step] = get_time() - t0;
-
-  // Drift
-  if (profiler_flag) t0 = get_time();
-  drift (p, (dtype) 0.5 * dt);
-  if (profiler_flag) profiler->second_drift_time[step] = get_time() - t0;
-
-}
 
 
 

@@ -30,22 +30,6 @@ typedef void (*kernel_t)(
     dtype * restrict az);
 
 
-void compute_accelerations_omp_br_cross(const size_t  local_n,
-                                        const size_t  visit_n,
-                                        const dtype   g,
-                                        const dtype   mass,
-                                        const dtype   eps,
-                                        const dtype * restrict local_x,
-                                        const dtype * restrict local_y,
-                                        const dtype * restrict local_z,
-                                        const dtype * restrict visit_x,
-                                        const dtype * restrict visit_y,
-                                        const dtype * restrict visit_z,
-                                        dtype * restrict ax,
-                                        dtype * restrict ay,
-                                        dtype * restrict az);
-
-
 void leapfrog_dkd_step_mpi(particles_t   *p,
                             const dtype    g,
                             const dtype  eps,
@@ -54,14 +38,6 @@ void leapfrog_dkd_step_mpi(particles_t   *p,
                             const size_t profiler_flag,
                             const size_t   step);
 
-
-dtype checked_global_energy(particles_t *p,
-                            dtype g,
-                            dtype eps,
-                            int rank,
-                            int size,
-                            dtype *out_kinetic,
-                            dtype *out_potential);
 #else
 typedef void (*kernel_t)(
     const size_t  n,                                  // number of particles)
@@ -86,6 +62,31 @@ void leapfrog_dkd_step (particles_t   *p,
                         const size_t profiler_flag,
                         const size_t   step,
                         const kernel_t  compute_accelerations);
+#endif
+
+void compute_accelerations_omp_br_cross(const size_t  local_n,
+                                        const size_t  visit_n,
+                                        const dtype   g,
+                                        const dtype   mass,
+                                        const dtype   eps,
+                                        const dtype * restrict local_x,
+                                        const dtype * restrict local_y,
+                                        const dtype * restrict local_z,
+                                        const dtype * restrict visit_x,
+                                        const dtype * restrict visit_y,
+                                        const dtype * restrict visit_z,
+                                        dtype * restrict ax,
+                                        dtype * restrict ay,
+                                        dtype * restrict az);
+
+
+dtype checked_global_energy(particles_t *p,
+                            dtype g,
+                            dtype eps,
+                            int rank,
+                            int size,
+                            dtype *out_kinetic,
+                            dtype *out_potential);
 
 
 void compute_accelerations_baseline(const size_t  n,
@@ -263,7 +264,6 @@ void compute_accelerations_omp_brt_red(const size_t  n,
                                        dtype       * restrict ay,
                                        dtype       * restrict az);
 
-#endif
 
 // COMMON
 

@@ -104,7 +104,6 @@ int main (int argc, char **argv)
   dtype        energy_tol    = (dtype) 1.0e-3;
   bool         quiet         = false;
   bool         papi          = false;
-  bool         mpi           = false;
   particles_t  particles;
   dtype        kinetic0;
   dtype        potential0;
