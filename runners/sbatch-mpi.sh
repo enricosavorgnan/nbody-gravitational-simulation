@@ -18,4 +18,18 @@ export OMP_PLACES=cores
 export OMP_PROC_BIND=close
 export OMP_DISPLAY_AFFINITY=TRUE
 
-make test-mpi USE_PAPI=1
+mkdir -p ./bins
+mkdir -p ./profilings
+make all USE_PAPI=1
+
+srun ./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-mpi.bin
+
+srun ./main --input ./bins/test-mpi.bin \
+            --nsteps 100 \
+            --dt 1e-4 \
+            --eps 0.05 \
+            --energy-every 100 \
+            --output ./bins/obrtr.out \
+             --kernel "obrc" \
+             --profiler 1  \
+             --profiler-path ./profilings/obrc.txt
