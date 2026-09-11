@@ -11,8 +11,6 @@
 
 cd "$SLURM_SUBMIT_DIR"
 mkdir -p log
-cd "./src"
+0cd "./src"
 
-make clean
-make all PRECISION=double
-make test-serial
+make test-mpi USE_PAPI=1
