@@ -1,0 +1,23 @@
+files:
+  - "./experiments/mpi/profilings/w_1_10000.txt"
+  - "./experiments/mpi/profilings/w_2_14142.txt"
+  - "./experiments/mpi/profilings/w_4_20000.txt"
+  - "./experiments/mpi/profilings/w_8_28284.txt"
+  - "./experiments/mpi/profilings/w_16_40000.txt"
+  - "./experiments/mpi/profilings/w_32_56569.txt"
+  - "./experiments/mpi/profilings/w_64_80000.txt"
+
+names_method:
+  - "Weak 1 Rank"
+  - "Weak 2 Ranks"
+  - "Weak 4 Ranks"
+  - "Weak 8 Ranks"
+  - "Weak 16 Ranks"
+  - "Weak 32 Ranks"
+  - "Weak 64 Ranks"
+
+baseline_idx: 0
+runs: 1
+save-path: "./reports/scaling/weak/"
+is_strong: false
+is_weak: true

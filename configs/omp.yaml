@@ -14,4 +14,4 @@ names_method:
 
 baseline_idx: 0
 runs: 5
-save-path: "./plots/parallel/omp/"
+save-path: "./reports/parallel/omp/"

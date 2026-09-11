@@ -6,4 +6,4 @@ names_method:
 
 baseline_idx: 0
 runs: 5
-save-path: "./plots/parallel/mpi/"
+save-path: "./reports/parallel/mpi/"
