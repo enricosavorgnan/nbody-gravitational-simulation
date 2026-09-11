@@ -10,13 +10,17 @@
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00
 
+module load openMPI
+
 cd "$SLURM_SUBMIT_DIR"
 cd "./experiments/mpi/"
 
+export OMP_STACKSIZE=64M
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OMP_PLACES=cores
 export OMP_PROC_BIND=close
 export OMP_DISPLAY_AFFINITY=TRUE
+
 
 mkdir -p ./bins
 mkdir -p ./profilings
