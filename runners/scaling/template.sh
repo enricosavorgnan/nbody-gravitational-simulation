@@ -42,6 +42,6 @@ srun ./generate_initial_conditions --model 0 --n $N_PARTICLES --seed 42 --output
 
 echo "Starting simulation..."
 /usr/bin/time -a -o $PROFILER_FILE -f "\n--- OS / MPI Launch Time ---\nReal: %e seconds\nUser: %U seconds\nSys: %S seconds" \
-mpirun -n $SLURM_NTASKS ./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrc" --profiler 1 --profiler-path $PROFILER_FILE
+mpirun -n $SLURM_NTASKS ./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrc" --profiler 1 --profiler-path $PROFILER_FILE --quiet
 
 echo "Done."
