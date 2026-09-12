@@ -38,7 +38,9 @@ NBODY_OBJS := main.o integration.o particles.o profiling.o utils.o
 all: $(PROGRAMS)
 
 # all, but with setting DO_UNROLL NUMBER:
-all-n-unroll: UNROLL=8
+all-8-unroll: UNROLL=8
+all-4-unroll: UNROLL=4
+all-2-unroll: UNROLL=2
 all-auto-unroll: UNROLL=-1
 all-no-unroll: UNROLL=0
 
@@ -84,19 +86,38 @@ test-auto-unroll: all-auto-unroll
 	done
 
 
-test-n-unroll: all-n-unroll
+test-8-unroll: all-8-unroll
 	mkdir -p ./bins
 	mkdir -p ./bins/test-n-unroll/
 	mkdir -p ./profilings
 	mkdir -p ./profilings/test-n-unroll/
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
-	for i in 1; do \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/n.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/t.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/r.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll/rt.txt ; \
+	for i in 1 2 3; do \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-8/n.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-8/r.txt ; \
 	done
 
+test-4-unroll: all-8-unroll
+	mkdir -p ./bins
+	mkdir -p ./bins/test-n-unroll/
+	mkdir -p ./profilings
+	mkdir -p ./profilings/test-n-unroll/
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
+	for i in 1 2 3; do \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-4/n.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-4/r.txt ; \
+	done
+
+test-2-unroll: all-8-unroll
+	mkdir -p ./bins
+	mkdir -p ./bins/test-n-unroll/
+	mkdir -p ./profilings
+	mkdir -p ./profilings/test-n-unroll/
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
+	for i in 1 2 3; do \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-2/n.txt ; \
+		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-2/r.txt ; \
+	done
 
 clean:
 	rm -f $(PROGRAMS) *.o *.bin
