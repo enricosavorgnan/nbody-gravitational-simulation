@@ -2,12 +2,12 @@ CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -flto -ffast-math -DBLOCK_SIZE=4000
 
 LDLIBS    ?= -lm
 PRECISION ?= double
 USE_PAPI  ?= 1
-N_RSQRT_LOOP ?= 3
+N_RSQRT_LOOP ?= 1
 
 
 PROGRAMS := main generate_initial_conditions
@@ -66,6 +66,19 @@ test-kernel : all
 		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/bt.out --kernel "bt" --profiler 1 --papi 1 --profiler-path ./profilings/bt.txt ; \
 		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/br.out --kernel "br" --profiler 1 --papi 1 --profiler-path ./profilings/br.txt ; \
 		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/brt.out --kernel "brt" --profiler 1 --papi 1 --profiler-path ./profilings/brt.txt ; \
+	done
+
+
+test-blocks : all
+	mkdir -p ./bins
+	mkdir -p ./profilings
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-kernel.bin
+	for i in 1 2 3 4 5; do \
+		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/n.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/b.out --kernel "b" --profiler 1 --papi 1 --profiler-path ./profilings/b_4000.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/bt.out --kernel "bt" --profiler 1 --papi 1 --profiler-path ./profilings/bt_4000.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/br.out --kernel "br" --profiler 1 --papi 1 --profiler-path ./profilings/br_4000.txt ; \
+		./main --input ./bins/test-kernel.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/brt.out --kernel "brt" --profiler 1 --papi 1 --profiler-path ./profilings/brt_4000.txt ; \
 	done
 
 
