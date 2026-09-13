@@ -1,0 +1,25 @@
+files:
+  - "./experiments/kernel/profilings/ba.txt"
+  - "./experiments/kernel/profilings/n.txt"
+  - "./experiments/kernel/profilings/t.txt"
+  - "./experiments/kernel/profilings/r.txt"
+  - "./experiments/kernel/profilings/b_256.txt"
+  - "./experiments/kernel/profilings/rt.txt"
+  - "./experiments/kernel/profilings/bt_256.txt"
+  - "./experiments/kernel/profilings/br_256.txt"
+  - "./experiments/kernel/profilings/brt_256.txt"
+
+names_method:
+  - "Baseline"
+  - "Naive"
+  - "ThirdLaw"
+  - "Rsqrt"
+  - "Blocks"
+  - "Rsqrt+Third"
+  - "Blocks+Third"
+  - "Blocks+Rsqrt"
+  - "Blocks+Rsqrt+Third"
+
+baseline_idx: 0
+runs: 5
+save-path: "./reports/serial/blocks-kernel/"

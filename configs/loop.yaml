@@ -1,0 +1,27 @@
+files:
+  - "./experiments/loop-unroll/profilings/test-no-unroll/n.txt"
+  - "./experiments/loop-unroll/profilings/test-auto-unroll/n.txt"
+  - "./experiments/loop-unroll/profilings/test-n-unroll-2/n.txt"
+  - "./experiments/loop-unroll/profilings/test-n-unroll-4/n.txt"
+  - "./experiments/loop-unroll/profilings/test-n-unroll-8/n.txt"
+  - "./experiments/loop-unroll/profilings/test-no-unroll/r.txt"
+  - "./experiments/loop-unroll/profilings/test-auto-unroll/r.txt"
+  - "./experiments/loop-unroll/profilings/test-n-unroll-2/r.txt"
+  - "./experiments/loop-unroll/profilings/test-n-unroll-4/r.txt"
+  - "./experiments/loop-unroll/profilings/test-n-unroll-8/r.txt"
+
+names_method:
+  - "Naive (No Unroll)"
+  - "Naive (Auto Unroll)"
+  - "Naive (Unroll 2)"
+  - "Naive (Unroll 4)"
+  - "Naive (Unroll 8)"
+  - "Rsqrt (No Unroll)"
+  - "Rsqrt (Auto Unroll)"
+  - "Rsqrt (Unroll 2)"
+  - "Rsqrt (Unroll 4)"
+  - "Rsqrt (Unroll 8)"
+
+baseline_idx: 0
+runs: 5
+save-path: "./reports/serial/loop-unroll/"
