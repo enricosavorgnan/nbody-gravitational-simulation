@@ -1,0 +1,23 @@
+files:
+  - "./experiments/omp/profilings/s_1.txt"
+  - "./experiments/omp/profilings/s_2.txt"
+  - "./experiments/omp/profilings/s_4.txt"
+  - "./experiments/omp/profilings/s_8.txt"
+  - "./experiments/omp/profilings/s_16.txt"
+  - "./experiments/omp/profilings/s_32.txt"
+  - "./experiments/omp/profilings/s_64.txt"
+
+names_method:
+  - "1 Thread"
+  - "2 Threads"
+  - "4 Threads"
+  - "8 Threads"
+  - "16 Threads"
+  - "32 Threads"
+  - "64 Threads"
+
+baseline_idx: 0
+runs: 1
+save-path: "./reports/scaling/omp-strong/"
+is_strong: true
+is_weak: false

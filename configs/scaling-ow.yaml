@@ -1,0 +1,23 @@
+files:
+  - "./experiments/omp/profilings/w_1_10000.txt"
+  - "./experiments/omp/profilings/w_2_14142.txt"
+  - "./experiments/omp/profilings/w_4_20000.txt"
+  - "./experiments/omp/profilings/w_8_28284.txt"
+  - "./experiments/omp/profilings/w_16_40000.txt"
+  - "./experiments/omp/profilings/w_32_56569.txt"
+  - "./experiments/omp/profilings/w_64_80000.txt"
+
+names_method:
+  - "1 Thread"
+  - "2 Threads"
+  - "4 Threads"
+  - "8 Threads"
+  - "16 Threads"
+  - "32 Threads"
+  - "64 Threads"
+
+baseline_idx: 0
+runs: 1
+save-path: "./reports/scaling/omp-weak/"
+is_strong: false
+is_weak: true
