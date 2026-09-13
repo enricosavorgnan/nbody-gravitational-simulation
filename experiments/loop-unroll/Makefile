@@ -88,35 +88,35 @@ test-auto-unroll: all-auto-unroll
 
 test-8-unroll: all-8-unroll
 	mkdir -p ./bins
-	mkdir -p ./bins/test-n-unroll/
+	mkdir -p ./bins/test-n-unroll-8/
 	mkdir -p ./profilings
-	mkdir -p ./profilings/test-n-unroll/
-	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
+	mkdir -p ./profilings/test-n-unroll-8/
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll-8.bin
 	for i in 1 2 3; do \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-8/n.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-8/r.txt ; \
+		./main --input ./bins/test-n-unroll-8.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll-8/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-8/n.txt ; \
+		./main --input ./bins/test-n-unroll-8.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll-8/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-8/r.txt ; \
 	done
 
-test-4-unroll: all-8-unroll
+test-4-unroll: all-4-unroll
 	mkdir -p ./bins
-	mkdir -p ./bins/test-n-unroll/
+	mkdir -p ./bins/test-n-unroll-4/
 	mkdir -p ./profilings
-	mkdir -p ./profilings/test-n-unroll/
-	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
+	mkdir -p ./profilings/test-n-unroll-4/
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll-4.bin
 	for i in 1 2 3; do \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-4/n.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-4/r.txt ; \
+		./main --input ./bins/test-n-unroll-4.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll-4/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-4/n.txt ; \
+		./main --input ./bins/test-n-unroll-4.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll-4/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-4/r.txt ; \
 	done
 
-test-2-unroll: all-8-unroll
+test-2-unroll: all-2-unroll
 	mkdir -p ./bins
-	mkdir -p ./bins/test-n-unroll/
+	mkdir -p ./bins/test-n-unroll-2/
 	mkdir -p ./profilings
-	mkdir -p ./profilings/test-n-unroll/
-	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll.bin
+	mkdir -p ./profilings/test-n-unroll-2/
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-n-unroll-2.bin
 	for i in 1 2 3; do \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-2/n.txt ; \
-		./main --input ./bins/test-n-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-2/r.txt ; \
+		./main --input ./bins/test-n-unroll-2.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll-2/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-2/n.txt ; \
+		./main --input ./bins/test-n-unroll-2.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-n-unroll-2/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-n-unroll-2/r.txt ; \
 	done
 
 clean:
@@ -124,10 +124,12 @@ clean:
 
 clean-folders:
 	rm -rf ./bins/test-auto-unroll/
-	rm -rf ./bins/test-n-unroll/
-	rm -rf ./bins/test-no-unroll/
+	rm -rf ./bins/test-n-unroll-8/
+	rm -rf ./bins/test-n-unroll-4/
+	rm -rf ./bins/test-n-unroll-2/
 	rm -rf ./profilings/test-auto-unroll/
-	rm -rf ./profilings/test-n-unroll/
-	rm -rf ./profilings/test-no-unroll/
+	rm -rf ./profilings/test-n-unroll-8/
+	rm -rf ./profilings/test-n-unroll-4/
+	rm -rf ./profilings/test-n-unroll-2/
 
 
