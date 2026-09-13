@@ -164,19 +164,13 @@ void drift (particles_t *p,       // particle positions are modified in place
 		   )
 {
   const size_t  n  = p->n;
-  dtype  *x  = p->x;
-  dtype  *y  = p->y;
-  dtype  *z  = p->z;
-  const dtype  *vx = p->vx;
-  const dtype  *vy = p->vy;
-  const dtype  *vz = p->vz;
-  size_t  i;
 
-  for (i = 0u; i < n; ++i)
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0u; i < n; ++i)
     {
-      x[i] += dt * vx[i];
-      y[i] += dt * vy[i];
-      z[i] += dt * vz[i];
+      p->x[i] += dt * p->vx[i];
+      p->y[i] += dt * p->vy[i];
+      p->z[i] += dt * p->vz[i];
     }
 }
 
@@ -187,20 +181,14 @@ void kick (particles_t *p,       // particle velocities are modified in place
                   dtype        dt       // full kick interval
 		  )
 {
-  size_t   n  = p->n;
-  dtype  * vx = p->vx;
-  dtype  * vy = p->vy;
-  dtype  * vz = p->vz;
-  dtype  * ax = p->ax;
-  dtype  * ay = p->ay;
-  dtype  * az = p->az;
-  size_t   i;
+  const size_t   n  = p->n;
 
-  for (i = 0u; i < n; ++i)
+  #pragma omp parallel for schedule(static)
+  for (size_t i = 0u; i < n; ++i)
     {
-      vx[i] += dt * ax[i];
-      vy[i] += dt * ay[i];
-      vz[i] += dt * az[i];
+      p->vx[i] += dt * p->ax[i];
+      p->vy[i] += dt * p->ay[i];
+      p->vz[i] += dt * p->az[i];
     }
 }
 
