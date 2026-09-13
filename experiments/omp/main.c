@@ -244,9 +244,11 @@ int main (int argc, char **argv)
         {
           dtype         kinetic;
           dtype         potential;
+          if (profiler_flag) { t0 = get_time();}
           const dtype   energy = total_energy (&particles, g, eps, &kinetic, &potential);
           const double  denom  = fmax (fabs ((double) energy0), (double) DTYPE_MIN_NORMAL);
           const double  rel    = fabs ((double) (energy - energy0)) / denom;
+          if (profiler_flag) { profiler.total_energy_time += (get_time() - t0);}
 
           if (rel > max_rel_drift)
             max_rel_drift = rel;
