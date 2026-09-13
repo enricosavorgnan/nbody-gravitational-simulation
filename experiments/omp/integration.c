@@ -23,13 +23,13 @@ void compute_accelerations_omp_br(const size_t  n,
     const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
     const dtype  eps2   = eps * eps;
 
-//     // Initialize accelerations to 0
-// #pragma omp parallel for schedule(static)
-//   for (size_t i = 0; i < n; ++i) {
-//     ax[i] = 0.0;
-//     ay[i] = 0.0;
-//     az[i] = 0.0;
-//   }
+    // Initialize accelerations to 0
+#pragma omp parallel for schedule(static)
+  for (size_t i = 0; i < n; ++i) {
+    ax[i] = 0.0;
+    ay[i] = 0.0;
+    az[i] = 0.0;
+  }
 
     // Loop over i-th blocks
     // Scheduler is static here because the total work is the same for all blocks
@@ -226,6 +226,7 @@ void compute_accelerations_omp_brt(const size_t  n,
     {
       const dtype eps2 = eps * eps;
       int num_threads = omp_get_max_threads();
+      printf("Number of threads: %d\n", num_threads);
 
       #pragma omp parallel for schedule(static)
       for (size_t i = 0; i < n; ++i) {
@@ -381,7 +382,7 @@ void compute_accelerations_omp_rt_red(const size_t  n,
   }
 
   // Dynamic scheduling with Automatic Array Reduction
-  #pragma omp parallel for schedule(dynamic, 128) reduction(+:ax[0:n], ay[0:n], az[0:n])
+  #pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
   for (size_t i = 0; i < n; ++i)
   {
     const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];

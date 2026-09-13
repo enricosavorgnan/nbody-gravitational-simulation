@@ -2,7 +2,7 @@ CC        ?= cc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -ffast-math -flto -fopenmp -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -ffast-math -flto -fopenmp -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=256 -DN_RSQRT_LOOP=1
 
 LDLIBS    ?= -lm
 PRECISION ?= double
@@ -63,7 +63,7 @@ test-br : all
 	mkdir -p ./profilings
 	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-br.bin
 	for i in 1 2 3; do \
-		./main --input ./bins/test-br.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obr.out --kernel "obr" --profiler 1  --profiler-path ./profilings/obr-2.txt ; \
+		./main --input ./bins/test-br.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obr.out --kernel "obrt" --profiler 1  --profiler-path ./profilings/obr-2.txt ; \
 	done
 
 clean:
