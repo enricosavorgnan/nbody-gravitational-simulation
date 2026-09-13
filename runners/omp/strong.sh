@@ -10,7 +10,7 @@ echo "Submitting OMP Strong Scaling Experiments (Fixed N = $PARTICLES)"
 for THREADS in 1 2 4 8 16 32 64; do
     echo "Submitting job for $THREADS OMP threads..."
 
-    PROFILER_FILE="./profilings/s_${THREADS}_prop.txt"
+    PROFILER_FILE="./profilings/s_${THREADS}_quiet.txt"
 
     # Submit the sbatch script, requesting 1 task but $THREADS cpus-per-task
     sbatch --ntasks=1 --cpus-per-task=$THREADS \

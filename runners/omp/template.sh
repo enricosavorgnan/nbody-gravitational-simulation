@@ -40,6 +40,6 @@ srun --cpus-per-task=1 ./generate_initial_conditions --model 0 --n $N_PARTICLES 
 
 echo "Starting simulation..."
 /usr/bin/time -a -o $PROFILER_FILE -f "\n--- OS Launch Time ---\nReal: %e seconds\nUser: %U seconds\nSys: %S seconds" \
-./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrt" --profiler 1 --profiler-path $PROFILER_FILE
+./main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 --output $OUTPUT_FILE --kernel "obrt" --profiler 1 --profiler-path $PROFILER_FILE --quiet
 
 echo "Done."
