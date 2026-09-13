@@ -7,7 +7,7 @@ STEPS=100
 echo "Submitting OMP Strong Scaling Experiments (Fixed N = $PARTICLES)"
 
 # Iterate through powers of 2 for OMP threads
-for THREADS in 1 2 4 8 16 32 64 128; do
+for THREADS in 1 2 4 8 16 32 64; do
     echo "Submitting job for $THREADS OMP threads..."
 
     PROFILER_FILE="./profilings/s_${THREADS}.txt"

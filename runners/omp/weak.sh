@@ -8,7 +8,7 @@ STEPS=100
 echo "Submitting OMP Weak Scaling Experiments (Base N = $N_BASE for 1 thread)"
 
 # Iterate through powers of 2 for OMP threads
-for THREADS in 1 2 4 8 16 32 64 128; do
+for THREADS in 1 2 4 8 16 32 64; do
 
     # Calculate N for this run: N = N_BASE * sqrt(THREADS)
     # We use awk to do the math and round to the nearest integer
