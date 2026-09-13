@@ -16,7 +16,7 @@ for THREADS in 1 2 4 8 16 32 64; do
 
     echo "Submitting job for $THREADS OMP threads (Particles = $CURRENT_N)..."
 
-    PROFILER_FILE="./profilings/w_${THREADS}_${CURRENT_N}.txt"
+    PROFILER_FILE="./profilings/w_${THREADS}_prop.txt"
 
     # Submit the sbatch script with the dynamically calculated N
     sbatch --ntasks=1 --cpus-per-task=$THREADS \
