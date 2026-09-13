@@ -240,7 +240,7 @@ int main (int argc, char **argv)
       if (profiler_flag) { profiler.total_step_time[step-1] = get_time() - t0;}
 
       // Get diagnostics, once in a while
-      if (((step % energy_every) == 0u) || (step == nsteps))
+      if (!quiet && ((step % energy_every) == 0u) || (step == nsteps))
         {
           dtype         kinetic;
           dtype         potential;
