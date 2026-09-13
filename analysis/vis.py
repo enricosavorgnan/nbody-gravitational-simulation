@@ -354,7 +354,8 @@ def plot_strong_scaling(
     ax.set_yticks(ranks)
     ax.set_yticklabels([str(r) for r in ranks])
     
-    ax.set_xlabel("MPI Ranks", fontsize=11, fontweight="bold")
+    label = "OMP Threads" if any("Thread" in n for n in names) else "MPI Ranks"
+    ax.set_xlabel(label, fontsize=11, fontweight="bold")
     ax.set_ylabel("Speedup", fontsize=11, fontweight="bold")
     ax.set_title(title or "Strong Scaling Speedup", fontsize=12, fontweight="bold", pad=12)
     ax.grid(True, which="both", linestyle="--", alpha=0.5)
@@ -389,7 +390,8 @@ def plot_weak_scaling(
     ax.set_xticks(ranks)
     ax.set_xticklabels([str(r) for r in ranks])
     
-    ax.set_xlabel("MPI Ranks", fontsize=11, fontweight="bold")
+    label = "OMP Threads" if any("Thread" in n for n in names) else "MPI Ranks"
+    ax.set_xlabel(label, fontsize=11, fontweight="bold")
     ax.set_ylabel("Efficiency (t_1 / t_n)", fontsize=11, fontweight="bold")
     ax.set_title(title or "Weak Scaling Efficiency", fontsize=12, fontweight="bold", pad=12)
     

@@ -104,7 +104,7 @@ def save(figs: List[Any], config: dict, save_path: str) -> str:
     os.makedirs(path, exist_ok=True)
 
     for i, fig in enumerate(figs):
-        fig.savefig(os.path.join(path, f"figure_{i}.png"), dpi=300)
+        fig.savefig(os.path.join(path, f"figure_{i}.png"), dpi=600)
 
     with open(os.path.join(path, "config.yaml"), "w", encoding="utf-8") as f:
         yaml.dump(config, f)

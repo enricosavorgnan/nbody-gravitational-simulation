@@ -178,7 +178,7 @@ def export_summary_markdown(experiments: List[Experiment], save_path: str, basel
             err_str = f"{exp.max_relative_error:.2e}" if exp.max_relative_error > 0 else "N/A"
             lines.append(
                 f"| **{exp.name}** | {format_time(exp.mean_force_time)} | {format_time(exp.std_force_time)} | "
-                f"**{exp.speedup:.2f}x** ± {exp.speedup_err:.2f} | {ipc_str} | {l1_str} | `{err_str}` |"
+                f"**{exp.speedup:.2f}x** ± {exp.speedup_err:.4f} | {ipc_str} | {l1_str} | `{err_str}` |"
             )
     else:
         lines.append("| Kernel / Method | Mean Force Time | Std | Median | Trimmed Mean (IQR) | Speedup | Max Rel Energy Drift |")
@@ -188,7 +188,7 @@ def export_summary_markdown(experiments: List[Experiment], save_path: str, basel
             lines.append(
                 f"| **{exp.name}** | {format_time(exp.mean_force_time)} | {format_time(exp.std_force_time)} | "
                 f"{format_time(exp.median_force_time)} | {format_time(exp.trimmed_mean_force_time)} | "
-                f"**{exp.speedup:.2f}x** ± {exp.speedup_err:.2f} | `{err_str}` |"
+                f"**{exp.speedup:.2f}x** ± {exp.speedup_err:.4f} | `{err_str}` |"
             )
 
     lines.append("\n")

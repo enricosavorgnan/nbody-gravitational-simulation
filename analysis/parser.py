@@ -101,6 +101,7 @@ KNOWN_HEADERS = {
     "Second Drift",
     "--- Configuration ---",
     "--- OS / MPI Launch Time ---",
+    "--- OS Launch Time ---",
     "PAPI Cycles",
     "PAPI Instructions",
     "PAPI L1 Misses",
@@ -136,10 +137,14 @@ def _parse_raw_runs(file_path: str) -> List[Dict[str, List[str]]]:
         stripped = line.strip()
         if stripped in KNOWN_HEADERS:
             if stripped in current_run:
-                # Encountered a header already in current_run -> start of new run
-                flush_section()
-                raw_runs.append(current_run)
-                current_run = {}
+                if "Launch Time" in stripped:
+                    # Ignore duplicate Launch Times from failed runs, just overwrite
+                    current_run[stripped] = []
+                else:
+                    # Encountered a header already in current_run -> start of new run
+                    flush_section()
+                    raw_runs.append(current_run)
+                    current_run = {}
             else:
                 flush_section()
             current_header = stripped
@@ -207,7 +212,11 @@ def parse_experiment(
         raw_runs = raw_runs[-max_runs:]
 
     parsed_runs: List[RunData] = []
-    for idx, r in enumerate(raw_runs):
+    valid_idx = 0
+    for r in raw_runs:
+        if "Compute Force" not in r:
+            continue
+
         force_time = _to_float_array(r.get("Compute Force", []))
         step_time = _to_float_array(r.get("Total Step", []))
         first_drift = _to_float_array(r.get("First Drift", []))
@@ -222,7 +231,7 @@ def parse_experiment(
         cfg = _parse_config(r.get("--- Configuration ---", []))
         
         # Parse MPI Launch Time
-        launch_lines = r.get("--- OS / MPI Launch Time ---", [])
+        launch_lines = r.get("--- OS / MPI Launch Time ---", r.get("--- OS Launch Time ---", []))
         real_time = 0.0
         user_time = 0.0
         sys_time = 0.0
@@ -245,7 +254,7 @@ def parse_experiment(
 
         parsed_runs.append(
             RunData(
-                run_idx=idx,
+                run_idx=valid_idx,
                 force_time=force_time,
                 step_time=step_time,
                 first_drift_time=first_drift,
@@ -261,6 +270,10 @@ def parse_experiment(
                 papi=papi_data,
             )
         )
+        valid_idx += 1
+
+    if not parsed_runs:
+        raise ValueError(f"No valid 'Compute Force' data found in {file_path}")
 
     n_runs = len(parsed_runs)
     n_steps = len(parsed_runs[0].force_time)
