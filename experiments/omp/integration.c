@@ -23,17 +23,17 @@ void compute_accelerations_omp_br(const size_t  n,
     const size_t blocks = (n + BLOCK_SIZE - 1) / BLOCK_SIZE;
     const dtype  eps2   = eps * eps;
 
-    // Initialize accelerations to 0
-#pragma omp parallel for schedule(static)
-  for (size_t i = 0; i < n; ++i) {
-    ax[i] = 0.0;
-    ay[i] = 0.0;
-    az[i] = 0.0;
-  }
+//     // Initialize accelerations to 0
+// #pragma omp parallel for schedule(static)
+//   for (size_t i = 0; i < n; ++i) {
+//     ax[i] = 0.0;
+//     ay[i] = 0.0;
+//     az[i] = 0.0;
+//   }
 
     // Loop over i-th blocks
     // Scheduler is static here because the total work is the same for all blocks
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static, BLOCK_SIZE)
   for (size_t b_i = 0; b_i < blocks; b_i++)
   {
     const size_t i_start = b_i * BLOCK_SIZE;

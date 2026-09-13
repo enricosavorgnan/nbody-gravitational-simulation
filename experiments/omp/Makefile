@@ -57,6 +57,15 @@ test-omp : all
 	  	./main --input ./bins/test-omp.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obrtr.out --kernel "obrtr" --profiler 1  --profiler-path ./profilings/obrtr.txt ; \
 	done
 
+
+test-br : all
+	mkdir -p ./bins
+	mkdir -p ./profilings
+	./generate_initial_conditions --model 0 --n 100000 --seed 42 --output ./bins/test-br.bin
+	for i in 1 2 3; do \
+		./main --input ./bins/test-br.bin --nsteps 100 --dt 1e-4 --eps 0.05 --energy-every 100 --output ./bins/obr.out --kernel "obr" --profiler 1  --profiler-path ./profilings/obr-2.txt ; \
+	done
+
 clean:
 	rm -f $(PROGRAMS) *.o *.bin
 
