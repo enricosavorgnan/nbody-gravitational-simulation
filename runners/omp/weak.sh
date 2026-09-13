@@ -2,7 +2,7 @@
 
 # Fixed parameters for Weak Scaling
 # N_BASE is the number of particles for a SINGLE thread
-N_BASE=100000
+N_BASE=10000
 STEPS=100
 
 echo "Submitting OMP Weak Scaling Experiments (Base N = $N_BASE for 1 thread)"
