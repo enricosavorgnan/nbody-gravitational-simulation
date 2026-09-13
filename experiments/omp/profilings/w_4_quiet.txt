@@ -1,0 +1,6 @@
+Command exited with non-zero status 126
+
+--- OS Launch Time ---
+Real: 0.00 seconds
+User: 0.00 seconds
+Sys: 0.00 seconds
