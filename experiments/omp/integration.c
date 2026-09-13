@@ -146,7 +146,7 @@ void compute_accelerations_omp_rt(const size_t  n,          // number of particl
         // The scheduler is here dynamic because there is a strong unbalance between the first and the
         // last iterations due to the triangularity of the workloads.
         // The chunk size is set to block_size, so that each thread works on a contiguous block of data.
-        #pragma omp for schedule(dynamic, BLOCK_SIZE)
+        #pragma omp for schedule(dynamic, 128)
         for (size_t i = 0; i < n; ++i)
         {
           const dtype xi = x[i];
@@ -381,7 +381,7 @@ void compute_accelerations_omp_rt_red(const size_t  n,
   }
 
   // Dynamic scheduling with Automatic Array Reduction
-  #pragma omp parallel for schedule(dynamic, BLOCK_SIZE) reduction(+:ax[0:n], ay[0:n], az[0:n])
+  #pragma omp parallel for schedule(dynamic, 128) reduction(+:ax[0:n], ay[0:n], az[0:n])
   for (size_t i = 0; i < n; ++i)
   {
     const dtype xi = x[i]; const dtype yi = y[i]; const dtype zi = z[i];
