@@ -403,3 +403,61 @@ def plot_weak_scaling(
     
     fig.tight_layout()
     return fig
+
+
+def plot_time_proportions(
+    experiments: List[Experiment],
+    title: Optional[str] = None,
+) -> plt.Figure:
+    """
+    Plots a stacked bar chart of the time proportions per step:
+    Compute Force, Integration (Drift + Kick), and Communication/Overhead.
+    """
+    names = [e.name for e in experiments]
+    n = len(names)
+    
+    force_times = np.array([e.mean_force_time for e in experiments])
+    drift_kick_times = np.array([e.mean_drift_time + e.mean_kick_time for e in experiments])
+    step_times = np.array([e.mean_step_time for e in experiments])
+    
+    # Overhead includes Communication Wait times and Thread forking
+    overhead_times = step_times - (force_times + drift_kick_times)
+    # Clamp to 0 just in case floating point drift causes tiny negatives
+    overhead_times = np.maximum(overhead_times, 0.0)
+    
+    # Calculate percentages
+    total = force_times + drift_kick_times + overhead_times
+    # Avoid division by zero
+    total = np.where(total == 0, 1e-9, total)
+    
+    force_pct = (force_times / total) * 100
+    dk_pct = (drift_kick_times / total) * 100
+    over_pct = (overhead_times / total) * 100
+    
+    fig, ax = plt.subplots(figsize=(max(8, n * 0.9), 6), dpi=300)
+    
+    x = range(n)
+    width = 0.65
+    
+    p1 = ax.bar(x, force_pct, width, label='Compute Force', color='#2563EB', edgecolor='white', linewidth=0.5)
+    p2 = ax.bar(x, dk_pct, width, bottom=force_pct, label='Integration (Drift+Kick)', color='#10B981', edgecolor='white', linewidth=0.5)
+    p3 = ax.bar(x, over_pct, width, bottom=force_pct + dk_pct, label='Communication / Overhead', color='#DC2626', edgecolor='white', linewidth=0.5)
+    
+    ax.set_ylabel("Proportion of Step Time (%)", fontsize=11, fontweight="bold")
+    ax.set_title(title or "Algorithm Time Area Proportions", fontsize=12, fontweight="bold", pad=12)
+    ax.set_xticks(x)
+    ax.set_xticklabels(names, rotation=30 if n > 5 else 0, ha="right" if n > 5 else "center")
+    
+    # Optional: Add text labels for segments > 5%
+    for i in range(n):
+        if force_pct[i] > 5:
+            ax.text(i, force_pct[i]/2, f"{force_pct[i]:.1f}%", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
+        if over_pct[i] > 5:
+            ax.text(i, force_pct[i] + dk_pct[i] + over_pct[i]/2, f"{over_pct[i]:.1f}%", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
+            
+    ax.set_ylim(0, 100)
+    ax.legend(loc='upper right', bbox_to_anchor=(1.0, 1.05), framealpha=0.9, fontsize=9)
+    ax.grid(axis='y', linestyle='--', alpha=0.3)
+    
+    fig.tight_layout()
+    return fig
