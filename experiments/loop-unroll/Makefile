@@ -44,7 +44,7 @@ all-2-unroll: UNROLL=2
 all-auto-unroll: UNROLL=-1
 all-no-unroll: UNROLL=0
 
-all-n-unroll all-auto-unroll all-no-unroll: all
+all-n-unroll all-auto-unroll all-no-unroll all-2-unroll all-4-unroll all-8-unroll: all
 
 
 main: $(NBODY_OBJS)
