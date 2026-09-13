@@ -81,8 +81,6 @@ test-auto-unroll: all-auto-unroll
 	for i in 1; do \
 		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "n" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/n.txt ; \
 		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "t" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/t.txt ; \
-		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "r" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/r.txt ; \
-		./main --input ./bins/test-auto-unroll.bin --nsteps 10 --dt 1e-4 --eps 0.05 --energy-every 10 --output ./bins/test-auto-unroll/n.out --kernel "rt" --profiler 1 --papi 1 --profiler-path ./profilings/test-auto-unroll/rt.txt ; \
 	done
 
 
