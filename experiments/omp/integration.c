@@ -662,6 +662,7 @@ dtype potential_energy_naive (particles_t *p,        // particle positions are r
   size_t        i;
   size_t        j;
 
+#pragma omp parallel for reduction(-:sum)
   for (i = 0u; i < n; ++i)
     {
       dtype  xi = p->x[i];
