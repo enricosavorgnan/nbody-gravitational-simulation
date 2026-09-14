@@ -10,7 +10,7 @@ echo "Submitting Strong Scaling Experiments (Fixed N = $PARTICLES)"
 for RANKS in 1 2 4 8 16 32 64 128; do
     echo "Submitting job for $RANKS MPI ranks..."
 
-    PROFILER_FILE="./profilings/s_${RANKS}.txt"
+    PROFILER_FILE="./profilings/s_${RANKS}_vec.txt"
 
     # Submit the sbatch script, requesting $RANKS tasks, and passing our variables
     sbatch --ntasks=$RANKS \
