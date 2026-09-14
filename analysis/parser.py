@@ -27,6 +27,7 @@ class RunData:
     file_read: float = 0.0
     file_write: float = 0.0
     total_run: float = 0.0
+    total_run_time: float = 0.0
     mpi_real_time: float = 0.0
     mpi_user_time: float = 0.0
     mpi_sys_time: float = 0.0
@@ -53,6 +54,7 @@ class Experiment:
     # Aggregate timing statistics for Compute Force (per step)
     mean_force_time: float
     std_force_time: float
+    trimmed_std_force_time: float
     median_force_time: float
     trimmed_mean_force_time: float
     min_force_time: float
@@ -61,6 +63,9 @@ class Experiment:
     # Total step time
     mean_step_time: float
     std_step_time: float
+    trimmed_std_step_time: float
+    median_step_time: float
+    trimmed_mean_step_time: float
 
     # Drift & Kick times
     mean_drift_time: float
@@ -70,6 +75,7 @@ class Experiment:
     mean_mpi_real_time: float
     mean_mpi_user_time: float
     mean_mpi_sys_time: float
+    mean_total_run_time: float
 
     # PAPI metrics
     papi_matrices: Dict[str, np.ndarray]
@@ -313,11 +319,12 @@ def parse_experiment(
         overall_std_force = float(np.std(force_mat[0])) if n_steps > 1 else 0.0
 
     overall_median_force = float(np.median(force_mat))
-    # 25%-75% Interquartile trimmed mean
-    q25 = np.percentile(force_mat, 25)
-    q75 = np.percentile(force_mat, 75)
-    in_iqr = force_mat[(force_mat >= q25) & (force_mat <= q75)]
+    # 2%-98% Interquartile trimmed mean
+    q2 = np.percentile(force_mat, 2)
+    q98 = np.percentile(force_mat, 98)
+    in_iqr = force_mat[(force_mat >= q2) & (force_mat <= q98)]
     overall_trimmed_mean = float(np.mean(in_iqr)) if len(in_iqr) else overall_mean_force
+    overall_trimmed_std = float(np.std(in_iqr, ddof=1)) if len(in_iqr) > 1 else overall_std_force
 
     min_force = float(np.min(force_mat))
     max_force = float(np.max(force_mat))
@@ -326,6 +333,13 @@ def parse_experiment(
     run_mean_steps = np.mean(step_mat, axis=1) if n_steps > 0 else np.zeros(n_runs)
     overall_mean_step = float(np.mean(run_mean_steps))
     overall_std_step = float(np.std(run_mean_steps, ddof=1)) if n_runs > 1 else float(np.std(step_mat[0]))
+    
+    overall_median_step = float(np.median(step_mat))
+    q2_s = np.percentile(step_mat, 2)
+    q98_s = np.percentile(step_mat, 98)
+    in_iqr_s = step_mat[(step_mat >= q2_s) & (step_mat <= q98_s)]
+    overall_trimmed_step = float(np.mean(in_iqr_s)) if len(in_iqr_s) else overall_mean_step
+    overall_trimmed_std_step = float(np.std(in_iqr_s, ddof=1)) if len(in_iqr_s) > 1 else overall_std_step
 
     mean_drift = float(np.mean(drift1_mat + drift2_mat))
     mean_kick = float(np.mean(kick_mat))
@@ -334,6 +348,7 @@ def parse_experiment(
     mean_mpi_real = float(np.mean([r.mpi_real_time for r in parsed_runs]))
     mean_mpi_user = float(np.mean([r.mpi_user_time for r in parsed_runs]))
     mean_mpi_sys = float(np.mean([r.mpi_sys_time for r in parsed_runs]))
+    mean_total_run_time = float(np.mean([r.total_run for r in parsed_runs]))
 
     # PAPI statistics
     papi_means: Dict[str, float] = {}
@@ -369,17 +384,22 @@ def parse_experiment(
         second_drift_matrix=drift2_mat,
         mean_force_time=overall_mean_force,
         std_force_time=overall_std_force,
+        trimmed_std_force_time=overall_trimmed_std,
         median_force_time=overall_median_force,
         trimmed_mean_force_time=overall_trimmed_mean,
         min_force_time=min_force,
         max_force_time=max_force,
         mean_step_time=overall_mean_step,
         std_step_time=overall_std_step,
+        trimmed_std_step_time=overall_trimmed_std_step,
+        median_step_time=overall_median_step,
+        trimmed_mean_step_time=overall_trimmed_step,
         mean_drift_time=mean_drift,
         mean_kick_time=mean_kick,
         mean_mpi_real_time=mean_mpi_real,
         mean_mpi_user_time=mean_mpi_user,
         mean_mpi_sys_time=mean_mpi_sys,
+        mean_total_run_time=mean_total_run_time,
         papi_matrices=papi_matrices,
         papi_means=papi_means,
         papi_stds=papi_stds,
@@ -407,13 +427,12 @@ def load_all_experiments(
 
     # Compute speedup relative to baseline
     base = experiments[baseline_idx]
-    t_base = base.mean_force_time
-    s_base = base.std_force_time
-    t_base_mpi = base.mean_mpi_real_time
+    t_base = getattr(base, 'trimmed_mean_force_time', base.mean_force_time)
+    s_base = getattr(base, 'trimmed_std_force_time', base.std_force_time)
 
     for exp in experiments:
-        t_exp = exp.mean_force_time
-        s_exp = exp.std_force_time
+        t_exp = getattr(exp, 'trimmed_mean_force_time', exp.mean_force_time)
+        s_exp = getattr(exp, 'trimmed_std_force_time', exp.std_force_time)
         if t_exp > 0:
             sp = t_base / t_exp
             # Error propagation: delta S = S * sqrt((s_exp/t_exp)^2 + (s_base/t_base)^2)
@@ -425,8 +444,9 @@ def load_all_experiments(
             exp.speedup = 0.0
             exp.speedup_err = 0.0
 
-        if exp.mean_mpi_real_time > 0:
-            exp.scaling_speedup = t_base_mpi / exp.mean_mpi_real_time
+        # Base scaling speedup on the Trimmed Step Time to purge OS jitter and cold-start outliers
+        if getattr(exp, 'trimmed_mean_step_time', exp.mean_step_time) > 0:
+            exp.scaling_speedup = getattr(base, 'trimmed_mean_step_time', base.mean_step_time) / getattr(exp, 'trimmed_mean_step_time', exp.mean_step_time)
         else:
             exp.scaling_speedup = 0.0
 

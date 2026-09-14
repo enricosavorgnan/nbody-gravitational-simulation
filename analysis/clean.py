@@ -28,6 +28,7 @@ from analysis.vis import (
     plot_step_trajectories,
     plot_strong_scaling,
     plot_weak_scaling,
+    plot_time_proportions,
     save_all_plots,
 )
 
@@ -162,6 +163,8 @@ def run_analysis(config: dict) -> None:
         figs["strong_scaling"] = plot_strong_scaling(experiments)
     if config.get("is_weak", False):
         figs["weak_scaling"] = plot_weak_scaling(experiments)
+    if config.get("do_proportion_time", False):
+        figs["time_proportions"] = plot_time_proportions(experiments)
 
     # 4. Save Plots and Config Copy
     saved_plots = save_all_plots(figs, save_path)
@@ -181,6 +184,7 @@ def main():
     parser.add_argument("--runs", type=int, default=None, help="Override number of runs to extract (defaults to config)")
     parser.add_argument("--baseline", type=int, default=None, help="Override baseline index (defaults to config)")
     parser.add_argument("--save-path", type=str, default=None, help="Override plot save path (defaults to config)")
+    parser.add_argument("--do-proportion-time", action="store_true", help="Generate a stacked bar chart of time proportions")
 
     args = parser.parse_args()
 
@@ -197,6 +201,8 @@ def main():
         cfg["baseline_idx"] = args.baseline
     if args.save_path is not None:
         cfg["save-path"] = args.save_path
+    if args.do_proportion_time:
+        cfg["do_proportion_time"] = True
 
     run_analysis(cfg)
 
