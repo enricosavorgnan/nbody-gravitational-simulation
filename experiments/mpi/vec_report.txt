@@ -1,0 +1,1805 @@
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 32 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:602:14: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:606:14: optimized: basic block part vectorized using 8 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+imized: basic block part vectorized using 8 byte vectors
+generate_initial_conditions.c:602:14: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:606:14: optimized: basic block part vectorized using 8 byte vectors
+generate_initial_conditions.c:602:14: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:606:14: optimized: basic block part vectorized using 8 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:544:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:537:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:530:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:523:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:516:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:509:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:602:14: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:606:14: optimized: basic block part vectorized using 8 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 32 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:602:14: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:606:14: optimized: basic block part vectorized using 8 byte vectors
+utils.c:167:20: note: ***** Analysis failed with vector mode V8DF
+utils.c:167:20: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V8DF
+integration.c:95:6: note: vectorized 0 loops in function.
+integration.c:95:6: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br_cross._omp_fn.0, &.omp_data_o.12, 0, 0);
+integration.c:114:11: note: ***** Analysis succeeded with vector mode V8DF
+integration.c:114:11: note: SLPing BB part
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x74a82f8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_n = local_n_3(D);
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_n = local_n_3(D);
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.visit_n = visit_n_5(D);
+integration.c:114:11: note: 	children 0x74a8378
+integration.c:114:11: note: node (external) 0x74a8378 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ local_n_3(D), visit_n_5(D) }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 32
+  Scalar cost: 32
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x74a83f8 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:114:11: note: op template: .omp_data_o.12.g = g_33(D);
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.g = g_33(D);
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.mass = mass_31(D);
+integration.c:114:11: note: 	children 0x74a8478
+integration.c:114:11: note: node (external) 0x74a8478 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:114:11: note: 	{ g_33(D), mass_31(D) }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x74a8578 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_x = local_x_29(D);
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_x = local_x_29(D);
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.local_y = local_y_27(D);
+integration.c:114:11: note: 	stmt 2 .omp_data_o.12.local_z = local_z_25(D);
+integration.c:114:11: note: 	stmt 3 .omp_data_o.12.visit_x = visit_x_23(D);
+integration.c:114:11: note: 	stmt 4 .omp_data_o.12.visit_y = visit_y_21(D);
+integration.c:114:11: note: 	stmt 5 .omp_data_o.12.visit_z = visit_z_19(D);
+integration.c:114:11: note: 	stmt 6 .omp_data_o.12.ax = ax_17(D);
+integration.c:114:11: note: 	stmt 7 .omp_data_o.12.ay = ay_15(D);
+integration.c:114:11: note: 	children 0x74a85f8
+integration.c:114:11: note: node (external) 0x74a85f8 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: 	{ local_x_29(D), local_y_27(D), local_z_25(D), visit_x_23(D), visit_y_21(D), visit_z_19(D), ax_17(D), ay_15(D) }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 160
+  Scalar cost: 128
+integration.c:114:11: missed: not vectorized: vectorization is not profitable.
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x74a8678 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.blocks_i = blocks_i_4;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.blocks_i = blocks_i_4;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.blocks_j = blocks_j_6;
+integration.c:114:11: note: 	children 0x74a86f8
+integration.c:114:11: note: node 0x74a86f8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: blocks_i_4 = _1 >> 7;
+integration.c:114:11: note: 	stmt 0 blocks_i_4 = _1 >> 7;
+integration.c:114:11: note: 	stmt 1 blocks_j_6 = _2 >> 7;
+integration.c:114:11: note: 	children 0x74a8778 0x74a88f8
+integration.c:114:11: note: node 0x74a8778 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:114:11: note: op template: _1 = local_n_3(D) + 127;
+integration.c:114:11: note: 	stmt 0 _1 = local_n_3(D) + 127;
+integration.c:114:11: note: 	stmt 1 _2 = visit_n_5(D) + 127;
+integration.c:114:11: note: 	children 0x74a87f8 0x74a8878
+integration.c:114:11: note: node (external) 0x74a87f8 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ local_n_3(D), visit_n_5(D) }
+integration.c:114:11: note: node (constant) 0x74a8878 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ 127, 127 }
+integration.c:114:11: note: node (constant) 0x74a88f8 (max_nunits=1, refcnt=1)
+integration.c:114:11: note: 	{ 7, 7 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 60
+  Scalar cost: 48
+integration.c:114:11: missed: not vectorized: vectorization is not profitable.
+integration.c:114:11: note: Basic block will be vectorized using SLP
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x74a82f8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_n = local_n_3(D);
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_n = local_n_3(D);
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.visit_n = visit_n_5(D);
+integration.c:114:11: note: 	children 0x74a8378
+integration.c:114:11: note: node (external) 0x74a8378 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ local_n_3(D), visit_n_5(D) }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.local_n = local_n_3(D);
+integration.c:114:11: note: vect_is_simple_use: operand visit_n_5(D), type of def: external
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.local_n
+integration.c:114:11: note: created &.omp_data_o.12
+integration.c:114:11: note: add new stmt: MEM <const vector(2) long unsigned int> [(long unsigned int *)&.omp_data_o.12] = _53;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x74a83f8 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:114:11: note: op template: .omp_data_o.12.g = g_33(D);
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.g = g_33(D);
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.mass = mass_31(D);
+integration.c:114:11: note: 	children 0x74a8478
+integration.c:114:11: note: node (external) 0x74a8478 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:114:11: note: 	{ g_33(D), mass_31(D) }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.g = g_33(D);
+integration.c:114:11: note: vect_is_simple_use: operand mass_31(D), type of def: external
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) double  vectorizing a pointer ref: .omp_data_o.12.g
+integration.c:114:11: note: created &.omp_data_o.12.g
+integration.c:114:11: note: add new stmt: MEM <const vector(2) double> [(double *)&.omp_data_o.12 + 16B] = _55;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: note: ***** The result for vector mode V64QI would be the same
+integration.c:171:11: missed: couldn't vectorize loop
+integration.c:171:11: missed: not vectorized: no vectype for stmt: _24 = *_23;
+ scalar_type: dtype
+integration.c:168:9: note: vectorized 0 loops in function.
+integration.c:173:15: note: ***** Analysis failed with vector mode V8DI
+integration.c:173:15: note: ***** The result for vector mode V64QI would be the same
+integration.c:173:15: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:173:15: note: ***** Analysis failed with vector mode V32QI
+integration.c:173:15: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:173:15: note: ***** Analysis failed with vector mode V16QI
+integration.c:173:15: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:173:15: note: ***** Analysis failed with vector mode V8QI
+integration.c:173:15: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:173:15: note: ***** Analysis failed with vector mode V4QI
+integration.c:228:11: note: vectorized 0 loops in function.
+integration.c:228:11: missed: splitting region at dont-vectorize loop 2 entry at bb11
+integration.c:231:14: missed: statement clobbers memory: __builtin_memset (_104, 0, _102);
+integration.c:232:14: missed: statement clobbers memory: __builtin_memset (_108, 0, _106);
+integration.c:233:14: missed: statement clobbers memory: __builtin_memset (_112, 0, _110);
+integration.c:228:11: note: ***** Analysis failed with vector mode V8DI
+integration.c:228:11: note: ***** The result for vector mode V64QI would be the same
+integration.c:228:11: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:228:11: note: ***** Analysis failed with vector mode V32QI
+integration.c:228:11: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:228:11: note: ***** Analysis failed with vector mode V16QI
+integration.c:228:11: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:228:11: note: ***** Analysis failed with vector mode V8QI
+integration.c:228:11: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:228:11: note: ***** Analysis failed with vector mode V4QI
+integration.c:228:11: missed: splitting region at dominance boundary bb3
+integration.c:228:11: note: ***** Analysis failed with vector mode VOID
+integration.c:228:11: note: ***** Analysis failed with vector mode VOID
+integration.c:189:12: missed: couldn't vectorize loop
+integration.c:189:12: missed: not vectorized: no vectype for stmt: _24 = *_23;
+ scalar_type: dtype
+integration.c:186:11: note: vectorized 0 loops in function.
+integration.c:191:16: note: ***** Analysis failed with vector mode V8DI
+integration.c:191:16: note: ***** The result for vector mode V64QI would be the same
+integration.c:191:16: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:191:16: note: ***** Analysis failed with vector mode V32QI
+integration.c:191:16: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:191:16: note: ***** Analysis failed with vector mode V16QI
+integration.c:191:16: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:191:16: note: ***** Analysis failed with vector mode V8QI
+integration.c:191:16: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:191:16: note: ***** Analysis failed with vector mode V4QI
+integration.c:117:18: missed: couldn't vectorize loop
+integration.c:117:18: missed: not vectorized: unsupported control flow in loop.
+integration.c:120:30: missed: couldn't vectorize loop
+integration.c:120:30: missed: not vectorized: unsupported control flow in loop.
+integration.c:125:34: missed: couldn't vectorize loop
+integration.c:125:34: missed: not vectorized: unsupported control flow in loop.
+integration.c:133:9: optimized: loop vectorized using 64 byte vectors
+integration.c:133:9: optimized: loop vectorized using 32 byte vectors
+integration.c:114:11: note: vectorized 1 loops in function.
+integration.c:145:43: note: ***** Analysis failed with vector mode V8DI
+integration.c:145:43: note: ***** The result for vector mode V64QI would be the same
+integration.c:145:43: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:145:43: note: ***** Analysis failed with vector mode V32QI
+integration.c:145:43: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:145:43: note: ***** Analysis failed with vector mode V16QI
+integration.c:145:43: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:145:43: note: ***** Analysis failed with vector mode V8QI
+integration.c:145:43: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:145:43: note: ***** Analysis failed with vector mode V4QI
+integration.c:26:9: note: vectorized 0 loops in function.
+integration.c:26:9: missed: splitting region at dont-vectorize loop 2 entry at bb11
+integration.c:28:11: missed: statement clobbers memory: __builtin_memset (_103, 0, _101);
+integration.c:29:11: missed: statement clobbers memory: __builtin_memset (_107, 0, _105);
+integration.c:30:11: missed: statement clobbers memory: __builtin_memset (_111, 0, _109);
+integration.c:26:9: note: ***** Analysis failed with vector mode V8DI
+integration.c:26:9: note: ***** The result for vector mode V64QI would be the same
+integration.c:26:9: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:26:9: note: ***** Analysis failed with vector mode V32QI
+integration.c:26:9: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:26:9: note: ***** Analysis failed with vector mode V16QI
+integration.c:26:9: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:26:9: note: ***** Analysis failed with vector mode V8QI
+integration.c:26:9: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:26:9: note: ***** Analysis failed with vector mode V4QI
+integration.c:26:9: missed: splitting region at dominance boundary bb3
+integration.c:26:9: note: ***** Analysis failed with vector mode VOID
+integration.c:26:9: note: ***** Analysis failed with vector mode VOID
+integration.c:36:18: missed: couldn't vectorize loop
+integration.c:36:18: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+integration.c:51:30: missed: couldn't vectorize loop
+integration.c:51:30: missed: not vectorized: unsupported control flow in loop.
+integration.c:56:34: missed: couldn't vectorize loop
+integration.c:56:34: missed: not vectorized: unsupported control flow in loop.
+integration.c:66:36: optimized: loop vectorized using 64 byte vectors
+integration.c:66:36: optimized: loop vectorized using 32 byte vectors
+integration.c:33:9: note: vectorized 1 loops in function.
+integration.c:33:9: missed: splitting region at dont-vectorize loop 8 entry at bb43
+integration.c:46:19: missed: statement clobbers memory: __builtin_memset (&block_ax, 0, _313);
+integration.c:47:19: missed: statement clobbers memory: __builtin_memset (&block_ay, 0, _312);
+integration.c:48:19: missed: statement clobbers memory: __builtin_memset (&block_az, 0, _311);
+integration.c:88:23: missed: statement clobbers memory: __builtin_memcpy (_247, &block_ax, _249);
+integration.c:89:23: missed: statement clobbers memory: __builtin_memcpy (_244, &block_ay, _246);
+integration.c:90:23: missed: statement clobbers memory: __builtin_memcpy (_241, &block_az, _243);
+integration.c:33:9: note: ***** Analysis failed with vector mode V8DI
+integration.c:33:9: note: ***** The result for vector mode V64QI would be the same
+integration.c:33:9: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:33:9: note: ***** Analysis failed with vector mode V32QI
+integration.c:33:9: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:33:9: note: ***** Analysis failed with vector mode V16QI
+integration.c:33:9: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:33:9: note: ***** Analysis failed with vector mode V8QI
+integration.c:33:9: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:33:9: note: ***** Analysis failed with vector mode V4QI
+integration.c:33:9: missed: splitting region at dominance boundary bb10
+integration.c:33:9: note: ***** Analysis failed with vector mode VOID
+integration.c:33:9: missed: splitting region at loop 1 exit at bb34
+integration.c:33:9: note: ***** Analysis failed with vector mode VOID
+integration.c:33:9: missed: splitting region at dominance boundary bb3
+integration.c:33:9: note: ***** Analysis failed with vector mode VOID
+integration.c:33:9: note: ***** Analysis failed with vector mode VOID
+integration.c:357:26: missed: couldn't vectorize loop
+integration.c:357:26: missed: not vectorized: inner-loop count not invariant.
+integration.c:357:26: missed: couldn't vectorize loop
+integration.c:359:29: missed: not vectorized: no vectype for stmt: _140 = *_139;
+ scalar_type: dtype
+integration.c:321:18: missed: couldn't vectorize loop
+integration.c:323:50: missed: not vectorized: no vectype for stmt: _99 = *_98;
+ scalar_type: dtype
+integration.c:390:7: note: vectorized 0 loops in function.
+integration.c:394:3: missed: statement clobbers memory: MPI_Reduce (&local_kinetic, &global_kinetic, 1, &ompi_mpi_double, &ompi_mpi_op_sum, 0, &ompi_mpi_comm_world);
+integration.c:407:3: missed: statement clobbers memory: MPI_Gather (_179, _327, &ompi_mpi_double, 0B, _327, &ompi_mpi_double, 0, &ompi_mpi_comm_world);
+integration.c:408:3: missed: statement clobbers memory: MPI_Gather (_183, _182, &ompi_mpi_double, 0B, _182, &ompi_mpi_double, 0, &ompi_mpi_comm_world);
+integration.c:409:3: missed: statement clobbers memory: MPI_Gather (_187, _186, &ompi_mpi_double, 0B, _186, &ompi_mpi_double, 0, &ompi_mpi_comm_world);
+integration.c:401:16: missed: statement clobbers memory: global_x_36 = malloc (_5);
+integration.c:402:16: missed: statement clobbers memory: global_y_38 = malloc (_5);
+integration.c:403:16: missed: statement clobbers memory: global_z_40 = malloc (_5);
+integration.c:407:3: missed: statement clobbers memory: MPI_Gather (_76, _327, &ompi_mpi_double, global_x_36, _327, &ompi_mpi_double, 0, &ompi_mpi_comm_world);
+integration.c:408:3: missed: statement clobbers memory: MPI_Gather (_1, _51, &ompi_mpi_double, global_y_38, _51, &ompi_mpi_double, 0, &ompi_mpi_comm_world);
+integration.c:409:3: missed: statement clobbers memory: MPI_Gather (_171, _170, &ompi_mpi_double, global_z_40, _170, &ompi_mpi_double, 0, &ompi_mpi_comm_world);
+integration.c:421:5: missed: statement clobbers memory: free (global_x_36);
+integration.c:421:21: missed: statement clobbers memory: free (global_y_38);
+integration.c:421:37: missed: statement clobbers memory: free (global_z_40);
+integration.c:427:25: note: ***** Analysis failed with vector mode V8DI
+integration.c:427:25: note: ***** The result for vector mode V64QI would be the same
+integration.c:427:25: note: ***** Re-trying analysis with vector mode V32QI
+integration.c:427:25: note: ***** Analysis failed with vector mode V32QI
+integration.c:427:25: note: ***** Re-trying analysis with vector mode V16QI
+integration.c:427:25: note: ***** Analysis failed with vector mode V16QI
+integration.c:427:25: note: ***** Re-trying analysis with vector mode V8QI
+integration.c:427:25: note: ***** Analysis failed with vector mode V8QI
+integration.c:427:25: note: ***** Re-trying analysis with vector mode V4QI
+integration.c:427:25: note: ***** Analysis failed with vector mode V4QI
+utils.c:12:3: missed: statement clobbers memory: __builtin_va_start (&args, 0);
+utils.c:13:3: missed: statement clobbers memory: vfprintf (_1, format_5(D), &args);
+utils.c:14:3: missed: statement clobbers memory: __builtin_va_end (&args);
+utils.c:15:3: missed: statement clobbers memory: __builtin_fputc (10, _2);
+utils.c:16:3: missed: statement clobbers memory: exit (1);
+utils.c:16:3: note: ***** Analysis failed with vector mode V8DI
+utils.c:16:3: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V8DI
+utils.c:133:23: missed: statement clobbers memory: got_9 = fread (ptr_4(D), size_5(D), nmemb_6(D), fp_7(D));
+utils.c:137:11: missed: statement clobbers memory: _1 = ferror (fp_7(D));
+utils.c:139:7: missed: statement clobbers memory: die ("short file while reading %s from \'%s\'", what_11(D), path_12(D));
+utils.c:138:9: missed: statement clobbers memory: die ("read error while reading %s from \'%s\'", what_11(D), path_12(D));
+utils.c:138:9: note: ***** Analysis failed with vector mode VOID
+utils.c:76:27: missed: statement clobbers memory: key_len_18 = strlen (key_17(D));
+utils.c:79:8: missed: statement clobbers memory: _5 = strncmp (arg_21, key_17(D), key_len_18);
+utils.c:82:7: missed: statement clobbers memory: _9 = strcmp (arg_21, key_17(D));
+utils.c:85:9: missed: statement clobbers memory: die ("missing value after %s", key_17(D));
+utils.c:80:26: note: ***** Analysis failed with vector mode V16SI
+utils.c:80:26: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V16SI
+profiling.c:121:26: missed: couldn't vectorize loop
+profiling.c:123:9: missed: statement clobbers memory: fprintf (fp_10, "%.6e\n", _3);
+profiling.c:115:6: note: vectorized 0 loops in function.
+profiling.c:117:16: missed: statement clobbers memory: fp_10 = fopen (path_8(D), "a");
+profiling.c:120:5: missed: statement clobbers memory: fprintf (fp_10, "%s\n", label_12(D));
+profiling.c:123:9: missed: statement clobbers memory: fprintf (fp_10, "%.6e\n", _3);
+profiling.c:125:5: missed: statement clobbers memory: __builtin_fputc (10, fp_10);
+profiling.c:127:5: missed: statement clobbers memory: fclose (fp_10);
+profiling.c:118:14: missed: statement clobbers memory: die ("Cannot open file \'%s\' for writing statistics", path_8(D));
+profiling.c:118:14: note: ***** Analysis failed with vector mode V8DF
+profiling.c:118:14: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V8DF
+profiling.c:81:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:81:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 64 byte vectors
+profiling.c:76:35: optimized: loop vectorized using 32 byte vectors
+profiling.c:59:13: note: vectorized 2 loops in function.
+profiling.c:64:22: missed: statement clobbers memory: sorted_3 = malloc (_2);
+profiling.c:66:52: missed: statement clobbers memory: __builtin_memcpy (sorted_3, times_6(D), _2);
+profiling.c:67:5: missed: statement clobbers memory: qsort (sorted_3, n_steps_1(D), 8, compare_doubles);
+profiling.c:89:5: missed: statement clobbers memory: printf ("%-15s \t\t Median; %.6e s \t\t Trimmed Mean: %.6e s \t\t Standard Deviation: %.6e s\n", label_51(D), _52, trimmed_mean_4, std_50);
+profiling.c:91:5: missed: statement clobbers memory: free (sorted_3);
+profiling.c:65:18: missed: statement clobbers memory: die ("Memory allocation failed in \'print_statistics\'");
+profiling.c:84:18: note: ***** Analysis failed with vector mode V8DF
+profiling.c:84:18: note: ***** The result for vector mode V64QI would be the same
+profiling.c:84:18: note: ***** Re-trying analysis with vector mode V32QI
+profiling.c:84:18: note: ***** Analysis failed with vector mode V32QI
+profiling.c:84:18: note: ***** Re-trying analysis with vector mode V16QI
+profiling.c:84:18: note: ***** Analysis failed with vector mode V16QI
+profiling.c:84:18: note: ***** Re-trying analysis with vector mode V8QI
+profiling.c:84:18: note: ***** Analysis failed with vector mode V8QI
+profiling.c:84:18: note: ***** Re-trying analysis with vector mode V4QI
+profiling.c:84:18: note: ***** Analysis failed with vector mode V4QI
+profiling.c:183:26: missed: couldn't vectorize loop
+profiling.c:185:9: missed: statement clobbers memory: fprintf (fp_2, "%lld\n", _8);
+profiling.c:175:6: note: vectorized 0 loops in function.
+profiling.c:179:16: missed: statement clobbers memory: fp_2 = fopen (path_1(D), "a");
+profiling.c:182:5: missed: statement clobbers memory: fprintf (fp_2, "%s\n", label_3(D));
+profiling.c:185:9: missed: statement clobbers memory: fprintf (fp_2, "%lld\n", _8);
+profiling.c:187:5: missed: statement clobbers memory: __builtin_fputc (10, fp_2);
+profiling.c:188:5: missed: statement clobbers memory: fclose (fp_2);
+profiling.c:180:14: missed: statement clobbers memory: die ("Cannot open file \'%s\' for writing PAPI stuff", path_1(D));
+profiling.c:180:14: note: ***** Analysis failed with vector mode V8DI
+profiling.c:180:14: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V8DI
+utils.c:33:11: missed: statement clobbers memory: value_9 = strtoull (text_7(D), &endptr, 10);
+utils.c:35:5: missed: statement clobbers memory: die ("invalid integer for %s: %s", name_10(D), text_7(D));
+utils.c:35:5: note: ***** Analysis failed with vector mode V16SI
+utils.c:35:5: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V16SI
+utils.c:56:11: missed: statement clobbers memory: value_9 = strtod (text_7(D), &endptr);
+utils.c:58:5: missed: statement clobbers memory: die ("invalid floating-point value for %s: %s", name_10(D), text_7(D));
+utils.c:58:5: note: ***** Analysis failed with vector mode V16SI
+utils.c:58:5: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V16SI
+utils.c:113:9: missed: statement clobbers memory: ptr_7 = aligned_alloc (64, padded_6);
+utils.c:115:5: missed: statement clobbers memory: die ("aligned_alloc failed for %zu bytes", padded_6);
+utils.c:110:5: missed: statement clobbers memory: die ("allocation size overflow");
+utils.c:106:5: missed: statement clobbers memory: die ("attempted zero-byte allocation");
+utils.c:106:5: note: ***** Analysis failed with vector mode VOID
+main.c:90:27: missed: couldn't vectorize loop
+main.c:90:27: missed: not vectorized: could not determine main exit from loop with multiple exits.
+main.c:61:5: note: vectorized 0 loops in function.
+utils.c:79:8: missed: statement clobbers memory: _484 = strncmp (arg_483, "--input", 7);
+utils.c:82:7: missed: statement clobbers memory: _489 = strcmp (arg_483, "--input");
+utils.c:79:8: missed: statement clobbers memory: _502 = strncmp (arg_501, "--output", 8);
+utils.c:82:7: missed: statement clobbers memory: _507 = strcmp (arg_501, "--output");
+main.c:98:25: missed: statement clobbers memory: value_221 = option_value (&argi, argc_144(D), argv_146(D), "--nsteps");
+main.c:100:25: missed: statement clobbers memory: value_223 = option_value (&argi, argc_144(D), argv_146(D), "--energy-every");
+main.c:102:25: missed: statement clobbers memory: value_225 = option_value (&argi, argc_144(D), argv_146(D), "--dt");
+main.c:104:25: missed: statement clobbers memory: value_227 = option_value (&argi, argc_144(D), argv_146(D), "--eps");
+main.c:106:25: missed: statement clobbers memory: value_229 = option_value (&argi, argc_144(D), argv_146(D), "--G");
+main.c:108:25: missed: statement clobbers memory: value_231 = option_value (&argi, argc_144(D), argv_146(D), "--mass");
+main.c:110:25: missed: statement clobbers memory: value_233 = option_value (&argi, argc_144(D), argv_146(D), "--energy-tol");
+main.c:112:25: missed: statement clobbers memory: value_235 = option_value (&argi, argc_144(D), argv_146(D), "--profiler");
+main.c:114:25: missed: statement clobbers memory: value_237 = option_value (&argi, argc_144(D), argv_146(D), "--profiler-path");
+main.c:116:25: missed: statement clobbers memory: value_239 = option_value (&argi, argc_144(D), argv_146(D), "--kernel");
+main.c:118:25: missed: statement clobbers memory: value_241 = option_value (&argi, argc_144(D), argv_146(D), "--papi");
+main.c:124:16: missed: statement clobbers memory: _7 = strcmp (_6, "--quiet");
+main.c:120:16: missed: statement clobbers memory: _1 = parse_size (value_241, "--papi");
+main.c:46:7: missed: statement clobbers memory: _514 = strcmp (value_239, "obrc");
+main.c:113:25: missed: statement clobbers memory: profiler_flag_248 = parse_size (value_235, "--profiler");
+main.c:111:22: missed: statement clobbers memory: energy_tol_250 = parse_dtype (value_233, "--energy-tol");
+main.c:109:16: missed: statement clobbers memory: mass_252 = parse_dtype (value_231, "--mass");
+main.c:107:13: missed: statement clobbers memory: g_254 = parse_dtype (value_229, "--G");
+main.c:105:15: missed: statement clobbers memory: eps_256 = parse_dtype (value_227, "--eps");
+main.c:103:14: missed: statement clobbers memory: dt_258 = parse_dtype (value_225, "--dt");
+main.c:101:24: missed: statement clobbers memory: energy_every_260 = parse_size (value_223, "--energy-every");
+main.c:99:18: missed: statement clobbers memory: nsteps_262 = parse_size (value_221, "--nsteps");
+main.c:126:16: missed: statement clobbers memory: _8 = strcmp (_485, "--help");
+main.c:24:3: missed: statement clobbers memory: fprintf (pretmp_1321, "usage: %s --input FILE [options]\n\noptions:\n  --input FILE              input binary particle file (%s)\n  --output FILE             optional final-state binary file\n  --nsteps N                number of DKD steps (default: 10)\n  --dt X                    time step (default: 0.001)\n  --eps X                   softening length (default: 0.01)\n  --G X                     gravitational constant (default: 1)\n  --mass X                  particle mass (default: 1)\n  --energy-every N          diagnostic period in steps (default: 1)\n  --energy-tol X            warning tolerance for max relative drift (default: 1e-3)\n  --kernel STR              acceleration kernel choice: n, t, r, b, rt, bt, br, brt (default: n)\n  --quiet                   only print final summary\n  --papi [0|1]              enable PAPI counters (default: 0)\n  --help                    show this help message\n", pretmp_1320, "nbody-f32-v1");
+main.c:134:11: missed: statement clobbers memory: die ("unknown option: %s", _15);
+main.c:24:3: missed: statement clobbers memory: fprintf (pretmp_1321, "usage: %s --input FILE [options]\n\noptions:\n  --input FILE              input binary particle file (%s)\n  --output FILE             optional final-state binary file\n  --nsteps N                number of DKD steps (default: 10)\n  --dt X                    time step (default: 0.001)\n  --eps X                   softening length (default: 0.01)\n  --G X                     gravitational constant (default: 1)\n  --mass X                  particle mass (default: 1)\n  --energy-every N          diagnostic period in steps (default: 1)\n  --energy-tol X            warning tolerance for max relative drift (default: 1e-3)\n  --kernel STR              acceleration kernel choice: n, t, r, b, rt, bt, br, brt (default: n)\n  --quiet                   only print final summary\n  --papi [0|1]              enable PAPI counters (default: 0)\n  --help                    show this help message\n", pretmp_1320, "nbody-f32-v1");
+main.c:49:5: missed: statement clobbers memory: die ("unknown kernel choice: %s", value_1267);
+utils.c:85:9: missed: statement clobbers memory: die ("missing value after %s", "--output");
+utils.c:85:9: missed: statement clobbers memory: die ("missing value after %s", "--input");
+profiling.c:22:43: missed: statement clobbers memory: _516 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:23:43: missed: statement clobbers memory: _517 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:24:43: missed: statement clobbers memory: _518 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:25:43: missed: statement clobbers memory: _519 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:26:43: missed: statement clobbers memory: _520 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:30:44: missed: statement clobbers memory: _521 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:31:44: missed: statement clobbers memory: _522 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:32:44: missed: statement clobbers memory: _523 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:33:44: missed: statement clobbers memory: _524 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:34:44: missed: statement clobbers memory: _525 = checked_aligned_alloc.constprop (bytes_515);
+profiling.c:195:18: missed: statement clobbers memory: retval_526 = PAPI_library_init (117506048);
+profiling.c:200:9: missed: statement clobbers memory: _529 = PAPI_create_eventset (&profiler.papi_eventset);
+profiling.c:204:5: missed: statement clobbers memory: PAPI_add_event (_530, -2147483589);
+profiling.c:205:5: missed: statement clobbers memory: PAPI_add_event (_531, -2147483598);
+profiling.c:206:5: missed: statement clobbers memory: PAPI_add_event (_532, -2147483648);
+profiling.c:207:5: missed: statement clobbers memory: PAPI_add_event (_533, -2147483646);
+profiling.c:208:5: missed: statement clobbers memory: PAPI_add_event (_534, -2147483544);
+main.c:163:3: missed: statement clobbers memory: MPI_Init (0B, 0B);
+main.c:164:3: missed: statement clobbers memory: MPI_Comm_rank (&ompi_mpi_comm_world, &rank);
+main.c:165:3: missed: statement clobbers memory: MPI_Comm_size (&ompi_mpi_comm_world, &size);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+particles.c:136:8: missed: statement clobbers memory: fp_535 = fopen (input_path_1301, "rb");
+particles.c:140:3: missed: statement clobbers memory: checked_fread (&magic, 1, 8, fp_535, input_path_1301, "binary magic");
+particles.c:142:7: missed: statement clobbers memory: _536 = memcmp (&magic, &nbody_binary_magic, 8);
+particles.c:145:3: missed: statement clobbers memory: checked_fread (&n64, 8, 1, fp_535, input_path_1301, "particle count");
+particles.c:59:13: missed: statement clobbers memory: _568 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:60:13: missed: statement clobbers memory: _569 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:61:13: missed: statement clobbers memory: _570 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:62:13: missed: statement clobbers memory: _571 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:63:13: missed: statement clobbers memory: _572 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:64:13: missed: statement clobbers memory: _573 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:65:13: missed: statement clobbers memory: _574 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:66:13: missed: statement clobbers memory: _575 = checked_aligned_alloc.constprop (bytes_567);
+particles.c:67:13: missed: statement clobbers memory: _576 = checked_aligned_alloc.constprop (bytes_567);
+utils.c:133:23: missed: statement clobbers memory: got_577 = fread (&record, 4, 6, fp_535);
+particles.c:176:7: missed: statement clobbers memory: _566 = fclose (fp_535);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:176:3: missed: statement clobbers memory: memmove (_27, _29, _26);
+main.c:177:3: missed: statement clobbers memory: memmove (_30, _31, _26);
+main.c:178:3: missed: statement clobbers memory: memmove (_32, _33, _26);
+main.c:179:3: missed: statement clobbers memory: memmove (_34, _35, _26);
+main.c:180:3: missed: statement clobbers memory: memmove (_36, _37, _26);
+main.c:181:3: missed: statement clobbers memory: memmove (_38, _40, _26);
+main.c:190:21: missed: statement clobbers memory: global_energy_1278 = checked_global_energy (&particles, g_1294, eps_1295, _1276, _1275, &kinetic0, &potential0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:190:21: missed: statement clobbers memory: global_energy_1284 = checked_global_energy (&particles, g_1294, eps_1295, _1282, _1281, &kinetic0, &potential0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:196:7: missed: statement clobbers memory: __builtin_puts (&"# Direct N-body DKD"[0]);
+main.c:197:7: missed: statement clobbers memory: printf ("# arithmetic_dtype=%s binary_storage=float32 format=%s\n", "double", "nbody-f32-v1");
+main.c:199:7: missed: statement clobbers memory: printf ("# N=%zu nsteps=%zu dt=%.17g eps=%.17g G=%.17g mass=%.17g\n", _47, nsteps_1299, dt_1296, eps_1295, g_1294, mass_1293);
+main.c:203:7: missed: statement clobbers memory: printf ("Acceleration Kernel: %s\n", "obrc");
+main.c:204:7: missed: statement clobbers memory: __builtin_puts (&"# Step \t Time \t\t\t Kinetic \t\t\t Potential \t\t\t Total \t\t\t Relative Energy Drift"[0]);
+main.c:205:7: missed: statement clobbers memory: printf ("%zu \t %.17g \t %.17g \t %.17g \t %.17g \t %.17g\n", 0, 0.0, _50, _49, global_energy_1288, 0.0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (drift._omp_fn.0, &.omp_data_o.17, 0, 0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (drift._omp_fn.0, &.omp_data_o.17, 0, 0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+profiling.c:217:5: missed: statement clobbers memory: PAPI_start (_721);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+integration.c:223:3: missed: statement clobbers memory: MPI_Comm_rank (&ompi_mpi_comm_world, &rank);
+integration.c:224:3: missed: statement clobbers memory: MPI_Comm_size (&ompi_mpi_comm_world, &size);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (leapfrog_dkd_step._omp_fn.0, &.omp_data_o.34, 0, 0);
+integration.c:247:18: missed: statement clobbers memory: _615 = malloc (_1314);
+integration.c:248:18: missed: statement clobbers memory: _616 = malloc (_1314);
+integration.c:249:18: missed: statement clobbers memory: _617 = malloc (_1314);
+integration.c:250:18: missed: statement clobbers memory: _618 = malloc (_1314);
+integration.c:251:18: missed: statement clobbers memory: _619 = malloc (_1314);
+integration.c:252:18: missed: statement clobbers memory: _620 = malloc (_1314);
+integration.c:256:5: missed: statement clobbers memory: memcpy (prephitmp_1297, pretmp_1315, _1314);
+integration.c:257:5: missed: statement clobbers memory: memcpy (_625, _624, _1314);
+integration.c:258:5: missed: statement clobbers memory: memcpy (_627, _626, _1314);
+integration.c:269:7: missed: statement clobbers memory: MPI_Irecv (_638, _635, &ompi_mpi_double, prev_634, 0, &ompi_mpi_comm_world, &req[0]);
+integration.c:270:7: missed: statement clobbers memory: MPI_Irecv (_639, _635, &ompi_mpi_double, prev_634, 1, &ompi_mpi_comm_world, &req[1]);
+integration.c:271:7: missed: statement clobbers memory: MPI_Irecv (_640, _635, &ompi_mpi_double, prev_634, 2, &ompi_mpi_comm_world, &req[2]);
+integration.c:273:7: missed: statement clobbers memory: MPI_Isend (_641, _635, &ompi_mpi_double, next_631, 0, &ompi_mpi_comm_world, &req[3]);
+integration.c:274:7: missed: statement clobbers memory: MPI_Isend (_642, _635, &ompi_mpi_double, next_631, 1, &ompi_mpi_comm_world, &req[4]);
+integration.c:275:7: missed: statement clobbers memory: MPI_Isend (_643, _635, &ompi_mpi_double, next_631, 2, &ompi_mpi_comm_world, &req[5]);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br_cross._omp_fn.0, &.omp_data_o.12, 0, 0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br._omp_fn.0, &.omp_data_o.3, 0, 0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br._omp_fn.1, &.omp_data_o.5, 0, 0);
+integration.c:283:7: missed: statement clobbers memory: MPI_Waitall (6, &req, 0B);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br_cross._omp_fn.0, &.omp_data_o.12, 0, 0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br._omp_fn.0, &.omp_data_o.3, 0, 0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (compute_accelerations_omp_br._omp_fn.1, &.omp_data_o.5, 0, 0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (kick._omp_fn.0, &.omp_data_o.22, 0, 0);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (drift._omp_fn.0, &.omp_data_o.17, 0, 0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+profiling.c:227:5: missed: statement clobbers memory: PAPI_stop (_739, &values);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (kick._omp_fn.0, &.omp_data_o.22, 0, 0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:61:5: missed: statement clobbers memory: __builtin_GOMP_parallel (drift._omp_fn.0, &.omp_data_o.17, 0, 0);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:226:32: missed: statement clobbers memory: current_global_209 = checked_global_energy (&particles, g_1294, eps_1295, _59, _58, &kinetic, &potential);
+main.c:235:11: missed: statement clobbers memory: printf ("%zu %.17g %.17g %.17g %.17g %.17g\n", step_111, _67, _65, _64, current_global_209, rel_211);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+particles.c:198:8: missed: statement clobbers memory: fp_757 = fopen (output_path_1300, "wb");
+utils.c:156:27: missed: statement clobbers memory: written_793 = __builtin_fwrite (&nbody_binary_magic, 1, 8, fp_757);
+utils.c:156:27: missed: statement clobbers memory: written_792 = __builtin_fwrite (&n64, 8, 1, fp_757);
+utils.c:156:27: missed: statement clobbers memory: written_794 = __builtin_fwrite (&record, 4, 6, fp_757);
+particles.c:220:7: missed: statement clobbers memory: _791 = fclose (fp_757);
+./headers/profiling.h:73:5: missed: statement clobbers memory: clock_gettime (1, &ts);
+main.c:248:5: missed: statement clobbers memory: printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n", pretmp_1319, nsteps_1299, "double", max_rel_drift_1260, energy_tol_1280, "WARNING");
+main.c:253:7: missed: statement clobbers memory: fprintf (_71, "warning: relative energy drift %.6e exceeds tolerance %.6e; try smaller --dt, larger --eps, or better initial conditions\n", max_rel_drift_1260, energy_tol_1280);
+main.c:248:5: missed: statement clobbers memory: printf ("# final: N=%zu steps=%zu arithmetic_dtype=%s max_relative_energy_drift=%.17g tolerance=%.17g status=%s\n", pretmp_1319, nsteps_1299, "double", max_rel_drift_1260, energy_tol_1280, "OK");
+profiling.c:97:5: missed: statement clobbers memory: __builtin_puts (&"\n--- Performance Profiling Report ---"[0]);
+profiling.c:100:5: missed: statement clobbers memory: printf ("%-15s : %.6e s\n", "File Read", _795);
+profiling.c:101:5: missed: statement clobbers memory: printf ("%-15s : %.6e s\n", "File Write", _796);
+profiling.c:102:5: missed: statement clobbers memory: printf ("%-15s : %.6e s\n", "Total Run", _797);
+profiling.c:104:5: missed: statement clobbers memory: printf ("\n--- Step Statistics (%zu steps) ---\n", _798);
+main.c:61:5: missed: statement clobbers memory: print_single_statistics.part.0 ("Total Step", _800, _799);
+main.c:61:5: missed: statement clobbers memory: print_single_statistics.part.0 ("First Drift", _802, _801);
+main.c:61:5: missed: statement clobbers memory: print_single_statistics.part.0 ("Compute Force", _804, _803);
+main.c:61:5: missed: statement clobbers memory: print_single_statistics.part.0 ("Kick", _806, _805);
+main.c:61:5: missed: statement clobbers memory: print_single_statistics.part.0 ("Second Drift", _808, _807);
+profiling.c:154:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "File Read", &profiler.reading_time, 1);
+profiling.c:155:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "File Write", &profiler.writing_time, 1);
+profiling.c:156:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "Total Run", &profiler.total_energy_time, 1);
+profiling.c:158:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "Total Step", _813, _812);
+profiling.c:159:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "First Drift", _815, _814);
+profiling.c:160:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "Compute Force", _817, _816);
+profiling.c:161:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "Kick", _819, _818);
+profiling.c:162:5: missed: statement clobbers memory: save_single_statistics (profiler_path_1270, "Second Drift", _821, _820);
+profiling.c:133:16: missed: statement clobbers memory: fp_847 = fopen (profiler_path_1270, "a");
+profiling.c:136:5: missed: statement clobbers memory: __builtin_fwrite ("--- Configuration ---\n", 1, 22, fp_847);
+profiling.c:137:5: missed: statement clobbers memory: fprintf (fp_847, "nsteps: %zu\n", nsteps_1299);
+profiling.c:138:5: missed: statement clobbers memory: fprintf (fp_847, "dt: %.6e\n", dt_1296);
+profiling.c:139:5: missed: statement clobbers memory: fprintf (fp_847, "eps: %.6e\n", eps_1295);
+profiling.c:140:5: missed: statement clobbers memory: fprintf (fp_847, "G: %.6e\n", g_1294);
+profiling.c:141:5: missed: statement clobbers memory: fprintf (fp_847, "mass: %.6e\n", mass_1293);
+profiling.c:142:5: missed: statement clobbers memory: fprintf (fp_847, "energy_every: %zu\n", energy_every_1298);
+profiling.c:143:5: missed: statement clobbers memory: fprintf (fp_847, "energy_tol: %.6e\n", energy_tol_1280);
+profiling.c:144:5: missed: statement clobbers memory: fprintf (fp_847, "kernel_choice: %s\n", "obrc");
+profiling.c:145:5: missed: statement clobbers memory: fprintf (fp_847, "kinetic0: %.6e\n", _76);
+profiling.c:146:5: missed: statement clobbers memory: fprintf (fp_847, "potential0: %.6e\n", _77);
+profiling.c:147:5: missed: statement clobbers memory: fprintf (fp_847, "max_relative_error: %.6e\n", max_rel_drift_1260);
+profiling.c:148:5: missed: statement clobbers memory: fclose (fp_847);
+main.c:61:5: missed: statement clobbers memory: save_single_papi_statistics.part.0 (profiler_path_1270, "PAPI Cycles", _823, _822);
+main.c:61:5: missed: statement clobbers memory: save_single_papi_statistics.part.0 (profiler_path_1270, "PAPI Instructions", _828, _827);
+main.c:61:5: missed: statement clobbers memory: save_single_papi_statistics.part.0 (profiler_path_1270, "PAPI L1 Misses", _833, _832);
+main.c:61:5: missed: statement clobbers memory: save_single_papi_statistics.part.0 (profiler_path_1270, "PAPI L2 Misses", _838, _837);
+main.c:61:5: missed: statement clobbers memory: save_single_papi_statistics.part.0 (profiler_path_1270, "PAPI Vectorial DP", _843, _842);
+profiling.c:241:5: missed: statement clobbers memory: PAPI_cleanup_eventset (_859);
+profiling.c:242:5: missed: statement clobbers memory: PAPI_destroy_eventset (&profiler.papi_eventset);
+profiling.c:243:5: missed: statement clobbers memory: PAPI_shutdown ();
+profiling.c:41:5: missed: statement clobbers memory: free (_861);
+profiling.c:42:5: missed: statement clobbers memory: free (_862);
+profiling.c:43:5: missed: statement clobbers memory: free (_863);
+profiling.c:44:5: missed: statement clobbers memory: free (_864);
+profiling.c:45:5: missed: statement clobbers memory: free (_865);
+profiling.c:47:5: missed: statement clobbers memory: free (_866);
+profiling.c:48:5: missed: statement clobbers memory: free (_867);
+profiling.c:49:5: missed: statement clobbers memory: free (_868);
+profiling.c:50:5: missed: statement clobbers memory: free (_869);
+profiling.c:51:5: missed: statement clobbers memory: free (_870);
+particles.c:78:3: missed: statement clobbers memory: free (_871);
+particles.c:79:3: missed: statement clobbers memory: free (_872);
+particles.c:80:3: missed: statement clobbers memory: free (_873);
+particles.c:81:3: missed: statement clobbers memory: free (_874);
+particles.c:82:3: missed: statement clobbers memory: free (_875);
+particles.c:83:3: missed: statement clobbers memory: free (_876);
+particles.c:84:3: missed: statement clobbers memory: free (_877);
+particles.c:85:3: missed: statement clobbers memory: free (_878);
+particles.c:86:3: missed: statement clobbers memory: free (_879);
+main.c:289:3: missed: statement clobbers memory: MPI_Finalize ();
+profiling.c:134:14: missed: statement clobbers memory: die ("Cannot open file \'%s\' for writing configuration", profiler_path_1270);
+particles.c:221:5: missed: statement clobbers memory: die ("error while closing output file \'%s\'", output_path_1300);
+utils.c:159:5: missed: statement clobbers memory: die ("write error while writing %s to \'%s\'", "particle record", output_path_1300);
+particles.c:112:5: missed: statement clobbers memory: die ("particle %zu component %s cannot be stored as a finite float", i_1236, "vz");
+particles.c:112:5: missed: statement clobbers memory: die ("particle %zu component %s cannot be stored as a finite float", i_1237, "vy");
+particles.c:112:5: missed: statement clobbers memory: die ("particle %zu component %s cannot be stored as a finite float", i_1238, "vx");
+particles.c:112:5: missed: statement clobbers memory: die ("particle %zu component %s cannot be stored as a finite float", i_1239, "z");
+particles.c:112:5: missed: statement clobbers memory: die ("particle %zu component %s cannot be stored as a finite float", i_1247, "y");
+particles.c:112:5: missed: statement clobbers memory: die ("particle %zu component %s cannot be stored as a finite float", i_1248, "x");
+utils.c:159:5: missed: statement clobbers memory: die ("write error while writing %s to \'%s\'", "particle count", output_path_1300);
+utils.c:159:5: missed: statement clobbers memory: die ("write error while writing %s to \'%s\'", "binary magic", output_path_1300);
+particles.c:200:5: missed: statement clobbers memory: die ("cannot open output file \'%s\'", output_path_1300);
+particles.c:177:5: missed: statement clobbers memory: die ("error while closing input file \'%s\'", input_path_1301);
+utils.c:137:11: missed: statement clobbers memory: _578 = ferror (fp_535);
+utils.c:139:7: missed: statement clobbers memory: die ("short file while reading %s from \'%s\'", "particle record", input_path_1301);
+utils.c:138:9: missed: statement clobbers memory: die ("read error while reading %s from \'%s\'", "particle record", input_path_1301);
+particles.c:52:5: missed: statement clobbers memory: die ("particle count is too large");
+particles.c:147:5: missed: statement clobbers memory: die ("invalid particle count in \'%s\'", input_path_1301);
+particles.c:143:5: missed: statement clobbers memory: die ("input file \'%s\' is not an %s file", input_path_1301, "nbody-f32-v1");
+particles.c:138:5: missed: statement clobbers memory: die ("cannot open input file \'%s\'", input_path_1301);
+profiling.c:201:9: missed: statement clobbers memory: die ("PAPI_create_eventset failed");
+profiling.c:197:9: missed: statement clobbers memory: _527 = PAPI_strerror (retval_526);
+profiling.c:197:9: missed: statement clobbers memory: die ("PAPI init error: %s", _527);
+main.c:148:37: missed: statement clobbers memory: die ("--energy-tol must be positive");
+main.c:147:37: missed: statement clobbers memory: die ("--energy-every must be positive");
+main.c:146:37: missed: statement clobbers memory: die ("--mass must be positive");
+main.c:145:37: missed: statement clobbers memory: die ("--G must be positive");
+main.c:144:37: missed: statement clobbers memory: die ("--eps must be non-negative");
+main.c:143:37: missed: statement clobbers memory: die ("--dt must be positive");
+main.c:24:3: missed: statement clobbers memory: fprintf (_272, "usage: %s --input FILE [options]\n\noptions:\n  --input FILE              input binary particle file (%s)\n  --output FILE             optional final-state binary file\n  --nsteps N                number of DKD steps (default: 10)\n  --dt X                    time step (default: 0.001)\n  --eps X                   softening length (default: 0.01)\n  --G X                     gravitational constant (default: 1)\n  --mass X                  particle mass (default: 1)\n  --energy-every N          diagnostic period in steps (default: 1)\n  --energy-tol X            warning tolerance for max relative drift (default: 1e-3)\n  --kernel STR              acceleration kernel choice: n, t, r, b, rt, bt, br, brt (default: n)\n  --quiet                   only print final summary\n  --papi [0|1]              enable PAPI counters (default: 0)\n  --help                    show this help message\n", _19, "nbody-f32-v1");
+main.c:141:7: missed: statement clobbers memory: die ("missing required --input FILE");
+particles.c:24:11: note: ***** Analysis succeeded with vector mode V16SI
+particles.c:24:11: note: SLPing BB part
+profiling.c:16:41: note: Costing subgraph: 
+profiling.c:16:41: note: node 0x75c7f58 (max_nunits=2, refcnt=1) vector(2) double
+profiling.c:16:41: note: op template: profiler.reading_time = 0.0;
+profiling.c:16:41: note: 	stmt 0 profiler.reading_time = 0.0;
+profiling.c:16:41: note: 	stmt 1 profiler.writing_time = 0.0;
+profiling.c:16:41: note: 	children 0x75c7fd8
+profiling.c:16:41: note: node (constant) 0x75c7fd8 (max_nunits=1, refcnt=1) vector(2) double
+profiling.c:16:41: note: 	{ 0.0, 0.0 }
+profiling.c:16:41: note: Cost model analysis: 
+profiling.c:16:41: note: Cost model analysis for part in loop 0:
+  Vector cost: 36
+  Scalar cost: 32
+profiling.c:16:41: missed: not vectorized: vectorization is not profitable.
+particles.c:24:11: note: Costing subgraph: 
+particles.c:24:11: note: node 0x75c80d8 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: op template: particles.x = 0B;
+particles.c:24:11: note: 	stmt 0 particles.x = 0B;
+particles.c:24:11: note: 	stmt 1 particles.y = 0B;
+particles.c:24:11: note: 	stmt 2 particles.z = 0B;
+particles.c:24:11: note: 	stmt 3 particles.vx = 0B;
+particles.c:24:11: note: 	stmt 4 particles.vy = 0B;
+particles.c:24:11: note: 	stmt 5 particles.vz = 0B;
+particles.c:24:11: note: 	stmt 6 particles.ax = 0B;
+particles.c:24:11: note: 	stmt 7 particles.ay = 0B;
+particles.c:24:11: note: 	children 0x75c8158
+particles.c:24:11: note: node (constant) 0x75c8158 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: 	{ 0B, 0B, 0B, 0B, 0B, 0B, 0B, 0B }
+particles.c:24:11: note: Cost model analysis: 
+particles.c:24:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 48
+  Scalar cost: 128
+particles.c:24:11: note: Costing subgraph: 
+particles.c:24:11: note: node 0x75c8258 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: op template: particles.x = 0B;
+particles.c:24:11: note: 	stmt 0 particles.x = 0B;
+particles.c:24:11: note: 	stmt 1 particles.y = 0B;
+particles.c:24:11: note: 	stmt 2 particles.z = 0B;
+particles.c:24:11: note: 	stmt 3 particles.vx = 0B;
+particles.c:24:11: note: 	stmt 4 particles.vy = 0B;
+particles.c:24:11: note: 	stmt 5 particles.vz = 0B;
+particles.c:24:11: note: 	stmt 6 particles.ax = 0B;
+particles.c:24:11: note: 	stmt 7 particles.ay = 0B;
+particles.c:24:11: note: 	children 0x75c82d8
+particles.c:24:11: note: node (constant) 0x75c82d8 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: 	{ 0B, 0B, 0B, 0B, 0B, 0B, 0B, 0B }
+particles.c:24:11: note: Cost model analysis: 
+particles.c:24:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 48
+  Scalar cost: 128
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c8358 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.visit_n = n_local_604;
+integration.c:114:11: note: 	children 0x75c83d8
+integration.c:114:11: note: node (external) 0x75c83d8 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ n_local_604, n_local_604 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 4:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c8458 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:114:11: note: op template: .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.mass = pretmp_1309;
+integration.c:114:11: note: 	children 0x75c8558
+integration.c:114:11: note: node (external) 0x75c8558 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:114:11: note: 	{ g_1294, pretmp_1309 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 4:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c8658 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_x = pretmp_1308;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_x = pretmp_1308;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.local_y = pretmp_1307;
+integration.c:114:11: note: 	stmt 2 .omp_data_o.12.local_z = pretmp_1306;
+integration.c:114:11: note: 	stmt 3 .omp_data_o.12.visit_x = _657;
+integration.c:114:11: note: 	stmt 4 .omp_data_o.12.visit_y = _656;
+integration.c:114:11: note: 	stmt 5 .omp_data_o.12.visit_z = _655;
+integration.c:114:11: note: 	stmt 6 .omp_data_o.12.ax = pretmp_1305;
+integration.c:114:11: note: 	stmt 7 .omp_data_o.12.ay = pretmp_1304;
+integration.c:114:11: note: 	children 0x75c8758
+integration.c:114:11: note: node (external) 0x75c8758 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: 	{ pretmp_1308, pretmp_1307, pretmp_1306, _657, _656, _655, pretmp_1305, pretmp_1304 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 4:
+  Vector cost: 112
+  Scalar cost: 128
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c87d8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.blocks_j = _1317;
+integration.c:114:11: note: 	children 0x75c8858
+integration.c:114:11: note: node (external) 0x75c8858 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ _1317, _1317 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 4:
+  Vector cost: 26
+  Scalar cost: 32
+integration.c:33:9: note: Costing subgraph: 
+integration.c:33:9: note: node 0x75c8a58 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:33:9: note: op template: .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.mass = _651;
+integration.c:33:9: note: 	children 0x75c8b58
+integration.c:33:9: note: node (external) 0x75c8b58 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:33:9: note: 	{ g_1294, _651 }
+integration.c:33:9: note: Cost model analysis: 
+integration.c:33:9: note: Cost model analysis for part in loop 4:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:33:9: note: Costing subgraph: 
+integration.c:33:9: note: node 0x75c8958 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.3.ax = _647;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.3.ax = _647;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.3.ay = _646;
+integration.c:33:9: note: 	children 0x75c89d8
+integration.c:33:9: note: node 0x75c89d8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _647 = particles.ax;
+integration.c:33:9: note: 	stmt 0 _647 = particles.ax;
+integration.c:33:9: note: 	stmt 1 _646 = particles.ay;
+integration.c:33:9: note: node 0x75c8c58 (max_nunits=4, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.x = _650;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.x = _650;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.y = _649;
+integration.c:33:9: note: 	stmt 2 .omp_data_o.5.z = _648;
+integration.c:33:9: note: 	stmt 3 .omp_data_o.5.ax = _647;
+integration.c:33:9: note: 	children 0x75c8cd8
+integration.c:33:9: note: node 0x75c8cd8 (max_nunits=4, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: op template: _650 = particles.x;
+integration.c:33:9: note: 	stmt 0 _650 = particles.x;
+integration.c:33:9: note: 	stmt 1 _649 = particles.y;
+integration.c:33:9: note: 	stmt 2 _648 = particles.z;
+integration.c:33:9: note: 	stmt 3 _647 = particles.ax;
+integration.c:33:9: note: 	load permutation { 0 1 2 6 }
+integration.c:33:9: note: node 0x75c8d58 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.ay = _646;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.ay = _646;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.az = _645;
+integration.c:33:9: note: 	children 0x75c8dd8
+integration.c:33:9: note: node 0x75c8dd8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _646 = particles.ay;
+integration.c:33:9: note: 	stmt 0 _646 = particles.ay;
+integration.c:33:9: note: 	stmt 1 _645 = particles.az;
+integration.c:33:9: note: Cost model analysis: 
+integration.c:33:9: note: Cost model analysis for part in loop 4:
+  Vector cost: 164
+  Scalar cost: 200
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c8e58 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.visit_n = n_local_604;
+integration.c:114:11: note: 	children 0x75c8ed8
+integration.c:114:11: note: node (external) 0x75c8ed8 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ n_local_604, n_local_604 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 2:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c8f58 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:114:11: note: op template: .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.mass = _673;
+integration.c:114:11: note: 	children 0x75c9058
+integration.c:114:11: note: node (external) 0x75c9058 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:114:11: note: 	{ g_1294, _673 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 2:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c9158 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_x = _672;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_x = _672;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.local_y = _671;
+integration.c:114:11: note: 	stmt 2 .omp_data_o.12.local_z = _670;
+integration.c:114:11: note: 	stmt 3 .omp_data_o.12.visit_x = _669;
+integration.c:114:11: note: 	stmt 4 .omp_data_o.12.visit_y = _668;
+integration.c:114:11: note: 	stmt 5 .omp_data_o.12.visit_z = _667;
+integration.c:114:11: note: 	stmt 6 .omp_data_o.12.ax = _666;
+integration.c:114:11: note: 	stmt 7 .omp_data_o.12.ay = _665;
+integration.c:114:11: note: 	children 0x75c9258
+integration.c:114:11: note: node (external) 0x75c9258 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: 	{ _672, _671, _670, _669, _668, _667, _666, _665 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 2:
+  Vector cost: 112
+  Scalar cost: 128
+integration.c:114:11: note: Costing subgraph: 
+integration.c:114:11: note: node 0x75c92d8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.blocks_j = _1317;
+integration.c:114:11: note: 	children 0x75c9358
+integration.c:114:11: note: node (external) 0x75c9358 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ _1317, _1317 }
+integration.c:114:11: note: Cost model analysis: 
+integration.c:114:11: note: Cost model analysis for part in loop 2:
+  Vector cost: 26
+  Scalar cost: 32
+integration.c:33:9: note: Costing subgraph: 
+integration.c:33:9: note: node 0x75c9558 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:33:9: note: op template: .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.mass = _612;
+integration.c:33:9: note: 	children 0x75c9658
+integration.c:33:9: note: node (external) 0x75c9658 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:33:9: note: 	{ g_1294, _612 }
+integration.c:33:9: note: Cost model analysis: 
+integration.c:33:9: note: Cost model analysis for part in loop 2:
+  Vector cost: 20
+  Scalar cost: 32
+integration.c:33:9: note: Costing subgraph: 
+integration.c:33:9: note: node 0x75c9758 (max_nunits=4, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.x = pretmp_1315;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.x = pretmp_1315;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.y = _610;
+integration.c:33:9: note: 	stmt 2 .omp_data_o.5.z = _609;
+integration.c:33:9: note: 	stmt 3 .omp_data_o.5.ax = _608;
+integration.c:33:9: note: 	children 0x75c9858
+integration.c:33:9: note: node (external) 0x75c9858 (max_nunits=1, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: 	{ pretmp_1315, _610, _609, _608 }
+integration.c:33:9: note: Cost model analysis: 
+integration.c:33:9: note: Cost model analysis for part in loop 2:
+  Vector cost: 44
+  Scalar cost: 64
+integration.c:33:9: note: Costing subgraph: 
+integration.c:33:9: note: node 0x75c9458 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.3.ax = _608;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.3.ax = _608;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.3.ay = _607;
+integration.c:33:9: note: 	children 0x75c94d8
+integration.c:33:9: note: node 0x75c94d8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _608 = particles.ax;
+integration.c:33:9: note: 	stmt 0 _608 = particles.ax;
+integration.c:33:9: note: 	stmt 1 _607 = particles.ay;
+integration.c:33:9: note: node 0x75c98d8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.ay = _607;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.ay = _607;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.az = _606;
+integration.c:33:9: note: 	children 0x75c9958
+integration.c:33:9: note: node 0x75c9958 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _607 = particles.ay;
+integration.c:33:9: note: 	stmt 0 _607 = particles.ay;
+integration.c:33:9: note: 	stmt 1 _606 = particles.az;
+integration.c:33:9: note: Cost model analysis: 
+integration.c:33:9: note: Cost model analysis for part in loop 2:
+  Vector cost: 80
+  Scalar cost: 100
+particles.c:24:11: note: Costing subgraph: 
+particles.c:24:11: note: node 0x75c9a58 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: op template: particles.x = 0B;
+particles.c:24:11: note: 	stmt 0 particles.x = 0B;
+particles.c:24:11: note: 	stmt 1 particles.y = 0B;
+particles.c:24:11: note: 	stmt 2 particles.z = 0B;
+particles.c:24:11: note: 	stmt 3 particles.vx = 0B;
+particles.c:24:11: note: 	stmt 4 particles.vy = 0B;
+particles.c:24:11: note: 	stmt 5 particles.vz = 0B;
+particles.c:24:11: note: 	stmt 6 particles.ax = 0B;
+particles.c:24:11: note: 	stmt 7 particles.ay = 0B;
+particles.c:24:11: note: 	children 0x75c9ad8
+particles.c:24:11: note: node (constant) 0x75c9ad8 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: 	{ 0B, 0B, 0B, 0B, 0B, 0B, 0B, 0B }
+particles.c:24:11: note: Cost model analysis: 
+particles.c:24:11: note: Cost model analysis for part in loop 0:
+  Vector cost: 48
+  Scalar cost: 128
+particles.c:24:11: note: Basic block will be vectorized using SLP
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: note: Vectorizing SLP tree:
+particles.c:24:11: note: node 0x75c80d8 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: op template: particles.x = 0B;
+particles.c:24:11: note: 	stmt 0 particles.x = 0B;
+particles.c:24:11: note: 	stmt 1 particles.y = 0B;
+particles.c:24:11: note: 	stmt 2 particles.z = 0B;
+particles.c:24:11: note: 	stmt 3 particles.vx = 0B;
+particles.c:24:11: note: 	stmt 4 particles.vy = 0B;
+particles.c:24:11: note: 	stmt 5 particles.vz = 0B;
+particles.c:24:11: note: 	stmt 6 particles.ax = 0B;
+particles.c:24:11: note: 	stmt 7 particles.ay = 0B;
+particles.c:24:11: note: 	children 0x75c8158
+particles.c:24:11: note: node (constant) 0x75c8158 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: 	{ 0B, 0B, 0B, 0B, 0B, 0B, 0B, 0B }
+particles.c:24:11: note: ------>vectorizing SLP node starting from: particles.x = 0B;
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: transform store. ncopies = 1
+particles.c:24:11: note: create vector_type-pointer variable to type: vector(8) long unsigned int  vectorizing a pointer ref: particles.x
+particles.c:24:11: note: created &particles.x
+particles.c:24:11: note: add new stmt: MEM <vector(8) long unsigned int> [(dtype * *)&particles + 16B] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+particles.c:24:11: note: vectorizing stmts using SLP.
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: note: Vectorizing SLP tree:
+particles.c:24:11: note: node 0x75c8258 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: op template: particles.x = 0B;
+particles.c:24:11: note: 	stmt 0 particles.x = 0B;
+particles.c:24:11: note: 	stmt 1 particles.y = 0B;
+particles.c:24:11: note: 	stmt 2 particles.z = 0B;
+particles.c:24:11: note: 	stmt 3 particles.vx = 0B;
+particles.c:24:11: note: 	stmt 4 particles.vy = 0B;
+particles.c:24:11: note: 	stmt 5 particles.vz = 0B;
+particles.c:24:11: note: 	stmt 6 particles.ax = 0B;
+particles.c:24:11: note: 	stmt 7 particles.ay = 0B;
+particles.c:24:11: note: 	children 0x75c82d8
+particles.c:24:11: note: node (constant) 0x75c82d8 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: 	{ 0B, 0B, 0B, 0B, 0B, 0B, 0B, 0B }
+particles.c:24:11: note: ------>vectorizing SLP node starting from: particles.x = 0B;
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: transform store. ncopies = 1
+particles.c:24:11: note: create vector_type-pointer variable to type: vector(8) long unsigned int  vectorizing a pointer ref: particles.x
+particles.c:24:11: note: created &particles.x
+particles.c:24:11: note: add new stmt: MEM <vector(8) long unsigned int> [(dtype * *)&particles + 16B] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+particles.c:24:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c8358 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.visit_n = n_local_604;
+integration.c:114:11: note: 	children 0x75c83d8
+integration.c:114:11: note: node (external) 0x75c83d8 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ n_local_604, n_local_604 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: vect_is_simple_use: operand particles.n, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.local_n
+integration.c:114:11: note: created &.omp_data_o.12
+integration.c:114:11: note: add new stmt: MEM <const vector(2) long unsigned int> [(long unsigned int *)&.omp_data_o.12] = _1003;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c8458 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:114:11: note: op template: .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.mass = pretmp_1309;
+integration.c:114:11: note: 	children 0x75c8558
+integration.c:114:11: note: node (external) 0x75c8558 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:114:11: note: 	{ g_1294, pretmp_1309 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: vect_is_simple_use: operand particles.mass, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) double  vectorizing a pointer ref: .omp_data_o.12.g
+integration.c:114:11: note: created &.omp_data_o.12.g
+integration.c:114:11: note: add new stmt: MEM <const vector(2) double> [(double *)&.omp_data_o.12 + 16B] = _1001;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c8658 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_x = pretmp_1308;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_x = pretmp_1308;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.local_y = pretmp_1307;
+integration.c:114:11: note: 	stmt 2 .omp_data_o.12.local_z = pretmp_1306;
+integration.c:114:11: note: 	stmt 3 .omp_data_o.12.visit_x = _657;
+integration.c:114:11: note: 	stmt 4 .omp_data_o.12.visit_y = _656;
+integration.c:114:11: note: 	stmt 5 .omp_data_o.12.visit_z = _655;
+integration.c:114:11: note: 	stmt 6 .omp_data_o.12.ax = pretmp_1305;
+integration.c:114:11: note: 	stmt 7 .omp_data_o.12.ay = pretmp_1304;
+integration.c:114:11: note: 	children 0x75c8758
+integration.c:114:11: note: node (external) 0x75c8758 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: 	{ pretmp_1308, pretmp_1307, pretmp_1306, _657, _656, _655, pretmp_1305, pretmp_1304 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.local_x = pretmp_1308;
+integration.c:114:11: note: vect_is_simple_use: operand particles.y, type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand particles.z, type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand buf_x[curr_636], type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand buf_y[curr_636], type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand buf_z[curr_636], type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand particles.ax, type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand particles.ay, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: vector(8) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.local_x
+integration.c:114:11: note: created &.omp_data_o.12.local_x
+integration.c:114:11: note: add new stmt: MEM <vector(8) long unsigned int> [(const dtype * *)&.omp_data_o.12 + 32B] = _883;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c87d8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.blocks_j = _1317;
+integration.c:114:11: note: 	children 0x75c8858
+integration.c:114:11: note: node (external) 0x75c8858 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ _1317, _1317 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: vect_is_simple_use: operand _1316 >> 7, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.blocks_i
+integration.c:114:11: note: created &.omp_data_o.12.blocks_i
+integration.c:114:11: note: add new stmt: MEM <const vector(2) long unsigned int> [(long unsigned int *)&.omp_data_o.12 + 104B] = _858;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c8a58 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:33:9: note: op template: .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.mass = _651;
+integration.c:33:9: note: 	children 0x75c8b58
+integration.c:33:9: note: node (external) 0x75c8b58 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:33:9: note: 	{ g_1294, _651 }
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: vect_is_simple_use: operand particles.mass, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: const vector(2) double  vectorizing a pointer ref: .omp_data_o.5.g
+integration.c:33:9: note: created &.omp_data_o.5.g
+integration.c:33:9: note: add new stmt: MEM <const vector(2) double> [(double *)&.omp_data_o.5 + 8B] = _848;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c8958 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.3.ax = _647;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.3.ax = _647;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.3.ay = _646;
+integration.c:33:9: note: 	children 0x75c89d8
+integration.c:33:9: note: node 0x75c89d8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _647 = particles.ax;
+integration.c:33:9: note: 	stmt 0 _647 = particles.ax;
+integration.c:33:9: note: 	stmt 1 _646 = particles.ay;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: _647 = particles.ax;
+integration.c:33:9: note: transform load. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: particles.ay
+integration.c:33:9: note: created &particles.ay
+integration.c:33:9: note: add new stmt: vect__647.529_719 = MEM <vector(2) long unsigned int> [(dtype * *)&particles + 64B];
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.3.ax = _647;
+integration.c:33:9: note: vect_is_simple_use: operand particles.ax, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.ay, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.3.ax
+integration.c:33:9: note: created &.omp_data_o.3.ax
+integration.c:33:9: note: add new stmt: MEM <vector(2) long unsigned int> [(dtype * *)&.omp_data_o.3 + 8B] = vect__647.529_719;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c8c58 (max_nunits=4, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.x = _650;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.x = _650;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.y = _649;
+integration.c:33:9: note: 	stmt 2 .omp_data_o.5.z = _648;
+integration.c:33:9: note: 	stmt 3 .omp_data_o.5.ax = _647;
+integration.c:33:9: note: 	children 0x75c8cd8
+integration.c:33:9: note: node 0x75c8cd8 (max_nunits=4, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: op template: _650 = particles.x;
+integration.c:33:9: note: 	stmt 0 _650 = particles.x;
+integration.c:33:9: note: 	stmt 1 _649 = particles.y;
+integration.c:33:9: note: 	stmt 2 _648 = particles.z;
+integration.c:33:9: note: 	stmt 3 _647 = particles.ax;
+integration.c:33:9: note: 	load permutation { 0 1 2 6 }
+integration.c:33:9: note: ------>vectorizing SLP node starting from: _650 = particles.x;
+integration.c:33:9: note: transform load. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(4) long unsigned int  vectorizing a pointer ref: particles.ax
+integration.c:33:9: note: created &particles.ax
+integration.c:33:9: note: add new stmt: vect__650.534_709 = MEM <vector(4) long unsigned int> [(dtype * *)&particles + 16B];
+integration.c:33:9: note: add new stmt: vect__650.535_708 = MEM <vector(4) long unsigned int> [(dtype * *)&particles + 48B];
+integration.c:33:9: note: add new stmt: _701 = MEM[(dtype * *)&particles + 80B];
+integration.c:33:9: note: add new stmt: vect__650.536_697 = {_701, 0, 0, 0};
+integration.c:33:9: note: add new stmt: vect__650.537_691 = VEC_PERM_EXPR <vect__650.534_709, vect__650.535_708, { 0, 1, 2, 6 }>;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.5.x = _650;
+integration.c:33:9: note: vect_is_simple_use: operand particles.x, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.y, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.z, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.ax, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(4) long unsigned int  vectorizing a pointer ref: .omp_data_o.5.x
+integration.c:33:9: note: created &.omp_data_o.5.x
+integration.c:33:9: note: add new stmt: MEM <vector(4) long unsigned int> [(const dtype * *)&.omp_data_o.5 + 24B] = vect__650.537_691;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c8d58 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.ay = _646;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.ay = _646;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.az = _645;
+integration.c:33:9: note: 	children 0x75c8dd8
+integration.c:33:9: note: node 0x75c8dd8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _646 = particles.ay;
+integration.c:33:9: note: 	stmt 0 _646 = particles.ay;
+integration.c:33:9: note: 	stmt 1 _645 = particles.az;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: _646 = particles.ay;
+integration.c:33:9: note: transform load. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: particles.az
+integration.c:33:9: note: created &particles.az
+integration.c:33:9: note: add new stmt: vect__646.542_592 = MEM <vector(2) long unsigned int> [(dtype * *)&particles + 72B];
+integration.c:33:9: note: extracting lane for live stmt _645 = particles.az;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.5.ay = _646;
+integration.c:33:9: note: vect_is_simple_use: operand particles.ay, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.az, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.5.ay
+integration.c:33:9: note: created &.omp_data_o.5.ay
+integration.c:33:9: note: add new stmt: MEM <vector(2) long unsigned int> [(dtype * *)&.omp_data_o.5 + 56B] = vect__646.542_592;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c8e58 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.visit_n = n_local_604;
+integration.c:114:11: note: 	children 0x75c8ed8
+integration.c:114:11: note: node (external) 0x75c8ed8 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ n_local_604, n_local_604 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.local_n = n_local_604;
+integration.c:114:11: note: vect_is_simple_use: operand particles.n, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.local_n
+integration.c:114:11: note: created &.omp_data_o.12
+integration.c:114:11: note: add new stmt: MEM <const vector(2) long unsigned int> [(long unsigned int *)&.omp_data_o.12] = _541;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c8f58 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:114:11: note: op template: .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.mass = _673;
+integration.c:114:11: note: 	children 0x75c9058
+integration.c:114:11: note: node (external) 0x75c9058 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:114:11: note: 	{ g_1294, _673 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.g = g_1294;
+integration.c:114:11: note: vect_is_simple_use: operand particles.mass, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) double  vectorizing a pointer ref: .omp_data_o.12.g
+integration.c:114:11: note: created &.omp_data_o.12.g
+integration.c:114:11: note: add new stmt: MEM <const vector(2) double> [(double *)&.omp_data_o.12 + 16B] = _513;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 64 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c9158 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.local_x = _672;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.local_x = _672;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.local_y = _671;
+integration.c:114:11: note: 	stmt 2 .omp_data_o.12.local_z = _670;
+integration.c:114:11: note: 	stmt 3 .omp_data_o.12.visit_x = _669;
+integration.c:114:11: note: 	stmt 4 .omp_data_o.12.visit_y = _668;
+integration.c:114:11: note: 	stmt 5 .omp_data_o.12.visit_z = _667;
+integration.c:114:11: note: 	stmt 6 .omp_data_o.12.ax = _666;
+integration.c:114:11: note: 	stmt 7 .omp_data_o.12.ay = _665;
+integration.c:114:11: note: 	children 0x75c9258
+integration.c:114:11: note: node (external) 0x75c9258 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+integration.c:114:11: note: 	{ _672, _671, _670, _669, _668, _667, _666, _665 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.local_x = _672;
+integration.c:114:11: note: vect_is_simple_use: operand particles.y, type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand particles.z, type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand buf_x[curr_1250], type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand buf_y[curr_1250], type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand buf_z[curr_1250], type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand particles.ax, type of def: internal
+integration.c:114:11: note: vect_is_simple_use: operand particles.ay, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: vector(8) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.local_x
+integration.c:114:11: note: created &.omp_data_o.12.local_x
+integration.c:114:11: note: add new stmt: MEM <vector(8) long unsigned int> [(const dtype * *)&.omp_data_o.12 + 32B] = _447;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:114:11: optimized: basic block part vectorized using 16 byte vectors
+integration.c:114:11: note: Vectorizing SLP tree:
+integration.c:114:11: note: node 0x75c92d8 (max_nunits=2, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: op template: .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 0 .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: 	stmt 1 .omp_data_o.12.blocks_j = _1317;
+integration.c:114:11: note: 	children 0x75c9358
+integration.c:114:11: note: node (external) 0x75c9358 (max_nunits=1, refcnt=1) const vector(2) long unsigned int
+integration.c:114:11: note: 	{ _1317, _1317 }
+integration.c:114:11: note: ------>vectorizing SLP node starting from: .omp_data_o.12.blocks_i = _1317;
+integration.c:114:11: note: vect_is_simple_use: operand _1316 >> 7, type of def: internal
+integration.c:114:11: note: transform store. ncopies = 1
+integration.c:114:11: note: create vector_type-pointer variable to type: const vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.12.blocks_i
+integration.c:114:11: note: created &.omp_data_o.12.blocks_i
+integration.c:114:11: note: add new stmt: MEM <const vector(2) long unsigned int> [(long unsigned int *)&.omp_data_o.12 + 104B] = _365;
+integration.c:114:11: note: vectorizing stmts using SLP.
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c9558 (max_nunits=2, refcnt=1) const vector(2) double
+integration.c:33:9: note: op template: .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.mass = _612;
+integration.c:33:9: note: 	children 0x75c9658
+integration.c:33:9: note: node (external) 0x75c9658 (max_nunits=1, refcnt=1) const vector(2) double
+integration.c:33:9: note: 	{ g_1294, _612 }
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.5.g = g_1294;
+integration.c:33:9: note: vect_is_simple_use: operand particles.mass, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: const vector(2) double  vectorizing a pointer ref: .omp_data_o.5.g
+integration.c:33:9: note: created &.omp_data_o.5.g
+integration.c:33:9: note: add new stmt: MEM <const vector(2) double> [(double *)&.omp_data_o.5 + 8B] = _349;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:33:9: optimized: basic block part vectorized using 32 byte vectors
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c9758 (max_nunits=4, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.x = pretmp_1315;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.x = pretmp_1315;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.y = _610;
+integration.c:33:9: note: 	stmt 2 .omp_data_o.5.z = _609;
+integration.c:33:9: note: 	stmt 3 .omp_data_o.5.ax = _608;
+integration.c:33:9: note: 	children 0x75c9858
+integration.c:33:9: note: node (external) 0x75c9858 (max_nunits=1, refcnt=1) vector(4) long unsigned int
+integration.c:33:9: note: 	{ pretmp_1315, _610, _609, _608 }
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.5.x = pretmp_1315;
+integration.c:33:9: note: vect_is_simple_use: operand particles.y, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.z, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.ax, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(4) long unsigned int  vectorizing a pointer ref: .omp_data_o.5.x
+integration.c:33:9: note: created &.omp_data_o.5.x
+integration.c:33:9: note: add new stmt: MEM <vector(4) long unsigned int> [(const dtype * *)&.omp_data_o.5 + 24B] = _93;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:26:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: optimized: basic block part vectorized using 16 byte vectors
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c9458 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.3.ax = _608;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.3.ax = _608;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.3.ay = _607;
+integration.c:33:9: note: 	children 0x75c94d8
+integration.c:33:9: note: node 0x75c94d8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _608 = particles.ax;
+integration.c:33:9: note: 	stmt 0 _608 = particles.ax;
+integration.c:33:9: note: 	stmt 1 _607 = particles.ay;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: _608 = particles.ax;
+integration.c:33:9: note: transform load. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: particles.ay
+integration.c:33:9: note: created &particles.ay
+integration.c:33:9: note: add new stmt: vect__608.559_89 = MEM <vector(2) long unsigned int> [(dtype * *)&particles + 64B];
+integration.c:33:9: note: extracting lane for live stmt _608 = particles.ax;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.3.ax = _608;
+integration.c:33:9: note: vect_is_simple_use: operand particles.ax, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.ay, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.3.ax
+integration.c:33:9: note: created &.omp_data_o.3.ax
+integration.c:33:9: note: add new stmt: MEM <vector(2) long unsigned int> [(dtype * *)&.omp_data_o.3 + 8B] = vect__608.559_89;
+integration.c:33:9: note: vectorizing stmts using SLP.
+integration.c:33:9: note: Vectorizing SLP tree:
+integration.c:33:9: note: node 0x75c98d8 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: .omp_data_o.5.ay = _607;
+integration.c:33:9: note: 	stmt 0 .omp_data_o.5.ay = _607;
+integration.c:33:9: note: 	stmt 1 .omp_data_o.5.az = _606;
+integration.c:33:9: note: 	children 0x75c9958
+integration.c:33:9: note: node 0x75c9958 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+integration.c:33:9: note: op template: _607 = particles.ay;
+integration.c:33:9: note: 	stmt 0 _607 = particles.ay;
+integration.c:33:9: note: 	stmt 1 _606 = particles.az;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: _607 = particles.ay;
+integration.c:33:9: note: transform load. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: particles.az
+integration.c:33:9: note: created &particles.az
+integration.c:33:9: note: add new stmt: vect__607.564_73 = MEM <vector(2) long unsigned int> [(dtype * *)&particles + 72B];
+integration.c:33:9: note: extracting lane for live stmt _606 = particles.az;
+integration.c:33:9: note: ------>vectorizing SLP node starting from: .omp_data_o.5.ay = _607;
+integration.c:33:9: note: vect_is_simple_use: operand particles.ay, type of def: internal
+integration.c:33:9: note: vect_is_simple_use: operand particles.az, type of def: internal
+integration.c:33:9: note: transform store. ncopies = 1
+integration.c:33:9: note: create vector_type-pointer variable to type: vector(2) long unsigned int  vectorizing a pointer ref: .omp_data_o.5.ay
+integration.c:33:9: note: created &.omp_data_o.5.ay
+integration.c:33:9: note: add new stmt: MEM <vector(2) long unsigned int> [(dtype * *)&.omp_data_o.5 + 56B] = vect__607.564_73;
+integration.c:33:9: note: vectorizing stmts using SLP.
+particles.c:24:11: optimized: basic block part vectorized using 64 byte vectors
+particles.c:24:11: note: Vectorizing SLP tree:
+particles.c:24:11: note: node 0x75c9a58 (max_nunits=8, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: op template: particles.x = 0B;
+particles.c:24:11: note: 	stmt 0 particles.x = 0B;
+particles.c:24:11: note: 	stmt 1 particles.y = 0B;
+particles.c:24:11: note: 	stmt 2 particles.z = 0B;
+particles.c:24:11: note: 	stmt 3 particles.vx = 0B;
+particles.c:24:11: note: 	stmt 4 particles.vy = 0B;
+particles.c:24:11: note: 	stmt 5 particles.vz = 0B;
+particles.c:24:11: note: 	stmt 6 particles.ax = 0B;
+particles.c:24:11: note: 	stmt 7 particles.ay = 0B;
+particles.c:24:11: note: 	children 0x75c9ad8
+particles.c:24:11: note: node (constant) 0x75c9ad8 (max_nunits=1, refcnt=1) vector(8) long unsigned int
+particles.c:24:11: note: 	{ 0B, 0B, 0B, 0B, 0B, 0B, 0B, 0B }
+particles.c:24:11: note: ------>vectorizing SLP node starting from: particles.x = 0B;
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: vect_is_simple_use: operand 0B, type of def: constant
+particles.c:24:11: note: transform store. ncopies = 1
+particles.c:24:11: note: create vector_type-pointer variable to type: vector(8) long unsigned int  vectorizing a pointer ref: particles.x
+particles.c:24:11: note: created &particles.x
+particles.c:24:11: note: add new stmt: MEM <vector(8) long unsigned int> [(dtype * *)&particles + 16B] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+particles.c:24:11: note: vectorizing stmts using SLP.
+particles.c:24:11: note: ***** The result for vector mode V64QI would be the same
+generate_initial_conditions.c:55:3: missed: statement clobbers memory: __builtin_va_start (&args, 0);
+generate_initial_conditions.c:56:3: missed: statement clobbers memory: vfprintf (_1, format_5(D), &args);
+generate_initial_conditions.c:57:3: missed: statement clobbers memory: __builtin_va_end (&args);
+generate_initial_conditions.c:58:3: missed: statement clobbers memory: fputc (10, _2);
+generate_initial_conditions.c:59:3: missed: statement clobbers memory: exit (1);
+generate_initial_conditions.c:59:3: note: ***** Analysis failed with vector mode V8DI
+generate_initial_conditions.c:59:3: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V8DI
+generate_initial_conditions.c:117:11: missed: statement clobbers memory: value_9 = strtod (text_7(D), &endptr);
+generate_initial_conditions.c:119:5: missed: statement clobbers memory: die ("invalid floating-point value for %s: %s", name_10(D), text_7(D));
+generate_initial_conditions.c:119:5: note: ***** Analysis failed with vector mode V16SI
+generate_initial_conditions.c:119:5: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V16SI
+generate_initial_conditions.c:136:27: missed: statement clobbers memory: key_len_18 = strlen (key_17(D));
+generate_initial_conditions.c:139:8: missed: statement clobbers memory: _5 = strncmp (arg_21, key_17(D), key_len_18);
+generate_initial_conditions.c:142:7: missed: statement clobbers memory: _9 = strcmp (arg_21, key_17(D));
+generate_initial_conditions.c:145:9: missed: statement clobbers memory: die ("missing value after %s", key_17(D));
+generate_initial_conditions.c:140:26: note: ***** Analysis failed with vector mode V16SI
+generate_initial_conditions.c:140:26: note: ***** Skipping vector mode V64QI, which would repeat the analysis for V16SI
+generate_initial_conditions.c:172:9: missed: statement clobbers memory: ptr_10 = aligned_alloc (64, padded_8);
+generate_initial_conditions.c:174:5: missed: statement clobbers memory: die ("allocation failed for array %s", name_5(D));
+generate_initial_conditions.c:169:5: missed: statement clobbers memory: die ("array %s is too large", name_5(D));
+generate_initial_conditions.c:169:5: note: ***** Analysis failed with vector mode VOID
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V8DI
+generate_initial_conditions.c:213:12: note: ***** The result for vector mode V64QI would be the same
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V32QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V32QI
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V16QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V16QI
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V8QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V8QI
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V4QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V4QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V8DI
+generate_initial_conditions.c:213:12: note: ***** The result for vector mode V64QI would be the same
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V32QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V32QI
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V16QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V16QI
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V8QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V8QI
+generate_initial_conditions.c:213:12: note: ***** Re-trying analysis with vector mode V4QI
+generate_initial_conditions.c:213:12: note: ***** Analysis failed with vector mode V4QI
+generate_initial_conditions.c:598:29: missed: couldn't vectorize loop
+generate_initial_conditions.c:190:27: missed: statement clobbers memory: written_518 = fwrite (&record, 4, 6, fp_495);
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:476:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:437:25: missed: couldn't vectorize loop
+generate_initial_conditions.c:437:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+generate_initial_conditions.c:400:10: missed: couldn't vectorize loop
+generate_initial_conditions.c:400:10: missed: not vectorized: number of iterations cannot be computed.
+generate_initial_conditions.c:381:31: missed: couldn't vectorize loop
+generate_initial_conditions.c:381:31: missed: not vectorized: number of iterations cannot be computed.
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 64 byte vectors
+generate_initial_conditions.c:349:25: optimized: loop vectorized using 32 byte vectors
+generate_initial_conditions.c:317:25: missed: couldn't vectorize loop
+generate_initial_conditions.c:317:25: missed: not vectorized: unsupported control flow in loop.
+generate_initial_conditions.c:644:23: missed: couldn't vectorize loop
+generate_initial_conditions.c:644:23: missed: not vectorized: could not determine main exit from loop with multiple exits.
+generate_initial_conditions.c:622:5: note: vectorized 2 loops in function.
+generate_initial_conditions.c:139:8: missed: statement clobbers memory: _184 = strncmp (arg_183, "--model", 7);
+generate_initial_conditions.c:142:7: missed: statement clobbers memory: _189 = strcmp (arg_183, "--model");
+generate_initial_conditions.c:139:8: missed: statement clobbers memory: _207 = strncmp (prephitmp_1157, "--n", 3);
+generate_initial_conditions.c:142:7: missed: statement clobbers memory: _212 = strcmp (prephitmp_1157, "--n");
+generate_initial_conditions.c:139:8: missed: statement clobbers memory: _230 = strncmp (prephitmp_1169, "--output", 8);
+generate_initial_conditions.c:142:7: missed: statement clobbers memory: _235 = strcmp (prephitmp_1169, "--output");
+generate_initial_conditions.c:654:25: missed: statement clobbers memory: value_90 = option_value (&argi, argc_46(D), argv_47(D), "--seed");
+generate_initial_conditions.c:656:25: missed: statement clobbers memory: value_92 = option_value (&argi, argc_46(D), argv_47(D), "--scale");
+generate_initial_conditions.c:658:25: missed: statement clobbers memory: value_94 = option_value (&argi, argc_46(D), argv_47(D), "--rmax");
+generate_initial_conditions.c:660:25: missed: statement clobbers memory: value_96 = option_value (&argi, argc_46(D), argv_47(D), "--radius");
+generate_initial_conditions.c:662:25: missed: statement clobbers memory: value_98 = option_value (&argi, argc_46(D), argv_47(D), "--sigma");
+generate_initial_conditions.c:664:25: missed: statement clobbers memory: value_100 = option_value (&argi, argc_46(D), argv_47(D), "--G");
+generate_initial_conditions.c:666:25: missed: statement clobbers memory: value_102 = option_value (&argi, argc_46(D), argv_47(D), "--mass");
+generate_initial_conditions.c:667:25: missed: statement clobbers memory: particle_mass_105 = parse_dtype (value_102, "--mass");
+generate_initial_conditions.c:665:13: missed: statement clobbers memory: g_107 = parse_dtype (value_100, "--G");
+generate_initial_conditions.c:663:17: missed: statement clobbers memory: sigma_109 = parse_dtype (value_98, "--sigma");
+generate_initial_conditions.c:661:23: missed: statement clobbers memory: ball_radius_111 = parse_dtype (value_96, "--radius");
+generate_initial_conditions.c:659:16: missed: statement clobbers memory: rmax_113 = parse_dtype (value_94, "--rmax");
+generate_initial_conditions.c:657:17: missed: statement clobbers memory: scale_115 = parse_dtype (value_92, "--scale");
+generate_initial_conditions.c:95:11: missed: statement clobbers memory: value_243 = strtoull (value_90, &endptr, 10);
+generate_initial_conditions.c:95:11: missed: statement clobbers memory: value_220 = strtoull (_545, &endptr, 10);
+generate_initial_conditions.c:95:11: missed: statement clobbers memory: value_197 = strtoull (_547, &endptr, 10);
+generate_initial_conditions.c:668:16: missed: statement clobbers memory: _7 = strcmp (_6, "--help");
+generate_initial_conditions.c:66:3: missed: statement clobbers memory: fprintf (pretmp_1282, "usage: %s --n N --output FILE [options]\n\noptions:\n  --n N                 number of particles\n  --output FILE         output binary particle file (%s)\n  --seed N              RNG seed (default: 1)\n  --scale X             Plummer scale radius a (default: 1)\n  --rmax X              optional truncation radius; <=0 disables (default: 0)\n  --G X                 gravitational constant used for velocities (default: 1)\n  --mass X              particle mass used for velocities (default: 1)\n  --help                show this help message\n", pretmp_1281, "nbody-f32-v1");
+generate_initial_conditions.c:676:11: missed: statement clobbers memory: die ("unknown option: %s", _10);
+generate_initial_conditions.c:66:3: missed: statement clobbers memory: fprintf (pretmp_1282, "usage: %s --n N --output FILE [options]\n\noptions:\n  --n N                 number of particles\n  --output FILE         output binary particle file (%s)\n  --seed N              RNG seed (default: 1)\n  --scale X             Plummer scale radius a (default: 1)\n  --rmax X              optional truncation radius; <=0 disables (default: 0)\n  --G X                 gravitational constant used for velocities (default: 1)\n  --mass X              particle mass used for velocities (default: 1)\n  --help                show this help message\n", pretmp_1281, "nbody-f32-v1");
+generate_initial_conditions.c:97:5: missed: statement clobbers memory: die ("invalid integer for %s: %s", "--seed", value_667);
+generate_initial_conditions.c:145:9: missed: statement clobbers memory: die ("missing value after %s", "--output");
+generate_initial_conditions.c:145:9: missed: statement clobbers memory: die ("missing value after %s", "--n");
+generate_initial_conditions.c:97:5: missed: statement clobbers memory: die ("invalid integer for %s: %s", "--n", _442);
+generate_initial_conditions.c:145:9: missed: statement clobbers memory: die ("missing value after %s", "--model");
+generate_initial_conditions.c:711:8: missed: statement clobbers memory: x_60 = allocate_array (n_88, "x");
+generate_initial_conditions.c:712:8: missed: statement clobbers memory: y_62 = allocate_array (n_88, "y");
+generate_initial_conditions.c:713:8: missed: statement clobbers memory: z_64 = allocate_array (n_88, "z");
+generate_initial_conditions.c:714:8: missed: statement clobbers memory: vx_66 = allocate_array (n_88, "vx");
+generate_initial_conditions.c:715:8: missed: statement clobbers memory: vy_68 = allocate_array (n_88, "vy");
+generate_initial_conditions.c:716:8: missed: statement clobbers memory: vz_70 = allocate_array (n_88, "vz");
+generate_initial_conditions.c:711:8: missed: statement clobbers memory: x_524 = allocate_array (n_88, "x");
+generate_initial_conditions.c:712:8: missed: statement clobbers memory: y_296 = allocate_array (n_88, "y");
+generate_initial_conditions.c:713:8: missed: statement clobbers memory: z_290 = allocate_array (n_88, "z");
+generate_initial_conditions.c:714:8: missed: statement clobbers memory: vx_284 = allocate_array (n_88, "vx");
+generate_initial_conditions.c:715:8: missed: statement clobbers memory: vy_129 = allocate_array (n_88, "vy");
+generate_initial_conditions.c:716:8: missed: statement clobbers memory: vz_37 = allocate_array (n_88, "vz");
+generate_initial_conditions.c:325:7: missed: statement clobbers memory: random_unit_vector (&rng, &ux, &uy, &uz);
+generate_initial_conditions.c:622:5: missed: statement clobbers memory: _420 = rng_normal.part.0 (&rng);
+generate_initial_conditions.c:622:5: missed: statement clobbers memory: _426 = rng_normal.part.0 (&rng);
+generate_initial_conditions.c:622:5: missed: statement clobbers memory: _432 = rng_normal.part.0 (&rng);
+generate_initial_conditions.c:448:7: missed: statement clobbers memory: random_unit_vector (&rng, &ux, &uy, &uz);
+generate_initial_conditions.c:456:7: missed: statement clobbers memory: random_unit_vector (&rng, &ux, &uy, &uz);
+generate_initial_conditions.c:590:12: missed: statement clobbers memory: fp_495 = fopen (output_path_137, "wb");
+generate_initial_conditions.c:190:27: missed: statement clobbers memory: written_496 = fwrite (&nbody_binary_magic, 1, 8, fp_495);
+generate_initial_conditions.c:190:27: missed: statement clobbers memory: written_497 = fwrite (&n64, 8, 1, fp_495);
+generate_initial_conditions.c:190:27: missed: statement clobbers memory: written_518 = fwrite (&record, 4, 6, fp_495);
+generate_initial_conditions.c:613:11: missed: statement clobbers memory: _520 = fclose (fp_495);
+generate_initial_conditions.c:730:3: missed: statement clobbers memory: free (x_25);
+generate_initial_conditions.c:731:3: missed: statement clobbers memory: free (y_208);
+generate_initial_conditions.c:732:3: missed: statement clobbers memory: free (z_86);
+generate_initial_conditions.c:733:3: missed: statement clobbers memory: free (vx_224);
+generate_initial_conditions.c:734:3: missed: statement clobbers memory: free (vy_436);
+generate_initial_conditions.c:735:3: missed: statement clobbers memory: free (vz_179);
+generate_initial_conditions.c:614:2: missed: statement clobbers memory: die ("error while closing output file \'%s\'", output_path_137);
+generate_initial_conditions.c:192:5: missed: statement clobbers memory: die ("write error while writing %s to \'%s\'", "particle record", output_path_137);
+generate_initial_conditions.c:192:5: missed: statement clobbers memory: die ("write error while writing %s to \'%s\'", "particle count", output_path_137);
+generate_initial_conditions.c:192:5: missed: statement clobbers memory: die ("write error while writing %s to \'%s\'", "binary magic", output_path_137);
+generate_initial_conditions.c:592:2: missed: statement clobbers memory: die ("cannot open output file \'%s\'", output_path_137);
+generate_initial_conditions.c:704:9: missed: statement clobbers memory: die ("total mass is not finite in the selected dtype");
+generate_initial_conditions.c:697:5: missed: statement clobbers memory: die ("--radius must be positive");
+generate_initial_conditions.c:695:5: missed: statement clobbers memory: die ("--mass must be positive");
+generate_initial_conditions.c:693:5: missed: statement clobbers memory: die ("--G must be positive");
+generate_initial_conditions.c:691:5: missed: statement clobbers memory: die ("--scale must be positive");
+generate_initial_conditions.c:66:3: missed: statement clobbers memory: fprintf (_126, "usage: %s --n N --output FILE [options]\n\noptions:\n  --n N                 number of particles\n  --output FILE         output binary particle file (%s)\n  --seed N              RNG seed (default: 1)\n  --scale X             Plummer scale radius a (default: 1)\n  --rmax X              optional truncation radius; <=0 disables (default: 0)\n  --G X                 gravitational constant used for velocities (default: 1)\n  --mass X              particle mass used for velocities (default: 1)\n  --help                show this help message\n", _15, "nbody-f32-v1");
+generate_initial_conditions.c:688:7: missed: statement clobbers memory: die ("missing required --output FILE");
+generate_initial_conditions.c:66:3: missed: statement clobbers memory: fprintf (_55, "usage: %s --n N --output FILE [options]\n\noptions:\n  --n N                 number of particles\n  --output FILE         output binary particle file (%s)\n  --seed N              RNG seed (default: 1)\n  --scale X             Plummer scale radius a (default: 1)\n  --rmax X              optional truncation radius; <=0 disables (default: 0)\n  --G X                 gravitational constant used for velocities (default: 1)\n  --mass X              particle mass used for velocities (default: 1)\n  --help                show this help message\n", _14, "nbody-f32-v1");
+generate_initial_conditions.c:683:7: missed: statement clobbers memory: die ("missing or invalid --n N");
+generate_initial_conditions.c:97:5: missed: statement clobbers memory: die ("invalid integer for %s: %s", "--model", _1280);
+generate_initial_conditions.c:606:14: note: ***** Analysis succeeded with vector mode V16SI
+generate_initial_conditions.c:606:14: note: SLPing BB part
+generate_initial_conditions.c:602:14: note: Costing subgraph: 
+generate_initial_conditions.c:602:14: note: node 0x3eb49d08 (max_nunits=4, refcnt=1) vector(4) float
+generate_initial_conditions.c:602:14: note: op template: record[0] = _502;
+generate_initial_conditions.c:602:14: note: 	stmt 0 record[0] = _502;
+generate_initial_conditions.c:602:14: note: 	stmt 1 record[1] = _505;
+generate_initial_conditions.c:602:14: note: 	stmt 2 record[2] = _508;
+generate_initial_conditions.c:602:14: note: 	stmt 3 record[3] = _511;
+generate_initial_conditions.c:602:14: note: 	children 0x3eb49d88
+generate_initial_conditions.c:602:14: note: node 0x3eb49d88 (max_nunits=4, refcnt=1) vector(4) float
+generate_initial_conditions.c:602:14: note: op template: _502 = (float) _501;
+generate_initial_conditions.c:602:14: note: 	stmt 0 _502 = (float) _501;
+generate_initial_conditions.c:602:14: note: 	stmt 1 _505 = (float) _504;
+generate_initial_conditions.c:602:14: note: 	stmt 2 _508 = (float) _507;
+generate_initial_conditions.c:602:14: note: 	stmt 3 _511 = (float) _510;
+generate_initial_conditions.c:602:14: note: 	children 0x3eb49e88
+generate_initial_conditions.c:602:14: note: node (external) 0x3eb49e88 (max_nunits=1, refcnt=1) vector(4) double
+generate_initial_conditions.c:602:14: note: 	{ _501, _504, _507, _510 }
+generate_initial_conditions.c:602:14: note: Cost model analysis: 
+generate_initial_conditions.c:602:14: note: Cost model analysis for part in loop 8:
+  Vector cost: 48
+  Scalar cost: 112
+generate_initial_conditions.c:606:14: note: Costing subgraph: 
+generate_initial_conditions.c:606:14: note: node 0x3eb49f08 (max_nunits=2, refcnt=1) vector(2) float
+generate_initial_conditions.c:606:14: note: op template: record[4] = _514;
+generate_initial_conditions.c:606:14: note: 	stmt 0 record[4] = _514;
+generate_initial_conditions.c:606:14: note: 	stmt 1 record[5] = _517;
+generate_initial_conditions.c:606:14: note: 	children 0x3eb49f88
+generate_initial_conditions.c:606:14: note: node 0x3eb49f88 (max_nunits=2, refcnt=1) vector(2) float
+generate_initial_conditions.c:606:14: note: op template: _514 = (float) _513;
+generate_initial_conditions.c:606:14: note: 	stmt 0 _514 = (float) _513;
+generate_initial_conditions.c:606:14: note: 	stmt 1 _517 = (float) _516;
+generate_initial_conditions.c:606:14: note: 	children 0x3eb4a088
+generate_initial_conditions.c:606:14: note: node (external) 0x3eb4a088 (max_nunits=1, refcnt=1) vector(2) double
+generate_initial_conditions.c:606:14: note: 	{ _513, _516 }
+generate_initial_conditions.c:606:14: note: Cost model analysis: 
+generate_initial_conditions.c:606:14: note: Cost model analysis for part in loop 8:
+  Vector cost: 32
+  Scalar cost: 56
+generate_initial_conditions.c:606:14: note: Basic block will be vectorized using SLP
+generate_initial_conditions.c:602:14: optimized: basic block part vectorized using 16 byte vectors
+generate_initial_conditions.c:602:14: note: Vectorizing SLP tree:
+generate_initial_conditions.c:602:14: note: node 0x3eb49d08 (max_nunits=4, refcnt=1) vector(4) float
+generate_initial_conditions.c:602:14: note: op template: record[0] = _502;
+generate_initial_conditions.c:602:14: note: 	stmt 0 record[0] = _502;
+generate_initial_conditions.c:602:14: note: 	stmt 1 record[1] = _505;
+generate_initial_conditions.c:602:14: note: 	stmt 2 record[2] = _508;
+generate_initial_conditions.c:602:14: note: 	stmt 3 record[3] = _511;
+generate_initial_conditions.c:602:14: note: 	children 0x3eb49d88
+generate_initial_conditions.c:602:14: note: node 0x3eb49d88 (max_nunits=4, refcnt=1) vector(4) float
+generate_initial_conditions.c:602:14: note: op template: _502 = (float) _501;
+generate_initial_conditions.c:602:14: note: 	stmt 0 _502 = (float) _501;
+generate_initial_conditions.c:602:14: note: 	stmt 1 _505 = (float) _504;
+generate_initial_conditions.c:602:14: note: 	stmt 2 _508 = (float) _507;
+generate_initial_conditions.c:602:14: note: 	stmt 3 _511 = (float) _510;
+generate_initial_conditions.c:602:14: note: 	children 0x3eb49e88
+generate_initial_conditions.c:602:14: note: node (external) 0x3eb49e88 (max_nunits=1, refcnt=1) vector(4) double
+generate_initial_conditions.c:602:14: note: 	{ _501, _504, _507, _510 }
+generate_initial_conditions.c:602:14: note: ------>vectorizing SLP node starting from: _502 = (float) _501;
+generate_initial_conditions.c:602:14: note: transform conversion. ncopies = 1.
+generate_initial_conditions.c:602:14: note: add new stmt: vect__502.193_870 = (vector(4) float) _877;
+generate_initial_conditions.c:602:14: note: ------>vectorizing SLP node starting from: record[0] = _502;
+generate_initial_conditions.c:602:14: note: vect_is_simple_use: operand (float) _501, type of def: internal
+generate_initial_conditions.c:602:14: note: vect_is_simple_use: operand (float) _504, type of def: internal
+generate_initial_conditions.c:602:14: note: vect_is_simple_use: operand (float) _507, type of def: internal
+generate_initial_conditions.c:602:14: note: vect_is_simple_use: operand (float) _510, type of def: internal
+generate_initial_conditions.c:602:14: note: transform store. ncopies = 1
+generate_initial_conditions.c:602:14: note: create vector_type-pointer variable to type: vector(4) float  vectorizing a pointer ref: record[0]
+generate_initial_conditions.c:602:14: note: created &record[0]
+generate_initial_conditions.c:602:14: note: add new stmt: MEM <vector(4) float> [(float *)&record] = vect__502.193_870;
+generate_initial_conditions.c:602:14: note: vectorizing stmts using SLP.
+generate_initial_conditions.c:606:14: optimized: basic block part vectorized using 8 byte vectors
+generate_initial_conditions.c:606:14: note: Vectorizing SLP tree:
+generate_initial_conditions.c:606:14: note: node 0x3eb49f08 (max_nunits=2, refcnt=1) vector(2) float
+generate_initial_conditions.c:606:14: note: op template: record[4] = _514;
+generate_initial_conditions.c:606:14: note: 	stmt 0 record[4] = _514;
+generate_initial_conditions.c:606:14: note: 	stmt 1 record[5] = _517;
+generate_initial_conditions.c:606:14: note: 	children 0x3eb49f88
+generate_initial_conditions.c:606:14: note: node 0x3eb49f88 (max_nunits=2, refcnt=1) vector(2) float
+generate_initial_conditions.c:606:14: note: op template: _514 = (float) _513;
+generate_initial_conditions.c:606:14: note: 	stmt 0 _514 = (float) _513;
+generate_initial_conditions.c:606:14: note: 	stmt 1 _517 = (float) _516;
+generate_initial_conditions.c:606:14: note: 	children 0x3eb4a088
+generate_initial_conditions.c:606:14: note: node (external) 0x3eb4a088 (max_nunits=1, refcnt=1) vector(2) double
+generate_initial_conditions.c:606:14: note: 	{ _513, _516 }
+generate_initial_conditions.c:606:14: note: ------>vectorizing SLP node starting from: _514 = (float) _513;
+generate_initial_conditions.c:606:14: note: transform conversion. ncopies = 1.
+generate_initial_conditions.c:606:14: note: add new stmt: vect__514.196_853 = (vector(2) float) _858;
+generate_initial_conditions.c:606:14: note: ------>vectorizing SLP node starting from: record[4] = _514;
+generate_initial_conditions.c:606:14: note: vect_is_simple_use: operand (float) _513, type of def: internal
+generate_initial_conditions.c:606:14: note: vect_is_simple_use: operand (float) _516, type of def: internal
+generate_initial_conditions.c:606:14: note: transform store. ncopies = 1
+generate_initial_conditions.c:606:14: note: create vector_type-pointer variable to type: vector(2) float  vectorizing a pointer ref: record[4]
+generate_initial_conditions.c:606:14: note: created &record[4]
+generate_initial_conditions.c:606:14: note: add new stmt: MEM <vector(2) float> [(float *)&record + 16B] = vect__514.196_853;
+generate_initial_conditions.c:606:14: note: vectorizing stmts using SLP.
+generate_initial_conditions.c:606:14: note: ***** The result for vector mode V64QI would be the same
