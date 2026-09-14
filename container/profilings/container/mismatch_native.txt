@@ -1,0 +1,30 @@
+Command exited with non-zero status 1
+
+--- OS / MPI Launch Time ---
+Real: 0.04 seconds
+User: 0.01 seconds
+Sys: 0.02 seconds
+Command exited with non-zero status 1
+
+--- OS / MPI Launch Time ---
+Real: 0.04 seconds
+User: 0.01 seconds
+Sys: 0.03 seconds
+Command exited with non-zero status 1
+
+--- OS / MPI Launch Time ---
+Real: 0.04 seconds
+User: 0.01 seconds
+Sys: 0.02 seconds
+Command exited with non-zero status 1
+
+--- OS / MPI Launch Time ---
+Real: 0.04 seconds
+User: 0.01 seconds
+Sys: 0.03 seconds
+Command exited with non-zero status 1
+
+--- OS / MPI Launch Time ---
+Real: 0.04 seconds
+User: 0.01 seconds
+Sys: 0.03 seconds
