@@ -17,9 +17,9 @@ cd "$SLURM_SUBMIT_DIR"
 mkdir -p ./bins ./profilings/container ./log
 
 N_PARTICLES=100000
-STEPS=100
+STEPS=25
 INPUT_FILE="./bins/mismatch_ic_${N_PARTICLES}.bin"
-N_RUNS=5
+N_RUNS=3
 
 # Generate initial conditions if absent
 if [ ! -f "$INPUT_FILE" ]; then
