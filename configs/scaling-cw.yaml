@@ -1,0 +1,37 @@
+files:
+  - "./experiments/mpi/profilings/w_1_100000.txt"
+  - "./profilings/container/w_1_100000.txt"
+  - "./experiments/mpi/profilings/w_2_141421.txt"
+  - "./profilings/container/w_2_141421.txt"
+  - "./experiments/mpi/profilings/w_4_200000.txt"
+  - "./profilings/container/w_4_200000.txt"
+  - "./experiments/mpi/profilings/w_8_282843.txt"
+  - "./profilings/container/w_8_282843.txt"
+  - "./experiments/mpi/profilings/w_16_400000.txt"
+  - "./profilings/container/w_16_400000.txt"
+  - "./experiments/mpi/profilings/w_32_565685.txt"
+  - "./profilings/container/w_32_565685.txt"
+  - "./experiments/mpi/profilings/w_64_800000.txt"
+  - "./profilings/container/w_64_800000.txt"
+
+names_method:
+  - "Native 1 Rank"
+  - "Container 1 Rank"
+  - "Native 2 Ranks"
+  - "Container 2 Ranks"
+  - "Native 4 Ranks"
+  - "Container 4 Ranks"
+  - "Native 8 Ranks"
+  - "Container 8 Ranks"
+  - "Native 16 Ranks"
+  - "Container 16 Ranks"
+  - "Native 32 Ranks"
+  - "Container 32 Ranks"
+  - "Native 64 Ranks"
+  - "Container 64 Ranks"
+
+baseline_idx: 0
+runs: 1
+save-path: "./reports/container/weak/"
+is_strong: false
+is_weak: true
