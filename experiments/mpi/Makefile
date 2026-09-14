@@ -2,7 +2,7 @@ CC        = mpicc
 STD       ?= -std=c11
 CPPFLAGS  ?= -I$(HOME)/opt/papi/include
 LDFLAGS   ?= -L$(HOME)/opt/papi/lib -Wl,-rpath,$(HOME)/opt/papi/lib
-CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -ffast-math -flto -fopenmp -fopt-info-vec-optimized=vec_report.txt -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1
+CFLAGS    ?= -O3 -march=native -Wall -Wextra -Wpedantic -ffast-math -flto -fopenmp -fopt-info-vec-optimized=vec_report.txt -fopt-info-vec-missed=vec_missed.txt -D_POSIX_C_SOURCE=199309L -DBLOCK_SIZE=128 -DN_RSQRT_LOOP=1
 
 LDLIBS    ?= -lm
 PRECISION ?= double
