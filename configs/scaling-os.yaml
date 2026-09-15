@@ -1,11 +1,11 @@
 files:
-  - "./experiments/omp/profilings/s_1.txt"
-  - "./experiments/omp/profilings/s_2.txt"
-  - "./experiments/omp/profilings/s_4.txt"
-  - "./experiments/omp/profilings/s_8.txt"
-  - "./experiments/omp/profilings/s_16.txt"
-  - "./experiments/omp/profilings/s_32.txt"
-  - "./experiments/omp/profilings/s_64.txt"
+  - "./experiments/omp/profilings/s_1_prop.txt"
+  - "./experiments/omp/profilings/s_2_prop.txt"
+  - "./experiments/omp/profilings/s_4_prop.txt"
+  - "./experiments/omp/profilings/s_8_prop.txt"
+  - "./experiments/omp/profilings/s_16_prop.txt"
+  - "./experiments/omp/profilings/s_32_prop.txt"
+  - "./experiments/omp/profilings/s_64_prop.txt"
 
 names_method:
   - "1 Thread"

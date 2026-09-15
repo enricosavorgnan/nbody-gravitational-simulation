@@ -1,11 +1,11 @@
 files:
-  - "./experiments/omp/profilings/w_1_10000.txt"
-  - "./experiments/omp/profilings/w_2_14142.txt"
-  - "./experiments/omp/profilings/w_4_20000.txt"
-  - "./experiments/omp/profilings/w_8_28284.txt"
-  - "./experiments/omp/profilings/w_16_40000.txt"
-  - "./experiments/omp/profilings/w_32_56569.txt"
-  - "./experiments/omp/profilings/w_64_80000.txt"
+  - "./experiments/omp/profilings/w_1_quiet.txt"
+  - "./experiments/omp/profilings/w_2_quiet.txt"
+  - "./experiments/omp/profilings/w_4_quiet.txt"
+  - "./experiments/omp/profilings/w_8_quiet.txt"
+  - "./experiments/omp/profilings/w_16_quiet.txt"
+  - "./experiments/omp/profilings/w_32_quiet.txt"
+  - "./experiments/omp/profilings/w_64_quiet.txt"
 
 names_method:
   - "1 Thread"
@@ -18,6 +18,6 @@ names_method:
 
 baseline_idx: 0
 runs: 1
-save-path: "./reports/scaling/omp-weak/"
+save-path: "./reports/scaling/omp-weak-quiet/"
 is_strong: false
 is_weak: true
