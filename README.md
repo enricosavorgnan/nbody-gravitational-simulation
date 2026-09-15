@@ -19,22 +19,28 @@ This project implements a numerical solver using the **DKD (Drift-Kick-Drift) Le
 ### 2. Shared-Memory Parallelism (OpenMP)
 *   Thread-level parallelism using optimized OpenMP scheduling.
 *   Algorithmic halving of the computational domain by exploiting **Newton's Third Law** ($F_{ij} = -F_{ji}$), correctly managed via thread-safe reductions to avoid race conditions.
-*   Demonstration of **Super-Linear Strong Scaling** (e.g., 97x speedup on 64 threads) achieved by partitioning the dataset until the thread-local working set fits entirely within the L2/L3 cache hierarchy.
 
 ### 3. Distributed-Memory Parallelism (MPI)
 *   Cluster-level scaling across multiple compute nodes via MPI.
 *   Implementation of a **Double-Buffered Asynchronous Ring Shift** using non-blocking communications (`MPI_Isend` / `MPI_Irecv`).
-*   Complete **Computation-Communication Overlap**, ensuring the high-latency InfiniBand network transfers are perfectly hidden behind the CPU's mathematical execution.
 
 ## Repository Structure
 The repo is organized as follows:
 
 ```
+├── analysis/               # Analysis scripts
 ├── configs/                # Configuration files for the simulation
+├── container/              # Containerization files
 ├── docs/                   # Documentation files
-├── src/                    # Source code files
 ├── experiments/            # Experiments and test cases
-└── plots/                  # Plots and images
+├── reports/                # Reports, plots, CSV
+├── runners/                # Scripts to run the simulation
+├── src/                    # Source code files
+├── .dockerignore
+├── .gitignore
+├── LICENSE
+├── README.md
+└── report.pdf              # Final report
 ```
 
 
