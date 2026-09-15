@@ -1,0 +1,33 @@
+files:
+  - "./experiments/loop-unroll/profilings/test-no-unroll/n.txt"
+  - "./experiments/fma/profilings/m2.txt"
+  - "./experiments/fma/profilings/m4.txt"
+  - "./experiments/fma/profilings/m8.txt"
+  - "./experiments/fma/profilings/m16.txt"
+  - "./experiments/fma/profilings/rm2.txt"
+  - "./experiments/fma/profilings/rm4.txt"
+  - "./experiments/fma/profilings/rm8.txt"
+  - "./experiments/fma/profilings/rm16.txt"
+  - "./experiments/fma/profilings/brm2.txt"
+  - "./experiments/fma/profilings/brm4.txt"
+  - "./experiments/fma/profilings/brm8.txt"
+  - "./experiments/fma/profilings/brm16.txt"
+
+names_method:
+  - "Naive (Baseline)"
+  - "FMA 2"
+  - "FMA 4"
+  - "FMA 8"
+  - "FMA 16"
+  - "Rsqrt-FMA 2"
+  - "Rsqrt-FMA 4"
+  - "Rsqrt-FMA 8"
+  - "Rsqrt-FMA 16"
+  - "Block-Rsqrt-FMA 2"
+  - "Block-Rsqrt-FMA 4"
+  - "Block-Rsqrt-FMA 8"
+  - "Block-Rsqrt-FMA 16"
+
+baseline_idx: 0
+runs: 5
+save-path: "./reports/fma/"

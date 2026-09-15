@@ -1,0 +1,25 @@
+files:
+  - "./experiments/mpi/profilings/s_1.txt"
+  - "./experiments/mpi/profilings/s_2.txt"
+  - "./experiments/mpi/profilings/s_4.txt"
+  - "./experiments/mpi/profilings/s_8.txt"
+  - "./experiments/mpi/profilings/s_16.txt"
+  - "./experiments/mpi/profilings/s_32.txt"
+  - "./experiments/mpi/profilings/s_64.txt"
+  - "./experiments/mpi/profilings/s_128.txt"
+
+names_method:
+  - "Strong 1 Rank"
+  - "Strong 2 Ranks"
+  - "Strong 4 Ranks"
+  - "Strong 8 Ranks"
+  - "Strong 16 Ranks"
+  - "Strong 32 Ranks"
+  - "Strong 64 Ranks"
+  - "Strong 128 Ranks"
+
+baseline_idx: 0
+runs: 1
+save-path: "./reports/scaling/strong/"
+is_strong: true
+is_weak: true

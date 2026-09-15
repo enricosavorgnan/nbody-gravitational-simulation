@@ -1,0 +1,15 @@
+files:
+  - "./experiments/aos-soa/profilings/n-aos.txt"
+  - "./experiments/aos-soa/profilings/n-soa.txt"
+  - "./experiments/aos-soa/profilings/t-aos.txt"
+  - "./experiments/aos-soa/profilings/t-soa.txt"
+
+names_method:
+  - "Naive AoS"
+  - "Naive SoA"
+  - "ThirdLaw AoS"
+  - "ThirdLaw SoA"
+
+baseline_idx: 0
+runs: 5
+save-path: "./reports/serial/aos-soa/"
