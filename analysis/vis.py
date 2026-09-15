@@ -340,7 +340,7 @@ def plot_strong_scaling(
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
     
     # Plot measured speedup
-    ax.plot(ranks, speedups, marker='o', color="#2563EB", linewidth=2, label="Measured Speedup (MPI Wall-clock)")
+    ax.plot(ranks, speedups, marker='o', color="#2563EB", linewidth=2, label="Measured Speedup (Step Time)")
     
     # Plot ideal speedup (Linear)
     ideal_speedup = [r / ranks[0] for r in ranks]
@@ -369,7 +369,7 @@ def plot_weak_scaling(
     experiments: List[Experiment],
     title: Optional[str] = None,
 ) -> plt.Figure:
-    """Plots weak scaling efficiency based on MPI wall-clock time."""
+    """Plots weak scaling efficiency based on Step time."""
     names = [e.name for e in experiments]
     # Weak scaling efficiency = t_1 / t_n
     # Which is exactly the scaling_speedup we computed (since t_base_mpi / t_exp_mpi)
@@ -416,23 +416,28 @@ def plot_time_proportions(
     names = [e.name for e in experiments]
     n = len(names)
     
-    force_times = np.array([e.mean_force_time for e in experiments])
-    drift_kick_times = np.array([e.mean_drift_time + e.mean_kick_time for e in experiments])
-    step_times = np.array([e.mean_step_time for e in experiments])
+    force_times = np.array([e.mean_force_time * e.n_steps for e in experiments])
+    drift_kick_times = np.array([(e.mean_drift_time + e.mean_kick_time) * e.n_steps for e in experiments])
+    step_times = np.array([e.mean_step_time * e.n_steps for e in experiments])
     
-    # Overhead includes Communication Wait times and Thread forking
+    # Energy time is stored in 'Total Run' in the profiler. 
+    # Since we want the total time over the whole simulation, we just use it directly.
+    energy_times = np.array([e.mean_total_run_time for e in experiments])
+
+    # Overhead includes Communication Wait times and Thread forking across all steps
     overhead_times = step_times - (force_times + drift_kick_times)
     # Clamp to 0 just in case floating point drift causes tiny negatives
     overhead_times = np.maximum(overhead_times, 0.0)
     
     # Calculate percentages
-    total = force_times + drift_kick_times + overhead_times
+    total = force_times + drift_kick_times + overhead_times + energy_times
     # Avoid division by zero
     total = np.where(total == 0, 1e-9, total)
     
     force_pct = (force_times / total) * 100
     dk_pct = (drift_kick_times / total) * 100
     over_pct = (overhead_times / total) * 100
+    energy_pct = (energy_times / total) * 100
     
     fig, ax = plt.subplots(figsize=(max(8, n * 0.9), 6), dpi=300)
     
@@ -442,8 +447,9 @@ def plot_time_proportions(
     p1 = ax.bar(x, force_pct, width, label='Compute Force', color='#2563EB', edgecolor='white', linewidth=0.5)
     p2 = ax.bar(x, dk_pct, width, bottom=force_pct, label='Integration (Drift+Kick)', color='#10B981', edgecolor='white', linewidth=0.5)
     p3 = ax.bar(x, over_pct, width, bottom=force_pct + dk_pct, label='Communication / Overhead', color='#DC2626', edgecolor='white', linewidth=0.5)
+    p4 = ax.bar(x, energy_pct, width, bottom=force_pct + dk_pct + over_pct, label='Total Energy Checks', color='#F59E0B', edgecolor='white', linewidth=0.5)
     
-    ax.set_ylabel("Proportion of Step Time (%)", fontsize=11, fontweight="bold")
+    ax.set_ylabel("Proportion of Algorithm (%)", fontsize=11, fontweight="bold")
     ax.set_title(title or "Algorithm Time Area Proportions", fontsize=12, fontweight="bold", pad=12)
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=30 if n > 5 else 0, ha="right" if n > 5 else "center")
@@ -454,6 +460,8 @@ def plot_time_proportions(
             ax.text(i, force_pct[i]/2, f"{force_pct[i]:.1f}%", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
         if over_pct[i] > 5:
             ax.text(i, force_pct[i] + dk_pct[i] + over_pct[i]/2, f"{over_pct[i]:.1f}%", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
+        if energy_pct[i] > 5:
+            ax.text(i, force_pct[i] + dk_pct[i] + over_pct[i] + energy_pct[i]/2, f"{energy_pct[i]:.1f}%", ha='center', va='center', color='white', fontsize=8, fontweight='bold')
             
     ax.set_ylim(0, 100)
     ax.legend(loc='upper right', bbox_to_anchor=(1.0, 1.05), framealpha=0.9, fontsize=9)

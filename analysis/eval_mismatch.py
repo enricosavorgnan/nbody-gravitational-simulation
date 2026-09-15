@@ -1,13 +1,13 @@
 import numpy as np
-from parser import parse_experiment
+from analysis.parser import parse_experiment
 
 def load_step_times(path):
-    exp = parse_experiment(path, "test", runs_to_evaluate=5)
+    exp = parse_experiment(path, "test", max_runs=5)
     return exp.trimmed_mean_step_time, exp.trimmed_std_step_time
 
-t_nat, s_nat = load_step_times("./profilings/container/mismatch_native.txt")
-t_v3, s_v3   = load_step_times("./profilings/container/mismatch_v3.txt")
-t_cnt, s_cnt = load_step_times("./profilings/container/mismatch_container.txt")
+t_nat, s_nat = load_step_times("./container/profilings/container/mismatch_native.txt")
+t_v3, s_v3   = load_step_times("./container/profilings/container/mismatch_v3.txt")
+t_cnt, s_cnt = load_step_times("./container/profilings/container/mismatch_container.txt")
 
 delta_isa = ((t_v3 - t_nat) / t_nat) * 100.0
 delta_cnt = ((t_cnt - t_v3) / t_v3) * 100.0
