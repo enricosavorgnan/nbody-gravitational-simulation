@@ -28,16 +28,14 @@ if [ ! -f "$INPUT_FILE" ]; then
     ./src/generate_initial_conditions --model 0 --n $N_PARTICLES --seed 42 --output $INPUT_FILE
 fi
 
-echo "=========================================================="
-echo "Starting 3-Way Target Mismatch Benchmark (Runs: $N_RUNS, N: $N_PARTICLES)"
-echo "=========================================================="
+echo "Starting"
 
 # 1. Benchmark Native AVX-512
 PROF_NATIVE="./profilings/container/mismatch_native.txt"
 rm -f $PROF_NATIVE
-echo "=== Running Target 1: Native AVX-512 (-march=native) ==="
+echo "Target 1: Native AVX-512 (-march=native)"
 for i in $(seq 1 $N_RUNS); do
-    echo "  Native AVX-512 run $i/$N_RUNS..."
+    echo "Native AVX-512 run $i/$N_RUNS..."
     /usr/bin/time -a -o $PROF_NATIVE -f "\n--- OS / MPI Launch Time ---\nReal: %e seconds\nUser: %U seconds\nSys: %S seconds" \
     mpirun -np 1 ./bins/main_native --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 \
                        --output ./bins/dummy.out --kernel "obrc" --profiler 1 --profiler-path $PROF_NATIVE --quiet
@@ -46,10 +44,10 @@ done
 
 # 2. Benchmark Native AVX2 (v3)
 PROF_V3="./profilings/container/mismatch_v3.txt"
+echo "Target 2: Native AVX2 (-march=x86-64-v3)"
 rm -f $PROF_V3
-echo "=== Running Target 2: Native AVX2 (-march=x86-64-v3) ==="
 for i in $(seq 1 $N_RUNS); do
-    echo "  Native AVX2 run $i/$N_RUNS..."
+    echo "Native AVX2 run $i/$N_RUNS..."
     /usr/bin/time -a -o $PROF_V3 -f "\n--- OS / MPI Launch Time ---\nReal: %e seconds\nUser: %U seconds\nSys: %S seconds" \
     mpirun -np 1 ./bins/main_v3 --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 \
                    --output ./bins/dummy.out --kernel "obrc" --profiler 1 --profiler-path $PROF_V3 --quiet
@@ -59,9 +57,9 @@ done
 # 3. Benchmark Container AVX2 (v3 inside Apptainer)
 PROF_CONTAINER="./profilings/container/mismatch_container.txt"
 rm -f $PROF_CONTAINER
-echo "=== Running Target 3: Container AVX2 (nbody.sif) ==="
+echo "Target 3: Container AVX2 (nbody.sif)"
 for i in $(seq 1 $N_RUNS); do
-    echo "  Container AVX2 run $i/$N_RUNS..."
+    echo "Container AVX2 run $i/$N_RUNS..."
     /usr/bin/time -a -o $PROF_CONTAINER -f "\n--- OS / MPI Launch Time ---\nReal: %e seconds\nUser: %U seconds\nSys: %S seconds" \
     mpirun -np 1 singularity exec nbody.sif /app/src/main --input $INPUT_FILE --nsteps $STEPS --dt 1e-4 --eps 0.05 --energy-every 100 \
                                             --output ./bins/dummy.out --kernel "obrc" --profiler 1 --profiler-path $PROF_CONTAINER --quiet

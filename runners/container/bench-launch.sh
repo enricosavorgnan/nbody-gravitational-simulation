@@ -17,16 +17,16 @@ mkdir -p ./reports/container ./log
 
 echo "run,type,real_sec" > $OUT_FILE
 
-echo "=== Benchmarking Bare-Metal /bin/true ==="
+echo "Benchmarking Native"
 for i in $(seq 1 $N_RUNS); do
     T=$(/usr/bin/time -f "%e" /bin/true 2>&1)
     echo "$i,native,$T" >> $OUT_FILE
 done
 
-echo "=== Benchmarking Singularity exec /bin/true ==="
+echo "Benchmarking Singularity"
 for i in $(seq 1 $N_RUNS); do
     T=$(/usr/bin/time -f "%e" singularity exec nbody.sif /bin/true 2>&1)
     echo "$i,container,$T" >> $OUT_FILE
 done
 
-echo "Done. Results stored in $OUT_FILE"
+echo "Done"

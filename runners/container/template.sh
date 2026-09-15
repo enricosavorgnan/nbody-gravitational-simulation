@@ -25,9 +25,7 @@ if [ ! -f "$INPUT_FILE" ]; then
     singularity exec nbody.sif /app/src/generate_initial_conditions --model 0 --n $N_PARTICLES --seed 42 --output $INPUT_FILE
 fi
 
-echo "=========================================================="
 echo "Container Job: $SLURM_JOB_ID | Tasks: $SLURM_NTASKS | N: $N_PARTICLES"
-echo "=========================================================="
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export OMP_PLACES=cores
