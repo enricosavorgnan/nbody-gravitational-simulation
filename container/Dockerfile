@@ -27,4 +27,4 @@ RUN cd src && \
     make all \
          USE_MPI=${USE_MPI} \
          PRECISION=${PRECISION} \
-         CFLAGS="-O3 -march=x86-64-v3 -Wall -Wextra -Wpedantic -fopenmp -ffast-math -flto -D_POSIX_C_SOURCE=199309L"
+         CFLAGS="-O3 -march=x86-64-v3 -Wall -Wextra -Wpedantic -fopenmp -ffast-math -flto -D_POSIX_C_SOURCE=199309L -DUSE_MPI=1 -DNBODY_USE_DOUBLE"
