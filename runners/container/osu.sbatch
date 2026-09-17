@@ -9,14 +9,8 @@
 #SBATCH --output=./log/osu_%j.out
 #SBATCH --error=./log/osu_%j.err
 
-# =============================================================================
 # OSU Micro-Benchmark: Native vs. Container MPI Latency and Bandwidth
 # Follows the exact methodology developed for the UniTS HPC Orfeo benchmarks.
-#
-# Tests point-to-point MPI latency and bandwidth between 2 ranks on the same node
-# using identical binding: --map-by core --bind-to core.
-# Isolates the MPI implementation difference (CMA single-copy vs. container IPC).
-# =============================================================================
 
 set -euo pipefail
 
@@ -41,7 +35,7 @@ echo "Host mpirun:      $(which mpirun) — $(mpirun --version 2>/dev/null | hea
 echo "Container mpirun: $(singularity exec "$SIF" mpirun --version 2>/dev/null | head -1 || true)"
 echo ""
 
-# 1. Build / Locate Official Native OSU Binaries
+# Build / Locate Official Native OSU Binaries
 NAT_DIR="$SUBMIT/bins/osu/pt2pt"
 if [ ! -x "$NAT_DIR/osu_latency" ] || [ ! -x "$NAT_DIR/osu_bw" ]; then
     echo "Native OSU binaries not found. Building official OSU Micro-Benchmarks natively..."
@@ -51,8 +45,7 @@ fi
 NAT_LATENCY="$NAT_DIR/osu_latency"
 NAT_BW="$NAT_DIR/osu_bw"
 
-# 2. Locate / Prepare Official Container OSU Binaries
-# Check standard container paths used by Ivan and Luca
+# Locate / Prepare Official Container OSU Binaries
 CONT_LATENCY=""
 CONT_BW=""
 for path_cand in "/opt/osu/pt2pt" "/opt/osu/libexec/osu-micro-benchmarks/mpi/pt2pt"; do
