@@ -9,7 +9,24 @@ RUN apt-get update && apt-get install -y \
     openmpi-bin \
     libopenmpi-dev \
     make \
+    wget \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# Compile official OSU Micro-Benchmarks 7.4
+ARG OSU_VERSION=7.4
+RUN wget -q https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-${OSU_VERSION}.tar.gz \
+ && tar xzf osu-micro-benchmarks-${OSU_VERSION}.tar.gz \
+ && cd osu-micro-benchmarks-${OSU_VERSION} \
+ && ./configure CC=mpicc CXX=mpicxx --prefix=/opt/osu \
+ && make -j"$(nproc)" && make install \
+ && mkdir -p /opt/osu/pt2pt \
+ && cp /opt/osu/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_latency \
+       /opt/osu/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw \
+       /opt/osu/pt2pt/ \
+ && cd .. && rm -rf osu-micro-benchmarks-${OSU_VERSION}*
+
+ENV PATH=/opt/osu/pt2pt:$PATH
 
 # Define build arguments that the user can override
 ARG USE_PAPI=0
